@@ -200,7 +200,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "insert into fss1.sp_audit(batchid, datasetname, tablename, taskname, etlstarttime, etlendtime, deltacondition, deltarecordsread, [status], errormessage,created_DTTM)\nvalues (''@{pipeline().parameters.batchid}',\n'@{pipeline().parameters.datasetname}',\n'@{pipeline().parameters.tablename}',\n'@{pipeline().parameters.taskname}',\n'@{pipeline().parameters.etlstarttime}',\n'@{pipeline().parameters.etlendtime}',\n'@{pipeline().parameters.deltacondition}',\n'@{pipeline().parameters.deltarecordsread}',\n'@{pipeline().parameters.status}',\n'@{pipeline().parameters.errormessage}',\n'@{pipeline().parameters.created_DTTM}'\n);",
+								"value": "insert into fss1.sp_audit(batchid, datasetname, tablename, taskname, etlstarttime, etlendtime, deltacondition, deltarecordsread, status, errormessage,created_DTTM)\nvalues (''@{pipeline().parameters.BatchId}',\n'@{pipeline().parameters.datasetname}',\n'@{pipeline().parameters.tablename}',\n'@{pipeline().parameters.taskname}',\n'@{pipeline().parameters.etlstarttime}',\n'@{pipeline().parameters.etlendtime}',\n'@{pipeline().parameters.deltacondition}',\n'@{pipeline().parameters.deltarecordsread}',\n'@{pipeline().parameters.status}',\n'@{pipeline().parameters.errormessage}',\n'@{pipeline().parameters.Created_DTTM}'\n);",
 								"type": "Expression"
 							}
 						}
@@ -240,41 +240,77 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "PostgreSqlV2Source",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "PostgreSqlTable",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"parameters": {
-			"Batchid": {
-				"type": "int"
+			"BatchId": {
+				"type": "string",
+				"defaultValue": "P"
 			},
 			"datasetname": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "a"
 			},
 			"tablename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "b"
 			},
 			"taskname": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "c"
 			},
 			"etlstarttime": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "d"
 			},
 			"etlendtime": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "e"
 			},
 			"deltacondition": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "f"
 			},
 			"deltarecordsread": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "g"
 			},
 			"status": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "h"
 			},
 			"errormessage": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "i"
 			},
 			"created_dttm": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "j"
 			}
 		},
 		"variables": {
