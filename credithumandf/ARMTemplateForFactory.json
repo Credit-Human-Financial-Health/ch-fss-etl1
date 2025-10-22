@@ -97,7 +97,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "outputofchilditems",
+								"activity": "Get folder metadata",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -137,10 +137,15 @@
 											}
 										},
 										"sink": {
-											"type": "AzurePostgreSqlSink",
-											"writeBatchSize": 1000000,
-											"writeBatchTimeout": "00:30:00",
-											"writeMethod": "CopyCommand"
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
 										},
 										"enableStaging": false,
 										"translator": {
@@ -161,9 +166,14 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "AzurePostgreSqlTable1",
+											"referenceName": "Destination",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"dest_filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
 										}
 									]
 								}
@@ -180,7 +190,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "dateloaddate",
+							"variableName": "ETLSTARTTIME",
 							"value": {
 								"value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
 								"type": "Expression"
@@ -188,26 +198,87 @@
 						}
 					},
 					{
-						"name": "outputofchilditems",
-						"type": "Filter",
+						"name": "Audit_in_data_load",
+						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Get folder metadata",
+								"activity": "ForEachfile",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "postgresqltable"
+							}
+						],
+						"typeProperties": {}
+					},
+					{
+						"name": "Audit_out_data_load",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ForEachfile",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
-							"items": {
-								"value": "@activity('Get folder metadata').output.childItems",
+							"storedProcedureName": {
+								"value": "@activity('Copy data').output",
 								"type": "Expression"
 							},
-							"condition": {
-								"value": "@item().name",
+							"storedProcedureParameters": {
+								"value": "@activity('Copy data').output.faliure",
 								"type": "Expression"
 							}
+						}
+					},
+					{
+						"name": "Notcopiedfiles",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Audit_out_data_load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Audit_in_data_load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "ETLENDTIME",
+							"value": [
+								"@formatDateTime(utcNow(),'yyyy-MM-dd')"
+							]
 						}
 					}
 				],
@@ -215,10 +286,10 @@
 					"elapsedTimeMetric": {}
 				},
 				"variables": {
-					"dateloaddate": {
+					"ETLSTARTTIME": {
 						"type": "String"
 					},
-					"notcopiedfiles": {
+					"ETLENDTIME": {
 						"type": "Array"
 					}
 				},
@@ -227,7 +298,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
-				"[concat(variables('factoryId'), '/datasets/AzurePostgreSqlTable1')]"
+				"[concat(variables('factoryId'), '/datasets/Destination')]"
 			]
 		},
 		{
@@ -333,10 +404,7 @@
 						"scale": 0
 					}
 				],
-				"typeProperties": {
-					"schema": "fss1",
-					"table": "ch_member_account"
-				}
+				"typeProperties": {}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
