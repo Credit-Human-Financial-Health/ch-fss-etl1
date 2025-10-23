@@ -443,16 +443,45 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "ETLSTARTTIME",
+							"variableName": "ETLSTARTTIMEvariable",
 							"value": {
-								"value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+								"value": "@formatDateTime(utcNow(),'yyyy-MM-dd HH:mm:ss')",
 								"type": "Expression"
 							}
 						}
 					},
 					{
-						"name": "Audit_in_data_load",
-						"type": "SqlServerStoredProcedure",
+						"name": "Notcopiedfiles",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "End_Audit",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "start_audit",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "ETLENDTIMEvariable",
+							"value": [
+								"@formatDateTime(utcNow(),'yyyy-MM-dd HH:mm:ss')"
+							]
+						}
+					},
+					{
+						"name": "start_audit",
+						"type": "Script",
 						"dependsOn": [
 							{
 								"activity": "ForEachfile",
@@ -468,16 +497,27 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "postgresqltable"
-							}
-						],
-						"typeProperties": {}
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into fss1.audit_pipeline(audit_id, batch_id, datasetname, tablename, taskname, etlstarttime, etlendtime, deltacondition, deltarecordsread, status, errormessage,created_DTTM)\nvalues ('@{pipeline().parameters.audit_id}',\n'@{pipeline().parameters.Batch_Id}',\n'@{pipeline().parameters.datasetname}',\n'@{pipeline().parameters.tablename}',\n'@{pipeline().parameters.taskname}',\n'@{pipeline().parameters.etlstarttime}',\n'@{pipeline().parameters.etlendtime}',\n'@{pipeline().parameters.deltacondition}',\n'@{pipeline().parameters.deltarecordsread}',\n'@{pipeline().parameters.status}',\n'@{pipeline().parameters.errormessage}',\n'@{pipeline().parameters.created_dttm}'\n);",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					},
 					{
-						"name": "Audit_out_data_load",
-						"type": "SqlServerStoredProcedure",
+						"name": "End_Audit",
+						"type": "Script",
 						"dependsOn": [
 							{
 								"activity": "ForEachfile",
@@ -494,55 +534,81 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": {
-								"value": "@activity('Copy data').output",
-								"type": "Expression"
-							},
-							"storedProcedureParameters": {
-								"value": "@activity('Copy data').output.faliure",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Notcopiedfiles",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Audit_out_data_load",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Audit_in_data_load",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
 						},
-						"userProperties": [],
 						"typeProperties": {
-							"variableName": "ETLENDTIME",
-							"value": [
-								"@formatDateTime(utcNow(),'yyyy-MM-dd')"
-							]
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into fss1.audit_pipeline(audit_id, batch_id, datasetname, tablename, taskname, etlstarttime, etlendtime, deltacondition, deltarecordsread, [status], errormessage,created_DTTM)\nvalues ('@{pipeline().parameters.audit_id}'\n'@{pipeline().parameters.Batch_Id}',\n'@{pipeline().parameters.datasetname}',\n'@{pipeline().parameters.tablename}',\n'@{pipeline().parameters.taskname}',\n'@{pipeline().parameters.etlstarttime}',\n'@{pipeline().parameters.etlendtime}',\n'@{pipeline().parameters.deltacondition}',\n'@{pipeline().parameters.deltarecordsread}',\n'@{pipeline().parameters.status}',\n'@{pipeline().parameters.errormessage}',\n'@{pipeline().parameters.created_dttm}'\n);",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"Batch_Id": {
+						"type": "string",
+						"defaultValue": "P"
+					},
+					"datasetname": {
+						"type": "string",
+						"defaultValue": "a"
+					},
+					"tablename": {
+						"type": "string",
+						"defaultValue": "b"
+					},
+					"taskname": {
+						"type": "string",
+						"defaultValue": "c"
+					},
+					"etlstarttime": {
+						"type": "string",
+						"defaultValue": "NULL"
+					},
+					"etlendtime": {
+						"type": "string",
+						"defaultValue": "NULL"
+					},
+					"deltacondition": {
+						"type": "string",
+						"defaultValue": "f"
+					},
+					"deltarecordsread": {
+						"type": "string",
+						"defaultValue": "g"
+					},
+					"status": {
+						"type": "string",
+						"defaultValue": "success"
+					},
+					"errormessage": {
+						"type": "string"
+					},
+					"created_dttm": {
+						"type": "string",
+						"defaultValue": "DEFAULT"
+					},
+					"audit_id": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
 				"variables": {
-					"ETLSTARTTIME": {
+					"ETLSTARTTIMEvariable": {
 						"type": "String"
 					},
-					"ETLENDTIME": {
+					"ETLENDTIMEvariable": {
 						"type": "Array"
 					}
 				},
@@ -551,6 +617,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
 				"[concat(variables('factoryId'), '/datasets/Destination')]"
 			]
 		}
