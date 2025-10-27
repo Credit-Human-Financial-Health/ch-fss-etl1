@@ -117,98 +117,7 @@
 				},
 				"annotations": [],
 				"type": "AzurePostgreSqlTable",
-				"schema": [
-					{
-						"name": "account_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "min_balance",
-						"type": "numeric",
-						"precision": 10,
-						"scale": 2
-					},
-					{
-						"name": "open_date",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "close_date",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "branch",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "status",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "household_account_number",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "member_group_name",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "product_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "created_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "created_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "updated_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "updated_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "account_type_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "anonymized_member_id",
-						"type": "bigint",
-						"precision": 0,
-						"scale": 0
-					}
-				],
+				"schema": [],
 				"typeProperties": {}
 			},
 			"dependsOn": [
@@ -312,7 +221,7 @@
 						"type": "GetMetadata",
 						"dependsOn": [
 							{
-								"activity": "dataloaddate",
+								"activity": "data_load_date",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -362,7 +271,7 @@
 								"value": "@activity('Get folder metadata').output.childItems",
 								"type": "Expression"
 							},
-							"batchCount": 1,
+							"isSequential": true,
 							"activities": [
 								{
 									"name": "Copy data",
@@ -434,7 +343,7 @@
 						}
 					},
 					{
-						"name": "dataloaddate",
+						"name": "data_load_date",
 						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
@@ -474,9 +383,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "ETLENDTIMEvariable",
-							"value": [
-								"@formatDateTime(utcNow(),'yyyy-MM-dd HH:mm:ss')"
-							]
+							"value": "[[\"@formatDateTime(utcNow(),'yyyy-MM-dd HH:mm:ss')\"]"
 						}
 					},
 					{
@@ -558,35 +465,35 @@
 				"parameters": {
 					"Batch_Id": {
 						"type": "string",
-						"defaultValue": "P"
+						"defaultValue": "account"
 					},
 					"datasetname": {
 						"type": "string",
-						"defaultValue": "a"
+						"defaultValue": "transaction"
 					},
 					"tablename": {
 						"type": "string",
-						"defaultValue": "b"
+						"defaultValue": "account_idb"
 					},
 					"taskname": {
 						"type": "string",
-						"defaultValue": "c"
+						"defaultValue": "updated"
 					},
 					"etlstarttime": {
 						"type": "string",
-						"defaultValue": "2025-10-24 08:11:50.725 +0530"
+						"defaultValue": "2025-10-27 09:30:50.725 +0530"
 					},
 					"etlendtime": {
 						"type": "string",
-						"defaultValue": "2025-10-24 08:11:50.725 +0530"
+						"defaultValue": "2025-10-27 09:30:50.725 +0530"
 					},
 					"deltacondition": {
 						"type": "string",
-						"defaultValue": "f"
+						"defaultValue": "Null"
 					},
 					"deltarecordsread": {
 						"type": "string",
-						"defaultValue": "g"
+						"defaultValue": "Null"
 					},
 					"status": {
 						"type": "string",
@@ -597,19 +504,21 @@
 					},
 					"created_dttm": {
 						"type": "string",
-						"defaultValue": "2025-10-24 08:20:35.827 +0530"
+						"defaultValue": "2025-10-27 09:30:35.827 +0530"
 					},
 					"audit_id": {
 						"type": "int",
-						"defaultValue": 1
+						"defaultValue": 5
 					}
 				},
 				"variables": {
 					"ETLSTARTTIMEvariable": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "2025-10-24 08:11:50.725 +0530"
 					},
 					"ETLENDTIMEvariable": {
-						"type": "Array"
+						"type": "String",
+						"defaultValue": "2025-10-24 08:11:50.725 +0530"
 					}
 				},
 				"annotations": [],
