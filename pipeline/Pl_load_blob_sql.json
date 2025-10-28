@@ -27,7 +27,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"childItems"
+						"columnCount"
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
@@ -75,7 +75,8 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"fileListPath": "chfiles/PWC_Extract_ODBCSavingsTransaction_2025_9_12.csv",
+										"recursive": true,
+										"wildcardFileName": "transaction.csv",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -91,6 +92,92 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "SEQUENCENUMBER",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "transaction_id",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "BALANCECHANGE",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "transaction_amount",
+												"type": "Decimal",
+												"physicalType": "numeric"
+											}
+										},
+										{
+											"source": {
+												"name": "NEWBALANCE",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "balance",
+												"type": "Decimal",
+												"physicalType": "numeric"
+											}
+										},
+										{
+											"source": {
+												"name": "DESCRIPTION",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "description",
+												"type": "String",
+												"physicalType": "character varying"
+											}
+										},
+										{
+											"source": {
+												"name": "SOURCECODE",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "payment_method",
+												"type": "String",
+												"physicalType": "character varying"
+											}
+										},
+										{
+											"source": {
+												"name": "ACTIONCODE",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "transaction_type_code_id",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "PWC_Key",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "share_id",
+												"type": "Int64",
+												"physicalType": "bigint"
+											}
+										}
+									],
 									"typeConversion": true,
 									"typeConversionSettings": {
 										"allowDataTruncation": true,
