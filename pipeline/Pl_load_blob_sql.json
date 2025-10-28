@@ -75,8 +75,7 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFileName": "*.csv",
+										"fileListPath": "chfiles/PWC_Extract_ODBCSavingsTransaction_2025_9_12.csv",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -84,15 +83,10 @@
 									}
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
-									}
+									"type": "AzurePostgreSqlSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
 								},
 								"enableStaging": false,
 								"translator": {
@@ -112,14 +106,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "Destination",
-									"type": "DatasetReference",
-									"parameters": {
-										"dest_filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "AzurePostgreSqlTable1",
+									"type": "DatasetReference"
 								}
 							]
 						}
