@@ -25,6 +25,206 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "Copy data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookupfile",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzurePostgreSqlSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"writeMethod": "BulkInsert"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "transaction_date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_date",
+									"type": "DateTime",
+									"physicalType": "timestamp without time zone"
+								}
+							},
+							{
+								"source": {
+									"name": "BALANCECHANGE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_amount",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"source": {
+									"name": "NEWBALANCE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "balance",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"source": {
+									"name": "DESCRIPTION",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "description",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "SOURCECODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "payment_method",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "transaction_code",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_type_code_id",
+									"type": "Int32",
+									"physicalType": "integer"
+								}
+							},
+							{
+								"source": {
+									"name": "PWC_Key",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "share_id",
+									"type": "Int64",
+									"physicalType": "bigint"
+								}
+							},
+							{
+								"source": {
+									"name": "SEQUENCENUMBER",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_id",
+									"type": "Int32",
+									"physicalType": "integer"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "incomingfilesfolder",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzurePostgreSqlTable1",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Lookupfile",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Dataflow",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"modifiedDatetimeStart": {
+								"value": "@activity('Dataflow').output",
+								"type": "Expression"
+							},
+							"modifiedDatetimeEnd": null,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "incomingfilesfolder",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"annotations": []

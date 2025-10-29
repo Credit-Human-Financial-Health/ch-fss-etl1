@@ -94,7 +94,6 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100,",
 				"     ignoreNoFilesFound: false,",
 				"     partitionBy('hash', 1)) ~> source",
 				"source derive(transaction_date = toTimestamp(\r",
@@ -106,7 +105,8 @@
 				"  toString(ACTIONCODE) == 'W', 2,\r",
 				"  toString(ACTIONCODE) == 'F', 3,\r",
 				"  toString(ACTIONCODE) == 'C', 0\r",
-				")) ~> CombineDateTime",
+				"),",
+				"     partitionBy('hash', 1)) ~> CombineDateTime",
 				"CombineDateTime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -172,7 +172,6 @@
 				"     ),",
 				"     partitionFileNames:['transaction.csv'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink"
 			]
 		}
