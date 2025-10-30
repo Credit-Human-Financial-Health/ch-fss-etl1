@@ -128,6 +128,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CH_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "chfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Destination')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -200,7 +227,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "transaction.csv",
+						"fileName": "PWC_Extract_ODBCSavingsTransaction_2025_9_12.csv",
 						"container": "chfiles"
 					},
 					"columnDelimiter": "|",
@@ -478,12 +505,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "incomingfilesfolder",
+								"referenceName": "CH_files",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
 							"fieldList": [
-								"columnCount"
+								"childItems"
 							],
 							"storeSettings": {
 								"type": "AzureBlobStorageReadSettings",
@@ -532,7 +559,11 @@
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
 												"recursive": true,
-												"wildcardFileName": "transaction.csv",
+												"wildcardFolderPath": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"wildcardFileName": "*.csv",
 												"enablePartitionDiscovery": false
 											},
 											"formatSettings": {
@@ -548,92 +579,6 @@
 										"enableStaging": false,
 										"translator": {
 											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"name": "SEQUENCENUMBER",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_id",
-														"type": "Int32",
-														"physicalType": "integer"
-													}
-												},
-												{
-													"source": {
-														"name": "BALANCECHANGE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_amount",
-														"type": "Decimal",
-														"physicalType": "numeric"
-													}
-												},
-												{
-													"source": {
-														"name": "NEWBALANCE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "balance",
-														"type": "Decimal",
-														"physicalType": "numeric"
-													}
-												},
-												{
-													"source": {
-														"name": "DESCRIPTION",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "description",
-														"type": "String",
-														"physicalType": "character varying"
-													}
-												},
-												{
-													"source": {
-														"name": "SOURCECODE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "payment_method",
-														"type": "String",
-														"physicalType": "character varying"
-													}
-												},
-												{
-													"source": {
-														"name": "ACTIONCODE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_type_code_id",
-														"type": "Int32",
-														"physicalType": "integer"
-													}
-												},
-												{
-													"source": {
-														"name": "PWC_Key",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "share_id",
-														"type": "Int64",
-														"physicalType": "bigint"
-													}
-												}
-											],
 											"typeConversion": true,
 											"typeConversionSettings": {
 												"allowDataTruncation": true,
@@ -643,7 +588,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "incomingfilesfolder",
+											"referenceName": "CH_files",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
@@ -842,178 +787,8 @@
 				"lastPublishTime": "2025-10-17T14:36:56Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
+				"[concat(variables('factoryId'), '/datasets/CH_files')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
-				"[concat(variables('factoryId'), '/datasets/AzurePostgreSqlTable1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/copy_transactiondata')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzurePostgreSqlSink",
-								"writeBatchSize": 1000000,
-								"writeBatchTimeout": "00:30:00",
-								"writeMethod": "BulkInsert"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "SEQUENCENUMBER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_id",
-											"type": "Int32",
-											"physicalType": "integer"
-										}
-									},
-									{
-										"source": {
-											"name": "transaction_date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_date",
-											"type": "DateTime",
-											"physicalType": "timestamp without time zone"
-										}
-									},
-									{
-										"source": {
-											"name": "BALANCECHANGE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_amount",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									},
-									{
-										"source": {
-											"name": "NEWBALANCE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "balance",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									},
-									{
-										"source": {
-											"name": "DESCRIPTION",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "description",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "SOURCECODE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "payment_method",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "ACTIONCODE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_type_code_id",
-											"type": "Int32",
-											"physicalType": "integer"
-										}
-									},
-									{
-										"source": {
-											"name": "PWC_Key",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "share_id",
-											"type": "Int64",
-											"physicalType": "bigint"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "incomingfilesfolder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzurePostgreSqlTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
 				"[concat(variables('factoryId'), '/datasets/AzurePostgreSqlTable1')]"
 			]
 		},
@@ -1115,13 +890,18 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     limit: 100,",
 						"     ignoreNoFilesFound: false,",
 						"     partitionBy('hash', 1)) ~> source",
 						"source derive(transaction_date = toTimestamp(\r",
 						"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME)),\r",
 						"  'yyyy-MM-dd HH:mm:ss.SSS'\r",
-						")) ~> CombineDateTime",
+						"),",
+						"          transaction_code = case(\r",
+						"  toString(ACTIONCODE) == 'D', 1,\r",
+						"  toString(SOURCECODE) == 'F', 3,\r",
+						"  toString(ACTIONCODE) == 'W', 2\r",
+						"),",
+						"     partitionBy('hash', 1)) ~> CombineDateTime",
 						"CombineDateTime sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -1187,7 +967,6 @@
 						"     ),",
 						"     partitionFileNames:['transaction.csv'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> sink"
 					]
 				}
@@ -1232,6 +1011,198 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "Copy data",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookupfile",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "transaction.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"writeMethod": "BulkInsert"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "transaction_date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_date",
+											"type": "DateTime",
+											"physicalType": "timestamp without time zone"
+										}
+									},
+									{
+										"source": {
+											"name": "BALANCECHANGE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_amount",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "NEWBALANCE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "balance",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "DESCRIPTION",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "description",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "SOURCECODE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "payment_method",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "transaction_code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_type_code_id",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "PWC_Key",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "share_id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "incomingfilesfolder",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzurePostgreSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Lookupfile",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Dataflow",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"modifiedDatetimeStart": {
+										"value": "@activity('Dataflow').output",
+										"type": "Expression"
+									},
+									"modifiedDatetimeEnd": null,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "incomingfilesfolder",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
 					}
 				],
 				"policy": {
@@ -1240,7 +1211,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_CombineDateTime')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_CombineDateTime')]",
+				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
+				"[concat(variables('factoryId'), '/datasets/AzurePostgreSqlTable1')]"
 			]
 		}
 	]
