@@ -51,6 +51,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
+							"wildcardFileName": "transaction.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -149,18 +150,6 @@
 									"name": "share_id",
 									"type": "Int64",
 									"physicalType": "bigint"
-								}
-							},
-							{
-								"source": {
-									"name": "SEQUENCENUMBER",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "transaction_id",
-									"type": "Int32",
-									"physicalType": "integer"
 								}
 							}
 						],
