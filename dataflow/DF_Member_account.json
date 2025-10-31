@@ -21,7 +21,11 @@
 					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          PWC_Key as string,",
@@ -189,7 +193,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"source1 derive(product_id = iifNull(TYPE,'p')) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          account_id as integer,",
@@ -213,15 +218,13 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          account_id = PWC_Key,",
 				"          open_date = OPENDATE,",
-				"          product_id = TYPE,",
 				"          close_date = CLOSEDATE,",
 				"          account_type_id = TYPE,",
-				"          branch = BRANCH",
+				"          branch = BRANCH,",
+				"          product_id",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
