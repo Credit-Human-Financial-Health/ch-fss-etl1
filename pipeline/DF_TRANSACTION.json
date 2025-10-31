@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_CombineDateTime",
+						"referenceName": "DF_transaction_data",
 						"type": "DataFlowReference"
 					},
 					"compute": {

@@ -20,7 +20,1075 @@
 		},
 		"schema": [
 			{
-				"name": "PWC_Key|ID|CHECKDIGITS|TYPE|LASTFMDATE|LASTTRANDATE|OPENDATE|CLOSEDATE|REFERENCE|WARNINGCODE1|WARNINGCODE2|WARNINGCODE3|WARNINGCODE4|WARNINGCODE5|WARNINGCODE6|WARNINGCODE7|WARNINGCODE8|WARNINGCODE9|WARNINGCODE10|WARNINGCODE11|WARNINGCODE12|WARNINGCODE13|WARNINGCODE14|WARNINGCODE15|WARNINGCODE16|WARNINGCODE17|WARNINGCODE18|WARNINGCODE19|WARNINGCODE20|SERVICE1|SERVICE2|SERVICE3|SERVICE4|SERVICE5|SERVICE6|SERVICE7|SERVICE8|SHARECODE|IRSCODE|DIVPOSTCODE|LASTDIVDATE|LASTDIVAMOUNT|DIVYTD|DIVLASTYEAR|DIVFROMOPEN|DIVTYPE|DIVRATE|DIVACCRUALDATE|DIVACCRUAL|WITHHOLDINGCODE|WITHHOLDINGYTD|WITHHOLDINGLASTYEAR|PENALTYTYPE|PENALTYYTD|PENALTYLASTYEAR|BALANCE|ORIGINALBALANCE|MINIMUMBALANCE|INSURANCETYPE|INSURANCEMAXIMUM|INSURANCEBALANCEAGE1|INSURANCEBALANCEAGE2|INSURANCEBALANCEAGE3|INSURANCEBALANCEAGE4|MINIMUMDEPOSIT|MINIMUMWITHDRAWAL|WITHDRAWALLIMIT|WITHDRAWALCOUNT|WITHDRAWNFROMOPEN|WITHDRAWALFEETYPE|WITHDRAWALFEECOUNT|LASTPURGEDATE|STATEMENTGROUP|STATEMENTDATE|STATEMENTMAILCODE|REGECOUNT|REGDCHECKCOUNT|REGDTRANSFERCOUNT|MATURITYPOSTCODE|MATURITYDATE|TERMFREQUENCY|TERMPERIOD|CERTIFICATENUMBER|DESCRIPTION|LOANPAYMENTHOLD|STATEMENTPREVDATE|BONDINTYTD|BONDINTLASTYEAR|NSFMONTHTODATE|NSFYTD|NSFLASTYEAR|XFRMONTHTODATE|XFRYTD|XFRLASTYEAR|WARNINGEXPIRATION1|WARNINGEXPIRATION2|WARNINGEXPIRATION3|WARNINGEXPIRATION4|WARNINGEXPIRATION5|WARNINGEXPIRATION6|WARNINGEXPIRATION7|WARNINGEXPIRATION8|WARNINGEXPIRATION9|WARNINGEXPIRATION10|WARNINGEXPIRATION11|WARNINGEXPIRATION12|WARNINGEXPIRATION13|WARNINGEXPIRATION14|WARNINGEXPIRATION15|WARNINGEXPIRATION16|WARNINGEXPIRATION17|WARNINGEXPIRATION18|WARNINGEXPIRATION19|WARNINGEXPIRATION20|FEECOUNT1|FEECOUNT2|FEECOUNT3|FEECOUNT4|STATEWITHHOLDINGCODE|STATEWITHHOLDINGYTD|STATEWITHHOLDINGLASTYEAR|CUTOTALSUSECODE|DIVPERIODSTART|DIVPERIODBALDAYS|CHARGEOFFAMOUNT|CHARGEOFFDATE|CHARGEOFFTYPE|CREDITREPORTINGCODE|CREDITREPORTNUMBER|BRANCH|CREDITREPORTOCCURDATE|CREDITREPORTLASTSTATUS|CREDITREPORTCOMMENT|BUMPRATE|BUMPEFFECTIVEDATE|BUMPEXPIRATIONDATE|IRSPLAN|ORIGINALDEPOSITDATE|ORIGINALDEPOSIT|CREDITREPORTCONSUMERINFO|CREDITREPORTCOMPLIANCE|ACTIVITYDATE|COURTESYPAYMONTHTODATE|COURTESYPAYYTD|COURTESYPAYLASTYEAR|OVERDRAFTTOLERANCE|CDDIVACCRYTD|CDDIVACCRLASTYR|AMORTIZATIONSCHD|AMORTIZATIONSCHDTYPE|DIVIDENDRATEMARGINSIGN|DIVIDENDRATEPERIODDATE|DIVIDENDRATEPERIODFREQ|DIVIDENDRATEMARGIN|DIVIDENDRATEMAX|DIVIDENDRATEMIN|PERIODICCAP|PERIODICSTARTRATE|CALLITEMSCHD|CALLITEMSCHDTYPE|MEMBERUSERTRANSFERCODE|CORPORATEUSERTRANSFERCODE|MEMBERBRANCHSUPPORT|MCDIVYTD|MCDIVLASTYEAR|USERCHAR1|USERCHAR2|USERCHAR3|USERCHAR4|USERAMOUNT1|USERAMOUNT2|USERDATE1|USERDATE2|PUTITEMSCHD|PUTITEMSCHDTYPE|LEDGERACCRUAL|LEDGERACCRUALDATE|CURRDIVPAYABLE|CURRMONTHPAIDDIV|MTDPAIDDIVS|MTDACCRUEDDIVS|MTDEARNEDDIVS|PREMTHDIVPAID1|PREMTHDIVPAID2|PREMTHDIVPAID3|PREMTHDIVACCRUED1|PREMTHDIVACCRUED2|PREMTHDIVACCRUED3|PREMTHDIVEARNED1|PREMTHDIVEARNED2|PREMTHDIVEARNED3|PREMTHDIVEARNED4|PREMTHDIVEARNED5|PREMTHDIVEARNED6|PREMTHDIVEARNED7|PREMTHDIVEARNED8|PREMTHDIVEARNED9|PREMTHDIVEARNED10|PREMTHDIVEARNED11|PREMTHDIVEARNED12|MTDPRIORRATEACCRUAL|LASTACCRUALUPDATEDATE|UNPAIDFEEYTD|UNPAIDFEELASTYEAR|OVERDRAFTFEEYTD|OVERDRAFTFEELASTYR|LASTCRREPORTDATE|CREDITREPORTCONSUMERINFODATE|EXTACHXFRDAILYLIMITIN|EXTACHXFRDAILYLIMITOUT|STATEWITHHOLDINGQTD|STATEWITHHOLDINGLASTQTR|ANALYSISGROUPPRIMARYACCT|ANALYSISGROUPPRIMARYID|ANALYSISPMTACCT|ANALYSISPMTSLID|ANALYSISPMTIDTYPE|NICKNAME|RENEWSHARETYPE|RENEWTERMFREQ|RENEWTERMPERIOD|DIVDISBUPDTACTVTYD|SWEEPBALANCETYPE|SWEEPTARGETMINIMUM|SWEEPTARGETMAXIMUM|SWEEPPRIORITY|LASTDIRECTDEPDATE|LASTDIRECTDEPAMT|REGDCTRSTARTDAY|RECORDCHANGEDATE|CAPPEDFEESAMTPERIOD|CAPPEDFEESAMOUNTCAP|CAPPEDFEESCNTPERIOD|CAPPEDFEESCOUNTCAP|CREATEDBYUSER|CREATEDATBRANCH|ESCROWEDLOANID|AUTHFEEOPTION1|AUTHFEEOPTION2|AUTHFEEOPTION3|AUTHFEEOPTION4|AUTHFEEOPTION5|ODTAUTHFEESRCCODELIST1|ODTAUTHFEESRCCODELIST2|ODTAUTHFEESRCCODELIST3|ODTAUTHFEESRCCODELIST4|FEEEXEMPTCRTSYBAL|NSFFEEMTD|NSFFEEYTD|NSFFEELY|COURTESYFEEMTD|COURTESYFEEYTD|COURTESYFEELY|NEGATIVEBALANCEDATE|CREDITREPORTORIGINALAMOUNTRPTD|NEGATIVEBALANCENOTICETYPE|NEGATIVEBALANCENOTICENUMBER|NEGATIVEBALANCENOTICEDATE|ESCROWYTD|ESCROWLASTYEAR|CHAPTER4WITHHOLDINGCODE|CHAPTER4WITHHELDYTD|CHAPTER4WITHHELDLSTYR|YEARENDBALANCE|IRS1042SUFID|POSITIVEPAYDRAFT|VERSIONID|UUID",
+				"name": "PWC_Key",
+				"type": "String"
+			},
+			{
+				"name": "ID",
+				"type": "String"
+			},
+			{
+				"name": "CHECKDIGITS",
+				"type": "String"
+			},
+			{
+				"name": "TYPE",
+				"type": "String"
+			},
+			{
+				"name": "LASTFMDATE",
+				"type": "String"
+			},
+			{
+				"name": "LASTTRANDATE",
+				"type": "String"
+			},
+			{
+				"name": "OPENDATE",
+				"type": "String"
+			},
+			{
+				"name": "CLOSEDATE",
+				"type": "String"
+			},
+			{
+				"name": "REFERENCE",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE1",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE2",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE3",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE4",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE5",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE6",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE7",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE8",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE9",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE10",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE11",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE12",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE13",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE14",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE15",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE16",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE17",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE18",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE19",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE20",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE1",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE2",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE3",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE4",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE5",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE6",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE7",
+				"type": "String"
+			},
+			{
+				"name": "SERVICE8",
+				"type": "String"
+			},
+			{
+				"name": "SHARECODE",
+				"type": "String"
+			},
+			{
+				"name": "IRSCODE",
+				"type": "String"
+			},
+			{
+				"name": "DIVPOSTCODE",
+				"type": "String"
+			},
+			{
+				"name": "LASTDIVDATE",
+				"type": "String"
+			},
+			{
+				"name": "LASTDIVAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "DIVYTD",
+				"type": "String"
+			},
+			{
+				"name": "DIVLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "DIVFROMOPEN",
+				"type": "String"
+			},
+			{
+				"name": "DIVTYPE",
+				"type": "String"
+			},
+			{
+				"name": "DIVRATE",
+				"type": "String"
+			},
+			{
+				"name": "DIVACCRUALDATE",
+				"type": "String"
+			},
+			{
+				"name": "DIVACCRUAL",
+				"type": "String"
+			},
+			{
+				"name": "WITHHOLDINGCODE",
+				"type": "String"
+			},
+			{
+				"name": "WITHHOLDINGYTD",
+				"type": "String"
+			},
+			{
+				"name": "WITHHOLDINGLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "PENALTYTYPE",
+				"type": "String"
+			},
+			{
+				"name": "PENALTYYTD",
+				"type": "String"
+			},
+			{
+				"name": "PENALTYLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "BALANCE",
+				"type": "String"
+			},
+			{
+				"name": "ORIGINALBALANCE",
+				"type": "String"
+			},
+			{
+				"name": "MINIMUMBALANCE",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCETYPE",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCEMAXIMUM",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCEBALANCEAGE1",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCEBALANCEAGE2",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCEBALANCEAGE3",
+				"type": "String"
+			},
+			{
+				"name": "INSURANCEBALANCEAGE4",
+				"type": "String"
+			},
+			{
+				"name": "MINIMUMDEPOSIT",
+				"type": "String"
+			},
+			{
+				"name": "MINIMUMWITHDRAWAL",
+				"type": "String"
+			},
+			{
+				"name": "WITHDRAWALLIMIT",
+				"type": "String"
+			},
+			{
+				"name": "WITHDRAWALCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "WITHDRAWNFROMOPEN",
+				"type": "String"
+			},
+			{
+				"name": "WITHDRAWALFEETYPE",
+				"type": "String"
+			},
+			{
+				"name": "WITHDRAWALFEECOUNT",
+				"type": "String"
+			},
+			{
+				"name": "LASTPURGEDATE",
+				"type": "String"
+			},
+			{
+				"name": "STATEMENTGROUP",
+				"type": "String"
+			},
+			{
+				"name": "STATEMENTDATE",
+				"type": "String"
+			},
+			{
+				"name": "STATEMENTMAILCODE",
+				"type": "String"
+			},
+			{
+				"name": "REGECOUNT",
+				"type": "String"
+			},
+			{
+				"name": "REGDCHECKCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "REGDTRANSFERCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "MATURITYPOSTCODE",
+				"type": "String"
+			},
+			{
+				"name": "MATURITYDATE",
+				"type": "String"
+			},
+			{
+				"name": "TERMFREQUENCY",
+				"type": "String"
+			},
+			{
+				"name": "TERMPERIOD",
+				"type": "String"
+			},
+			{
+				"name": "CERTIFICATENUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "LOANPAYMENTHOLD",
+				"type": "String"
+			},
+			{
+				"name": "STATEMENTPREVDATE",
+				"type": "String"
+			},
+			{
+				"name": "BONDINTYTD",
+				"type": "String"
+			},
+			{
+				"name": "BONDINTLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHTODATE",
+				"type": "String"
+			},
+			{
+				"name": "NSFYTD",
+				"type": "String"
+			},
+			{
+				"name": "NSFLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "XFRMONTHTODATE",
+				"type": "String"
+			},
+			{
+				"name": "XFRYTD",
+				"type": "String"
+			},
+			{
+				"name": "XFRLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION1",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION2",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION3",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION4",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION5",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION6",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION7",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION8",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION9",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION10",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION11",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION12",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION13",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION14",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION15",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION16",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION17",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION18",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION19",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION20",
+				"type": "String"
+			},
+			{
+				"name": "FEECOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "FEECOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "FEECOUNT3",
+				"type": "String"
+			},
+			{
+				"name": "FEECOUNT4",
+				"type": "String"
+			},
+			{
+				"name": "STATEWITHHOLDINGCODE",
+				"type": "String"
+			},
+			{
+				"name": "STATEWITHHOLDINGYTD",
+				"type": "String"
+			},
+			{
+				"name": "STATEWITHHOLDINGLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "CUTOTALSUSECODE",
+				"type": "String"
+			},
+			{
+				"name": "DIVPERIODSTART",
+				"type": "String"
+			},
+			{
+				"name": "DIVPERIODBALDAYS",
+				"type": "String"
+			},
+			{
+				"name": "CHARGEOFFAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "CHARGEOFFDATE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGEOFFTYPE",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTINGCODE",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "BRANCH",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTOCCURDATE",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTLASTSTATUS",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTCOMMENT",
+				"type": "String"
+			},
+			{
+				"name": "BUMPRATE",
+				"type": "String"
+			},
+			{
+				"name": "BUMPEFFECTIVEDATE",
+				"type": "String"
+			},
+			{
+				"name": "BUMPEXPIRATIONDATE",
+				"type": "String"
+			},
+			{
+				"name": "IRSPLAN",
+				"type": "String"
+			},
+			{
+				"name": "ORIGINALDEPOSITDATE",
+				"type": "String"
+			},
+			{
+				"name": "ORIGINALDEPOSIT",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTCONSUMERINFO",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTCOMPLIANCE",
+				"type": "String"
+			},
+			{
+				"name": "ACTIVITYDATE",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYPAYMONTHTODATE",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYPAYYTD",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYPAYLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "OVERDRAFTTOLERANCE",
+				"type": "String"
+			},
+			{
+				"name": "CDDIVACCRYTD",
+				"type": "String"
+			},
+			{
+				"name": "CDDIVACCRLASTYR",
+				"type": "String"
+			},
+			{
+				"name": "AMORTIZATIONSCHD",
+				"type": "String"
+			},
+			{
+				"name": "AMORTIZATIONSCHDTYPE",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEMARGINSIGN",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEPERIODDATE",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEPERIODFREQ",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEMARGIN",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEMAX",
+				"type": "String"
+			},
+			{
+				"name": "DIVIDENDRATEMIN",
+				"type": "String"
+			},
+			{
+				"name": "PERIODICCAP",
+				"type": "String"
+			},
+			{
+				"name": "PERIODICSTARTRATE",
+				"type": "String"
+			},
+			{
+				"name": "CALLITEMSCHD",
+				"type": "String"
+			},
+			{
+				"name": "CALLITEMSCHDTYPE",
+				"type": "String"
+			},
+			{
+				"name": "MEMBERUSERTRANSFERCODE",
+				"type": "String"
+			},
+			{
+				"name": "CORPORATEUSERTRANSFERCODE",
+				"type": "String"
+			},
+			{
+				"name": "MEMBERBRANCHSUPPORT",
+				"type": "String"
+			},
+			{
+				"name": "MCDIVYTD",
+				"type": "String"
+			},
+			{
+				"name": "MCDIVLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR1",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR2",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR3",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR4",
+				"type": "String"
+			},
+			{
+				"name": "USERAMOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "USERAMOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "USERDATE1",
+				"type": "String"
+			},
+			{
+				"name": "USERDATE2",
+				"type": "String"
+			},
+			{
+				"name": "PUTITEMSCHD",
+				"type": "String"
+			},
+			{
+				"name": "PUTITEMSCHDTYPE",
+				"type": "String"
+			},
+			{
+				"name": "LEDGERACCRUAL",
+				"type": "String"
+			},
+			{
+				"name": "LEDGERACCRUALDATE",
+				"type": "String"
+			},
+			{
+				"name": "CURRDIVPAYABLE",
+				"type": "String"
+			},
+			{
+				"name": "CURRMONTHPAIDDIV",
+				"type": "String"
+			},
+			{
+				"name": "MTDPAIDDIVS",
+				"type": "String"
+			},
+			{
+				"name": "MTDACCRUEDDIVS",
+				"type": "String"
+			},
+			{
+				"name": "MTDEARNEDDIVS",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVPAID1",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVPAID2",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVPAID3",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVACCRUED1",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVACCRUED2",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVACCRUED3",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED1",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED2",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED3",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED4",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED5",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED6",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED7",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED8",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED9",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED10",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED11",
+				"type": "String"
+			},
+			{
+				"name": "PREMTHDIVEARNED12",
+				"type": "String"
+			},
+			{
+				"name": "MTDPRIORRATEACCRUAL",
+				"type": "String"
+			},
+			{
+				"name": "LASTACCRUALUPDATEDATE",
+				"type": "String"
+			},
+			{
+				"name": "UNPAIDFEEYTD",
+				"type": "String"
+			},
+			{
+				"name": "UNPAIDFEELASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "OVERDRAFTFEEYTD",
+				"type": "String"
+			},
+			{
+				"name": "OVERDRAFTFEELASTYR",
+				"type": "String"
+			},
+			{
+				"name": "LASTCRREPORTDATE",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTCONSUMERINFODATE",
+				"type": "String"
+			},
+			{
+				"name": "EXTACHXFRDAILYLIMITIN",
+				"type": "String"
+			},
+			{
+				"name": "EXTACHXFRDAILYLIMITOUT",
+				"type": "String"
+			},
+			{
+				"name": "STATEWITHHOLDINGQTD",
+				"type": "String"
+			},
+			{
+				"name": "STATEWITHHOLDINGLASTQTR",
+				"type": "String"
+			},
+			{
+				"name": "ANALYSISGROUPPRIMARYACCT",
+				"type": "String"
+			},
+			{
+				"name": "ANALYSISGROUPPRIMARYID",
+				"type": "String"
+			},
+			{
+				"name": "ANALYSISPMTACCT",
+				"type": "String"
+			},
+			{
+				"name": "ANALYSISPMTSLID",
+				"type": "String"
+			},
+			{
+				"name": "ANALYSISPMTIDTYPE",
+				"type": "String"
+			},
+			{
+				"name": "NICKNAME",
+				"type": "String"
+			},
+			{
+				"name": "RENEWSHARETYPE",
+				"type": "String"
+			},
+			{
+				"name": "RENEWTERMFREQ",
+				"type": "String"
+			},
+			{
+				"name": "RENEWTERMPERIOD",
+				"type": "String"
+			},
+			{
+				"name": "DIVDISBUPDTACTVTYD",
+				"type": "String"
+			},
+			{
+				"name": "SWEEPBALANCETYPE",
+				"type": "String"
+			},
+			{
+				"name": "SWEEPTARGETMINIMUM",
+				"type": "String"
+			},
+			{
+				"name": "SWEEPTARGETMAXIMUM",
+				"type": "String"
+			},
+			{
+				"name": "SWEEPPRIORITY",
+				"type": "String"
+			},
+			{
+				"name": "LASTDIRECTDEPDATE",
+				"type": "String"
+			},
+			{
+				"name": "LASTDIRECTDEPAMT",
+				"type": "String"
+			},
+			{
+				"name": "REGDCTRSTARTDAY",
+				"type": "String"
+			},
+			{
+				"name": "RECORDCHANGEDATE",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESAMTPERIOD",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESAMOUNTCAP",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESCNTPERIOD",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESCOUNTCAP",
+				"type": "String"
+			},
+			{
+				"name": "CREATEDBYUSER",
+				"type": "String"
+			},
+			{
+				"name": "CREATEDATBRANCH",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWEDLOANID",
+				"type": "String"
+			},
+			{
+				"name": "AUTHFEEOPTION1",
+				"type": "String"
+			},
+			{
+				"name": "AUTHFEEOPTION2",
+				"type": "String"
+			},
+			{
+				"name": "AUTHFEEOPTION3",
+				"type": "String"
+			},
+			{
+				"name": "AUTHFEEOPTION4",
+				"type": "String"
+			},
+			{
+				"name": "AUTHFEEOPTION5",
+				"type": "String"
+			},
+			{
+				"name": "ODTAUTHFEESRCCODELIST1",
+				"type": "String"
+			},
+			{
+				"name": "ODTAUTHFEESRCCODELIST2",
+				"type": "String"
+			},
+			{
+				"name": "ODTAUTHFEESRCCODELIST3",
+				"type": "String"
+			},
+			{
+				"name": "ODTAUTHFEESRCCODELIST4",
+				"type": "String"
+			},
+			{
+				"name": "FEEEXEMPTCRTSYBAL",
+				"type": "String"
+			},
+			{
+				"name": "NSFFEEMTD",
+				"type": "String"
+			},
+			{
+				"name": "NSFFEEYTD",
+				"type": "String"
+			},
+			{
+				"name": "NSFFEELY",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYFEEMTD",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYFEEYTD",
+				"type": "String"
+			},
+			{
+				"name": "COURTESYFEELY",
+				"type": "String"
+			},
+			{
+				"name": "NEGATIVEBALANCEDATE",
+				"type": "String"
+			},
+			{
+				"name": "CREDITREPORTORIGINALAMOUNTRPTD",
+				"type": "String"
+			},
+			{
+				"name": "NEGATIVEBALANCENOTICETYPE",
+				"type": "String"
+			},
+			{
+				"name": "NEGATIVEBALANCENOTICENUMBER",
+				"type": "String"
+			},
+			{
+				"name": "NEGATIVEBALANCENOTICEDATE",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWYTD",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWLASTYEAR",
+				"type": "String"
+			},
+			{
+				"name": "CHAPTER4WITHHOLDINGCODE",
+				"type": "String"
+			},
+			{
+				"name": "CHAPTER4WITHHELDYTD",
+				"type": "String"
+			},
+			{
+				"name": "CHAPTER4WITHHELDLSTYR",
+				"type": "String"
+			},
+			{
+				"name": "YEARENDBALANCE",
+				"type": "String"
+			},
+			{
+				"name": "IRS1042SUFID",
+				"type": "String"
+			},
+			{
+				"name": "POSITIVEPAYDRAFT",
+				"type": "String"
+			},
+			{
+				"name": "VERSIONID",
+				"type": "String"
+			},
+			{
+				"name": "UUID",
 				"type": "String"
 			}
 		]

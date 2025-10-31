@@ -5,33 +5,264 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"filename": {
-				"type": "string"
-			},
-			"containername": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().filename",
-					"type": "Expression"
-				},
-				"container": {
-					"value": "@dataset().containername",
-					"type": "Expression"
-				}
+				"fileName": "PWC_Extract_SavingsTransaction_2025_10_24.csv",
+				"container": "incomingfiles"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "PWC_Key",
+				"type": "String"
+			},
+			{
+				"name": "BALSEGCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "COMMENTCODE",
+				"type": "String"
+			},
+			{
+				"name": "TRANSFERCODE",
+				"type": "String"
+			},
+			{
+				"name": "ADJUSTMENTCODE",
+				"type": "String"
+			},
+			{
+				"name": "REGECODE",
+				"type": "String"
+			},
+			{
+				"name": "REGDCHECKCODE",
+				"type": "String"
+			},
+			{
+				"name": "REGDTRANSFERCODE",
+				"type": "String"
+			},
+			{
+				"name": "VOIDCODE",
+				"type": "String"
+			},
+			{
+				"name": "SUBACTIONCODE",
+				"type": "String"
+			},
+			{
+				"name": "SEQUENCENUMBER",
+				"type": "String"
+			},
+			{
+				"name": "EFFECTIVEDATE",
+				"type": "String"
+			},
+			{
+				"name": "POSTDATE",
+				"type": "String"
+			},
+			{
+				"name": "POSTTIME",
+				"type": "String"
+			},
+			{
+				"name": "USERNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "USEROVERRIDE",
+				"type": "String"
+			},
+			{
+				"name": "SECURITYLEVELS",
+				"type": "String"
+			},
+			{
+				"name": "DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "ACTIONCODE",
+				"type": "String"
+			},
+			{
+				"name": "SOURCECODE",
+				"type": "String"
+			},
+			{
+				"name": "BALANCECHANGE",
+				"type": "String"
+			},
+			{
+				"name": "INTEREST",
+				"type": "String"
+			},
+			{
+				"name": "NEWBALANCE",
+				"type": "String"
+			},
+			{
+				"name": "FEEAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "LASTTRANDATE",
+				"type": "String"
+			},
+			{
+				"name": "MATURITYLOANDUEDATE",
+				"type": "String"
+			},
+			{
+				"name": "COMMENT",
+				"type": "String"
+			},
+			{
+				"name": "BRANCH",
+				"type": "String"
+			},
+			{
+				"name": "CONSOLENUMBER",
+				"type": "String"
+			},
+			{
+				"name": "BATCHSEQUENCE",
+				"type": "String"
+			},
+			{
+				"name": "SALESTAXAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "ACTIVITYDATE",
+				"type": "String"
+			},
+			{
+				"name": "BILLEDFEEAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "PROCESSORUSER",
+				"type": "String"
+			},
+			{
+				"name": "MEMBERBRANCH",
+				"type": "String"
+			},
+			{
+				"name": "PREVAVAILBALANCE",
+				"type": "String"
+			},
+			{
+				"name": "SUBSOURCE",
+				"type": "String"
+			},
+			{
+				"name": "CONFIRMATIONSEQ",
+				"type": "String"
+			},
+			{
+				"name": "MICRACCTNUM",
+				"type": "String"
+			},
+			{
+				"name": "MICRRT",
+				"type": "String"
+			},
+			{
+				"name": "RECURRINGTRAN",
+				"type": "String"
+			},
+			{
+				"name": "FEEEXMTCRTSYAMT",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWUNPAIDBALCHG",
+				"type": "String"
+			},
+			{
+				"name": "ESCROWAPPLIEDBALCHG",
+				"type": "String"
+			},
+			{
+				"name": "UNAPPLIEDPARTIALPMTCHG",
+				"type": "String"
+			},
+			{
+				"name": "FEECOUNTBY",
+				"type": "String"
+			},
+			{
+				"name": "LATECHGWAIVEDAMT",
+				"type": "String"
+			},
+			{
+				"name": "LATECHGUNPAIDCHGAMT",
+				"type": "String"
+			},
+			{
+				"name": "PREVLATECHGDATE",
+				"type": "String"
+			},
+			{
+				"name": "PREVLATECHGACCRUED",
+				"type": "String"
+			},
+			{
+				"name": "LATECHGFIELDSVALID",
+				"type": "String"
+			},
+			{
+				"name": "BALSEGID1",
+				"type": "String"
+			},
+			{
+				"name": "BALSEGPMTCHANGEDATE1",
+				"type": "String"
+			},
+			{
+				"name": "INTEFFECTDATE",
+				"type": "String"
+			},
+			{
+				"name": "BALSEGPREVFIRSTPMTDATE1",
+				"type": "String"
+			},
+			{
+				"name": "DRAFTNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "TRACERNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DISPOSITIONFEE",
+				"type": "String"
+			},
+			{
+				"name": "TERMINATIONFEE",
+				"type": "String"
+			},
+			{
+				"name": "MISCEXPENSEAMOUNT",
+				"type": "String"
+			}
+		]
 	}
 }
