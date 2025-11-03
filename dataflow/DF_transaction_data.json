@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CH_files",
+						"referenceName": "incomingfilesfolder",
 						"type": "DatasetReference"
 					},
 					"name": "source"
@@ -71,8 +71,6 @@
 				"          PREVAVAILBALANCE as string,",
 				"          SUBSOURCE as string,",
 				"          CONFIRMATIONSEQ as string,",
-				"          MICRACCTNUM as string,",
-				"          MICRRT as string,",
 				"          RECURRINGTRAN as string,",
 				"          FEEEXMTCRTSYAMT as string,",
 				"          ESCROWUNPAIDBALCHG as string,",

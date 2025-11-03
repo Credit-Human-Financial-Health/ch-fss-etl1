@@ -31,7 +31,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookupfile",
+						"activity": "Dataflow",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -172,48 +172,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Lookupfile",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Dataflow",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"modifiedDatetimeStart": {
-								"value": "@activity('Dataflow').output",
-								"type": "Expression"
-							},
-							"modifiedDatetimeEnd": null,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"dataset": {
-						"referenceName": "incomingfilesfolder",
-						"type": "DatasetReference"
-					}
-				}
 			}
 		],
 		"annotations": []
