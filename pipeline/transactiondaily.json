@@ -22,7 +22,32 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH share_ids AS (\n  SELECT\n    share_id\n  FROM fss1.ch_share_account_1\n),\ntransactions_daily AS (\n  SELECT\n    ct.share_id,\n    ct.transaction_date::date AS stat_date,\n    ct.transaction_type_code_id,\n    SUM(ct.transaction_amount) AS total_amount\n  FROM fss1.ch_transaction_1 ct\n  JOIN share_ids csa ON ct.share_id = csa.share_id\n  WHERE ct.transaction_type_code_id IN (1, 2, 3)\n  GROUP BY ct.share_id, stat_date, ct.transaction_type_code_id\n)\nINSERT INTO fss1.share_group_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  share_id,\n  transaction_type_code_id AS financial_stat_type_code_id,\n  stat_date AS date,\n  total_amount AS value\nFROM transactions_daily;"
+							"text": "INSERT INTO fss1.share_group_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\n  SELECT\n    ct.share_id ,\n    ct.transaction_type_code_id AS financial_stat_type_code_id,\n    ct.transaction_date::date AS date,\n    SUM(ct.transaction_amount) AS value\n  FROM fss1.ch_transaction_1 ct\n  WHERE ct.transaction_type_code_id IN (1, 2, 3)\n  GROUP BY ct.share_id, date, ct.transaction_type_code_id"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
