@@ -3,197 +3,16 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Dataflow",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "Asondate",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"userProperties": [],
-				"typeProperties": {
-					"activities": [
-						{
-							"name": "Dataflow",
-							"type": "ExecuteDataFlow",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataflow": {
-									"referenceName": "DF_transaction_data",
-									"type": "DataFlowReference"
-								},
-								"compute": {
-									"coreCount": 32,
-									"computeType": "MemoryOptimized"
-								},
-								"traceLevel": "Fine"
-							}
-						},
-						{
-							"name": "Copy data",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Dataflow",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFileName": "transaction.csv",
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "AzurePostgreSqlSink",
-									"writeBatchSize": 1000000,
-									"writeBatchTimeout": "00:30:00",
-									"writeMethod": "BulkInsert"
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"name": "transaction_date",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "transaction_date",
-												"type": "DateTime",
-												"physicalType": "timestamp without time zone"
-											}
-										},
-										{
-											"source": {
-												"name": "BALANCECHANGE",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "transaction_amount",
-												"type": "Decimal",
-												"physicalType": "numeric"
-											}
-										},
-										{
-											"source": {
-												"name": "NEWBALANCE",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "balance",
-												"type": "Decimal",
-												"physicalType": "numeric"
-											}
-										},
-										{
-											"source": {
-												"name": "DESCRIPTION",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "description",
-												"type": "String",
-												"physicalType": "character varying"
-											}
-										},
-										{
-											"source": {
-												"name": "SOURCECODE",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "payment_method",
-												"type": "String",
-												"physicalType": "character varying"
-											}
-										},
-										{
-											"source": {
-												"name": "transaction_code",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "transaction_type_code_id",
-												"type": "Int32",
-												"physicalType": "integer"
-											}
-										},
-										{
-											"source": {
-												"name": "PWC_Key",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "share_id",
-												"type": "Int64",
-												"physicalType": "bigint"
-											}
-										}
-									],
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "incomingfilesfolder",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "transaction",
-									"type": "DatasetReference"
-								}
-							]
-						}
-					]
-				}
-			},
-			{
-				"name": "Get Metadata1",
-				"type": "GetMetadata",
-				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -201,9 +20,222 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_transaction_data",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 32,
+						"computeType": "MemoryOptimized"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "CopyDataActivity",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Dataflow",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "transaction.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzurePostgreSqlSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"preCopyScript": {
+							"value": "UPDATE fss1.watermark_table\nSET date = CAST('@{variables('currentDateTime')}' AS TIMESTAMPTZ),\n    lines_copied = @{variables('rowsCopied')}\nWHERE source_table = 'ch_transaction_1 ct';",
+							"type": "Expression"
+						},
+						"writeMethod": "BulkInsert"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "transaction_date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_date",
+									"type": "DateTime",
+									"physicalType": "timestamp without time zone"
+								}
+							},
+							{
+								"source": {
+									"name": "BALANCECHANGE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_amount",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"source": {
+									"name": "NEWBALANCE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "balance",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"source": {
+									"name": "DESCRIPTION",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "description",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "SOURCECODE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "payment_method",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "transaction_code",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "transaction_type_code_id",
+									"type": "Int32",
+									"physicalType": "integer"
+								}
+							},
+							{
+								"source": {
+									"name": "PWC_Key",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "share_id",
+									"type": "Int64",
+									"physicalType": "bigint"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "incomingfilesfolder",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "transaction",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Asondate",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "currentDateTime",
+					"value": {
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "rowsCopied",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "CopyDataActivity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "rowsCopied",
+					"value": {
+						"value": "@activity('CopyDataActivity').output.rowscopied",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"currentDateTime": {
+				"type": "String",
+				"defaultValue": "@utcNow()"
+			},
+			"rowsCopied": {
+				"type": "String",
+				"defaultValue": "@string(activity('CopyDataActivity').output.rowsCopied)"
+			}
+		},
 		"annotations": []
 	}
 }
