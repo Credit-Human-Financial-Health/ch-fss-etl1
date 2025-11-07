@@ -94,8 +94,8 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "fss1",
-			"table": "ch_transaction_1"
+			"schema": "ch_fss",
+			"table": "transaction"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

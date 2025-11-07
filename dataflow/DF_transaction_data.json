@@ -29,6 +29,9 @@
 			"transformations": [
 				{
 					"name": "CombineDateTime"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -100,7 +103,7 @@
 				"     ignoreNoFilesFound: false,",
 				"     partitionBy('hash', 1)) ~> source",
 				"source derive(transaction_date = toTimestamp(\r",
-				"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME)),\r",
+				"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME, 'HH:mm')),\r",
 				"  'yyyy-MM-dd HH:mm:ss.SSS'\r",
 				"),",
 				"          transaction_code = case(\r",
@@ -108,8 +111,10 @@
 				"  toString(SOURCECODE) == 'F', 3,\r",
 				"  toString(ACTIONCODE) == 'W', 2\r",
 				"),",
+				"          Transaction_amount = toInteger(BALANCECHANGE),",
 				"     partitionBy('hash', 1)) ~> CombineDateTime",
-				"CombineDateTime sink(allowSchemaDrift: true,",
+				"CombineDateTime filter(Transaction_amount != 0) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          PWC_Key as string,",

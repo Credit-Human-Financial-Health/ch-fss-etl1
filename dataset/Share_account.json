@@ -112,8 +112,8 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "fss1",
-			"table": "ch_share_account_1"
+			"schema": "ch_fss",
+			"table": "share_account"
 		}
 	}
 }
