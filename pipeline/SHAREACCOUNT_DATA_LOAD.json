@@ -1,5 +1,5 @@
 {
-	"name": "DF_SHAREACCOUNT",
+	"name": "SHAREACCOUNT_DATA_LOAD",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_share_account",
+						"referenceName": "Transformation_share_account",
 						"type": "DataFlowReference"
 					},
 					"compute": {

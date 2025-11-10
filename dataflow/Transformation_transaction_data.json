@@ -1,5 +1,5 @@
 {
-	"name": "DF_transaction_data",
+	"name": "Transformation_transaction_data",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

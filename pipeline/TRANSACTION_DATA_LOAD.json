@@ -1,5 +1,5 @@
 {
-	"name": "DF_TRANSACTION",
+	"name": "TRANSACTION_DATA_LOAD",
 	"properties": {
 		"activities": [
 			{
@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_transaction_data",
+						"referenceName": "Transformation_transaction_data",
 						"type": "DataFlowReference"
 					},
 					"compute": {

@@ -1,5 +1,5 @@
 {
-	"name": "DF_share_account",
+	"name": "Transformation_share_account",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

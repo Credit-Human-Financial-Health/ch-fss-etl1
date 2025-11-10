@@ -1,5 +1,5 @@
 {
-	"name": "DF_MEMBERACCOUNT",
+	"name": "MEMBERACCOUNT_DATA_LOAD",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_Member_account",
+						"referenceName": "Transformation_Member_account",
 						"type": "DataFlowReference"
 					},
 					"compute": {
