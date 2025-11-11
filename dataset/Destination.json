@@ -1,10 +1,6 @@
 {
 	"name": "Destination",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
-			"type": "LinkedServiceReference"
-		},
 		"parameters": {
 			"dest_filename": {
 				"type": "string"
@@ -13,14 +9,6 @@
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
-			"location": {
-				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().dest_filename",
-					"type": "Expression"
-				},
-				"container": "archive"
-			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,

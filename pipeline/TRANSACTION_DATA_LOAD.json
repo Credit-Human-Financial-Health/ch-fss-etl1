@@ -82,101 +82,76 @@
 							{
 								"source": {
 									"name": "transaction_date",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "transaction_date",
-									"type": "DateTime",
-									"physicalType": "timestamp without time zone"
+									"type": "DateTime"
 								}
 							},
 							{
 								"source": {
 									"name": "Transaction_amount",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "transaction_amount",
-									"type": "Decimal",
-									"physicalType": "numeric"
+									"type": "Decimal"
 								}
 							},
 							{
 								"source": {
 									"name": "DESCRIPTION",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "description",
-									"type": "String",
-									"physicalType": "character varying"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "SOURCECODE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "payment_method",
-									"type": "String",
-									"physicalType": "character varying"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "transaction_code",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "transaction_type_code_id",
-									"type": "Int32",
-									"physicalType": "integer"
+									"type": "Int32"
 								}
 							},
 							{
 								"source": {
 									"name": "PWC_Key",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "share_id",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
 									"name": "NEWBALANCE",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "balance",
-									"type": "Decimal",
-									"physicalType": "numeric"
+									"type": "Decimal"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
-				"inputs": [
-					{
-						"referenceName": "incomingfilesfolder",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
 						"referenceName": "transaction",
