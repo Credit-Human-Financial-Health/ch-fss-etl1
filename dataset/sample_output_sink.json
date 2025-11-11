@@ -1,5 +1,5 @@
 {
-	"name": "AzurePostgreSqlTable1",
+	"name": "sample_output_sink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzurePostgreSql1",
