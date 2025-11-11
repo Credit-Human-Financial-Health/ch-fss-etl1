@@ -3,10 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "transactiondaily",
+				"name": "transaction_daily",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -31,13 +29,11 @@
 				}
 			},
 			{
-				"name": "endingbal_cal",
+				"name": "ending_bal_cal",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "transactiondaily",
+						"activity": "transaction_daily",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -68,11 +64,9 @@
 			{
 				"name": "avg_multiple_dates",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "endingbal_cal",
+						"activity": "ending_bal_cal",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -103,8 +97,6 @@
 			{
 				"name": "slack_score_with_fee",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "avg_multiple_dates",
@@ -138,8 +130,6 @@
 			{
 				"name": "slack score without fee",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "slack_score_with_fee",
@@ -173,8 +163,6 @@
 			{
 				"name": "spot slack",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "slack score without fee",
@@ -208,8 +196,6 @@
 			{
 				"name": "flow slack",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "spot slack",
