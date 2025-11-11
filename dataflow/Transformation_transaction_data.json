@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "transactiondataflow",
+						"referenceName": "sample_output",
 						"type": "DatasetReference"
 					},
 					"name": "source"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "transactiondataflow",
+						"referenceName": "sample_output",
 						"type": "DatasetReference"
 					},
 					"name": "sink",

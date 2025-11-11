@@ -1,5 +1,5 @@
 {
-	"name": "transactiondataflow",
+	"name": "sample_output",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PWC_Extract_SavingsTransaction_2025_10_24.csv",
-				"container": "incomingfiles"
+				"fileName": "PwC_Extract_Sample_Output_2025_10_21.csv",
+				"container": "sampleoutput"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
