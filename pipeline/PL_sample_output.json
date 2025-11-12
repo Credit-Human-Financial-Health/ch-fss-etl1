@@ -342,7 +342,7 @@
 				"typeProperties": {
 					"variableName": "status",
 					"value": {
-						"value": "@activity('Copy data').output.sink.status\n",
+						"value": "@activity('Copy data').output.status\n",
 						"type": "Expression"
 					}
 				}
