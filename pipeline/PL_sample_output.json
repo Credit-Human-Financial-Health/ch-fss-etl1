@@ -20,50 +20,26 @@
 				}
 			},
 			{
-				"name": "End_time",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Copy data",
-						"dependencyConditions": [
-							"Succeeded",
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "End_time",
-					"value": {
-						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "start_audit",
 				"type": "Script",
 				"dependsOn": [
 					{
 						"activity": "End_time",
 						"dependencyConditions": [
+							"Completed",
 							"Succeeded"
 						]
 					},
 					{
 						"activity": "status",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					},
 					{
 						"activity": "error_message",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -84,7 +60,7 @@
 						{
 							"type": "NonQuery",
 							"text": {
-								"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{variables('error_message')}',\n  '@{variables('status')}'\n)",
+								"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{variables('status')}',\n  '@{variables('error_message')}'\n)",
 								"type": "Expression"
 							}
 						}
@@ -323,14 +299,13 @@
 				]
 			},
 			{
-				"name": "status",
+				"name": "End_time",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
 						"activity": "Copy data",
 						"dependencyConditions": [
-							"Completed",
-							"Failed"
+							"Completed"
 						]
 					}
 				],
@@ -340,9 +315,9 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "status",
+					"variableName": "End_time",
 					"value": {
-						"value": "@activity('Copy data').output.status\n",
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 						"type": "Expression"
 					}
 				}
@@ -366,7 +341,32 @@
 				"typeProperties": {
 					"variableName": "status",
 					"value": {
-						"value": "@activity('Copy data').output.Error.message",
+						"value": "@{activity('Copy data').Error.message}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "status",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy data",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": {
+						"value": "@{activity('Copy data').status}",
 						"type": "Expression"
 					}
 				}
@@ -383,7 +383,7 @@
 				"type": "String"
 			},
 			"error_message": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": [],
