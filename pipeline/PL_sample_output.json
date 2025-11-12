@@ -14,7 +14,7 @@
 				"typeProperties": {
 					"variableName": "Start_time",
 					"value": {
-						"value": "@utcNow()",
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 						"type": "Expression"
 					}
 				}
@@ -39,7 +39,7 @@
 				"typeProperties": {
 					"variableName": "End_time",
 					"value": {
-						"value": "@utcNow()",
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 						"type": "Expression"
 					}
 				}
@@ -73,7 +73,7 @@
 						{
 							"type": "NonQuery",
 							"text": {
-								"value": "insert into fss.pipelinerunstatus values ('@{pipeline().Pipeline}','{pipeline().RunId}','{(pipeline().TriggerTime)}',\n'@{pipeline().TriggerType}',sub('@{variables('Start_time')}','@{variables('End_time')}'))",
+								"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}'\n)",
 								"type": "Expression"
 							}
 						}
