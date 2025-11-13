@@ -1,18 +1,26 @@
 {
-	"name": "dataflow1",
+	"name": "member_stories",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
-					"name": "source1"
+					"name": "source"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"     validateSchema: false,",
+				"     partitionBy('hash', 1)) ~> source",
+				"source derive(cleanedtext = ERROR_FUNCTION('trim(replace(replace(, __SINGLE_QUOTE__***__SINGLE_QUOTE__, __SINGLE_QUOTE____SINGLE_QUOTE__), __SINGLE_QUOTE__.__SINGLE_QUOTE__, __SINGLE_QUOTE____SINGLE_QUOTE__))'),",
+				"          column1 = ERROR_FUNCTION(''),",
+				"     partitionBy('hash', 1)) ~> derivedColumn1"
 			]
 		}
 	}

@@ -1,0 +1,34 @@
+{
+	"name": "member_stories",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "synapsys_sample (002).xlsx",
+				"container": "incomingfiles"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "DetailEntryValue",
+				"type": "String"
+			},
+			{
+				"name": "Value",
+				"type": "String"
+			}
+		]
+	}
+}
