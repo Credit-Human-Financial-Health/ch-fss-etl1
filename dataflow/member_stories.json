@@ -18,19 +18,16 @@
 						"referenceName": "member_stories_sink",
 						"type": "DatasetReference"
 					},
-					"name": "sink"
-				},
-				{
-					"dataset": {
-						"referenceName": "member_stories_sink",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
+					"name": "sink",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureBlobStorage1",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "derivedColumn2"
 				},
 				{
 					"name": "flatten1"
@@ -39,16 +36,10 @@
 					"name": "filter1"
 				},
 				{
-					"name": "derivedColumn2"
-				},
-				{
-					"name": "filter2"
-				},
-				{
-					"name": "flatten2"
-				},
-				{
 					"name": "derivedColumn3"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -61,50 +52,49 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     partitionBy('hash', 1)) ~> source",
-				"source derive(comments_array = split(Comments, '***'),",
-				"     partitionBy('hash', 1)) ~> derivedColumn1",
-				"derivedColumn1 foldDown(unroll(comments_array),",
-				"     mapColumn(",
-				"          Comments,",
-				"          DetailEntryValue,",
-				"          Value,",
-				"          comments_array",
-				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten2 filter(startsWith(comments_array, 'Added by:')) ~> filter1",
-				"filter1 derive(fsh_name = substring(\r",
-				"    comments_array,\r",
-				"    locate('Added by: ', comments_array) + length('Added by: '),\r",
-				"    locate(' - ', comments_array) - (locate('Added by: ', comments_array) + length('Added by: '))\r",
+				"source derive(fsh_name = substring(\r",
+				"    Comments,\r",
+				"    locate('Added by: ', Comments) + length('Added by: '),\r",
+				"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
 				"),",
 				"          id = substring(\r",
-				"    comments_array,\r",
-				"    locate(' - ', comments_array) + length(' - '),\r",
-				"    locate(' -- ', comments_array) - (locate(' - ', comments_array) + length(' - '))\r",
+				"    Comments,\r",
+				"    locate(' - ', Comments) + length(' - '),\r",
+				"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
 				"),",
 				"          branch_id = substring(\r",
-				"    comments_array,\r",
-				"    locate(' -- ', comments_array) + length(' -- '),\r",
-				"    locate(' On: ', comments_array) - (locate(' -- ', comments_array) + length(' -- '))\r",
+				"    Comments,\r",
+				"    locate(' -- ', Comments) + length(' -- '),\r",
+				"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
 				"),",
 				"          story_date = substring(\r",
 				"    Comments,\r",
 				"    locate('On: ', Comments) + length('On: '),\r",
 				"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
-				")) ~> derivedColumn2",
-				"flatten1 filter(!startsWith(comments_array, 'Added by:') && length(replace(comments_array, ' ', '')) > 0) ~> filter2",
-				"derivedColumn1 foldDown(unroll(comments_array),",
+				"),",
+				"          comments_array = split(Comments, '***')) ~> derivedColumn2",
+				"derivedColumn2 foldDown(unroll(comments_array),",
 				"     mapColumn(",
 				"          Comments,",
 				"          DetailEntryValue,",
 				"          Value,",
+				"          fsh_name,",
+				"          id,",
+				"          branch_id,",
+				"          story_date,",
 				"          comments_array",
 				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten2",
-				"filter2 derive(story_reason = comments_array) ~> derivedColumn3",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> flatten1",
+				"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
+				"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
+				"flatten1 derive(story_id = id,",
+				"          story_reason = comments_array,",
+				"          story_date = toTimestamp(story_date, 'yyyy-MM-dd HH:mm:ss')) ~> derivedColumn3",
+				"filter1 keyGenerate(output(story_id as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          story_id as long,",
@@ -122,38 +112,15 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
+				"          story_id,",
 				"          story_date,",
-				"          fhs_name = fsh_name,",
-				"          fhs_id = id,",
-				"          branch_id",
-				"     )) ~> sink",
-				"derivedColumn3 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          story_id as long,",
-				"          story_date as timestamp,",
-				"          story_reason as string,",
-				"          story_details as string,",
-				"          fhs_name as string,",
-				"          fhs_id as string,",
-				"          branch_id as string,",
-				"          account_id as integer,",
-				"          story_source_type_code_id as integer",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
 				"          story_details = Value,",
+				"          fhs_name = fsh_name,",
+				"          fhs_id = story_id,",
+				"          branch_id,",
 				"          story_reason",
-				"     )) ~> sink1"
+				"     )) ~> sink"
 			]
 		}
 	}

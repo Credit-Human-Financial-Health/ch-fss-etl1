@@ -1,0 +1,19 @@
+{
+	"name": "member_story",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "sampleoutput"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
