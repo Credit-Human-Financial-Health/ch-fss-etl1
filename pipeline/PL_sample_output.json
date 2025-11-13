@@ -26,8 +26,8 @@
 					{
 						"activity": "End_time",
 						"dependencyConditions": [
-							"Completed",
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -289,7 +289,15 @@
 			{
 				"name": "End_time",
 				"type": "SetVariable",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy data",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
 				"policy": {
 					"secureOutput": false,
 					"secureInput": false
