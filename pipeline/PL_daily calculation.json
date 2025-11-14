@@ -5,7 +5,14 @@
 			{
 				"name": "transaction_daily",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Start_time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -31,7 +38,14 @@
 			{
 				"name": "ending_bal_cal",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "transaction_daily",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -53,8 +67,33 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "Start_time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Start_time",
+					"value": {
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"Start_time": {
+				"type": "String"
+			},
+			"End_time": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
