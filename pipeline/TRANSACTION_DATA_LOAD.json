@@ -206,7 +206,7 @@
 				"typeProperties": {
 					"variableName": "rowsCopied",
 					"value": {
-						"value": "@activity('CopyDataActivity').output.rowscopied",
+						"value": "@activity('copy_transaction_csv').output.rowscopied",
 						"type": "Expression"
 					}
 				}
