@@ -145,7 +145,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "LastProcessedYear",
-								"value": "@int(activity('LookupMinTransactionDate').output.firstRow.min_year)"
+								"value": {
+									"value": "@if(empty(activity('LookupWatermark').output.value), 0, int(activity('LookupWatermark').output.value[0].last_processed_year))",
+									"type": "Expression"
+								}
 							}
 						},
 						{
@@ -166,31 +169,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "LastProcessedMonth",
-								"value": "@int(activity('LookupMinTransactionDate').output.firstRow.min_month)"
+								"value": {
+									"value": "@if(\n  empty(activity('LookupWatermark').output.value), \n  0, \n  int(activity('LookupWatermark').output.value[0].last_processed_month)\n)",
+									"type": "Expression"
+								}
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "SetNextProcessingDate",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "IsFirstRun",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "NextProcessingDate",
-					"value": ""
 				}
 			}
 		],
