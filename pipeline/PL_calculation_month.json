@@ -57,14 +57,7 @@
 						{
 							"name": "Execute Pipeline1",
 							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Script1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"secureInput": false
 							},
@@ -75,32 +68,6 @@
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true
-							}
-						},
-						{
-							"name": "Script1",
-							"type": "Script",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"linkedServiceName": {
-								"referenceName": "AzurePostgreSql1",
-								"type": "LinkedServiceReference"
-							},
-							"typeProperties": {
-								"scripts": [
-									{
-										"type": "NonQuery",
-										"text": "WHERE date_trunc('month', transaction_date) = CAST('@{item().month_start}' AS timestamp)"
-									}
-								],
-								"scriptBlockExecutionTimeout": "02:00:00"
 							}
 						}
 					]
@@ -192,12 +159,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"month_start": {
-				"type": "string",
-				"defaultValue": "@item().month_start"
-			}
-		},
 		"variables": {
 			"Start_time": {
 				"type": "String"
