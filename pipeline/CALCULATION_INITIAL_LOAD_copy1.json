@@ -5,14 +5,7 @@
 			{
 				"name": "transaction_daily",
 				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "LookupMonthsArray",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -30,7 +23,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,  -- date type column\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_type_code_id IN (1, 2, 3)\n  AND t.transaction_date >= @{pipeline().parameters.month_start}::date\n  AND t.transaction_date < @{pipeline().parameters.month_end}::date\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;",
+								"value": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= CAST(@{pipeline().parameters.month_start} AS date)\n  AND t.transaction_date::date < CAST(to_timestamp(@{pipeline().parameters.month_start}) AS date)\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;",
 								"type": "Expression"
 							}
 						}
@@ -103,40 +96,16 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
-			},
-			{
-				"name": "LookupMonthsArray",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzurePostgreSqlSource",
-						"query": "WITH bounds AS (\n  SELECT \n    date_trunc('month', MIN(transaction_date))::date AS min_month,\n    date_trunc('month', MAX(transaction_date))::date AS max_month\n  FROM ch_fss.\"transaction\"\n),\nmonths AS (\n  SELECT \n    generate_series(min_month, max_month, interval '1 month')::date AS month_start\n  FROM bounds\n)\nSELECT \n  month_start,\n  (month_start + INTERVAL '1 month' - INTERVAL '1 day')::date AS month_end\nFROM months\nORDER BY month_start;",
-						"partitionOption": "None",
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "transaction",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
 			}
 		],
 		"parameters": {
 			"month_start": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().month_start"
 			},
 			"month_end": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().month_end"
 			}
 		},
 		"annotations": []

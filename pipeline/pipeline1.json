@@ -5,8 +5,6 @@
 			{
 				"name": "slack_score_with_fee",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -24,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 8\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE\n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  share_id,\n  9,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
+							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and  financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE\n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  share_id,\n  9,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -33,9 +31,14 @@
 			{
 				"name": "slack score without fee",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "slack_score_with_fee",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -52,7 +55,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (7, 8)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
+							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (7,8)\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -61,9 +64,14 @@
 			{
 				"name": "spot slack",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "slack score without fee",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -80,7 +88,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 4\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
+							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -89,9 +97,14 @@
 			{
 				"name": "flow slack",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "spot slack",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -108,7 +121,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 6\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.income, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  11,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
+							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5,7)\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 6\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.income, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  11,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -117,9 +130,14 @@
 			{
 				"name": "stock slack",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "flow slack",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -136,7 +154,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 8\n    AND date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.balance, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  13,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
+							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5,7)\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.balance, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  13,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
