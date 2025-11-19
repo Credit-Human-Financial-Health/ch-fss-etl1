@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "member_details_csv",
 				"container": "sampleoutput"
 			},
 			"columnDelimiter": "|",
@@ -19,123 +20,127 @@
 		},
 		"schema": [
 			{
+				"name": "add_date",
+				"type": "String"
+			},
+			{
 				"name": "PWC_Key",
 				"type": "String"
 			},
 			{
-				"name": "Shr",
+				"name": "ORDINAL",
 				"type": "String"
 			},
 			{
-				"name": "Beg Balance",
+				"name": "TYPE",
 				"type": "String"
 			},
 			{
-				"name": "#Dep",
+				"name": "SUBTYPE",
 				"type": "String"
 			},
 			{
-				"name": "Dep Amount",
+				"name": "MAILOVERRIDE",
 				"type": "String"
 			},
 			{
-				"name": "#With",
+				"name": "SSNOVERRIDE",
 				"type": "String"
 			},
 			{
-				"name": "With Amount",
+				"name": "SSNCERTIFICATION",
 				"type": "String"
 			},
 			{
-				"name": "# Dep External Transfers",
+				"name": "SSNTYPE",
 				"type": "String"
 			},
 			{
-				"name": "Dep External Transfers Bal",
+				"name": "EFFECTIVEDATE",
 				"type": "String"
 			},
 			{
-				"name": "# With External Transfers",
+				"name": "EXPIRATIONDATE",
 				"type": "String"
 			},
 			{
-				"name": "With External Transfers Bal",
+				"name": "FirstName",
 				"type": "String"
 			},
 			{
-				"name": "# Dep Internal Transfers",
+				"name": "MiddleName",
 				"type": "String"
 			},
 			{
-				"name": "Dep Internal Transfers Bal",
+				"name": "LastName",
 				"type": "String"
 			},
 			{
-				"name": "# With Internal Transfers",
+				"name": "SUFFIX",
 				"type": "String"
 			},
 			{
-				"name": "With Internal Transfers Bal",
+				"name": "EXTRAADDRESS",
 				"type": "String"
 			},
 			{
-				"name": "# NSF CP Fees",
+				"name": "STREET",
 				"type": "String"
 			},
 			{
-				"name": "NSF CP Fees Amt",
+				"name": "CITY",
 				"type": "String"
 			},
 			{
-				"name": "End Balance",
+				"name": "STATE",
 				"type": "String"
 			},
 			{
-				"name": "Monthly Avg Balance",
+				"name": "ZIPCODE",
 				"type": "String"
 			},
 			{
-				"name": "SType",
+				"name": "LASTFMDATE",
 				"type": "String"
 			},
 			{
-				"name": "Description",
+				"name": "CARRIERROUTE",
 				"type": "String"
 			},
 			{
-				"name": "City",
+				"name": "ADDRESSTYPE",
 				"type": "String"
 			},
 			{
-				"name": "State",
+				"name": "DEATHDATE",
 				"type": "String"
 			},
 			{
-				"name": "Zip",
+				"name": "ECOACODE",
 				"type": "String"
 			},
 			{
-				"name": "YMbr",
+				"name": "COUNTRY",
 				"type": "String"
 			},
 			{
-				"name": "Age",
+				"name": "COUNTRYCODE",
 				"type": "String"
 			},
 			{
-				"name": "Orig Branch",
+				"name": "RECORDCHANGEDATE",
 				"type": "String"
 			},
 			{
-				"name": "Cur Branch",
+				"name": "MBRSTATUS",
 				"type": "String"
 			},
 			{
-				"name": "Aggr Daily End Bal",
+				"name": "MBRSTATUSFMDATE",
 				"type": "String"
 			},
 			{
-				"name": "# of Days Open During Month",
+				"name": "MBRCREATEDATE",
 				"type": "String"
 			}
 		]

@@ -156,7 +156,8 @@
 						"mappings": [
 							{
 								"source": {
-									"name": ""
+									"name": "PWC_Key",
+									"type": "String"
 								},
 								"sink": {
 									"name": "member_id",
@@ -164,12 +165,94 @@
 									"physicalType": "integer"
 								}
 							},
-							null,
-							null,
-							null,
-							null,
-							null,
-							null
+							{
+								"source": {
+									"name": "FirstName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "LastName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "last_name",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "STREET",
+									"type": "String"
+								},
+								"sink": {
+									"name": "address",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "CITY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "city",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "STATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "state",
+									"type": "String",
+									"physicalType": "character"
+								}
+							},
+							{
+								"source": {
+									"name": "ZIPCODE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "zip_code",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "MBRSTATUS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "status",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "MBRCREATEDATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "start_date",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
 						],
 						"typeConversion": true,
 						"typeConversionSettings": {

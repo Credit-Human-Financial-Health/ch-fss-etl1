@@ -32,6 +32,9 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -100,20 +103,21 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     partitionBy('hash', 1)) ~> source",
-				"source derive(transaction_date = toTimestamp(\r",
-				"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME, 'HH:mm')),\r",
-				"  'yyyy-MM-dd HH:mm'\r",
-				"),",
-				"          transaction_code = case(\r",
+				"     ignoreNoFilesFound: false) ~> source",
+				"source derive(transaction_code = case(\r",
 				"  toString(ACTIONCODE) == 'D', 1,\r",
 				"  toString(SOURCECODE) == 'F', 3,\r",
 				"  toString(ACTIONCODE) == 'W', 2\r",
 				"),",
 				"          Transaction_amount = toInteger(BALANCECHANGE),",
+				"          post_time = lpad(toString(POSTTIME), 4, '0'),",
 				"     partitionBy('hash', 1)) ~> CombineDateTime",
-				"CombineDateTime filter(Transaction_amount != 0) ~> filter1",
+				"derivedColumn1 filter(Transaction_amount != 0) ~> filter1",
+				"CombineDateTime derive(transaction_date = toTimestamp(\r",
+				"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME, 'HH:mm')),\r",
+				"  'yyyy-MM-dd HH:mm'\r",
+				"),",
+				"     partitionBy('hash', 1)) ~> derivedColumn1",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
