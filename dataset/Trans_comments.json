@@ -1,0 +1,60 @@
+{
+	"name": "Trans_comments",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "PWC_Trans_comment_2025_10_31.csv",
+				"container": "incomingfiles"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "TranId",
+				"type": "String"
+			},
+			{
+				"name": "CommentID",
+				"type": "String"
+			},
+			{
+				"name": "PARENTID",
+				"type": "String"
+			},
+			{
+				"name": "SEQUENCENUMBER",
+				"type": "String"
+			},
+			{
+				"name": "EFFECTIVEDATE",
+				"type": "String"
+			},
+			{
+				"name": "POSTDATE",
+				"type": "String"
+			},
+			{
+				"name": "POSTTIME",
+				"type": "String"
+			},
+			{
+				"name": "Comment",
+				"type": "String"
+			},
+			{
+				"name": "PWC_Key",
+				"type": "String"
+			}
+		]
+	}
+}

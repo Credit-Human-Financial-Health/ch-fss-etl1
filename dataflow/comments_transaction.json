@@ -1,0 +1,35 @@
+{
+	"name": "comments_transaction",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Trans_comments",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          TranId as string,",
+				"          CommentID as string,",
+				"          PARENTID as string,",
+				"          SEQUENCENUMBER as string,",
+				"          EFFECTIVEDATE as string,",
+				"          POSTDATE as string,",
+				"          POSTTIME as string,",
+				"          Comment as string,",
+				"          PWC_Key as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1"
+			]
+		}
+	}
+}

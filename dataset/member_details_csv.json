@@ -1,0 +1,27 @@
+{
+	"name": "member_details_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "sampleoutput"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PWC_Key|Shr|Beg Balance|#Dep|Dep Amount|#With|With Amount|# Dep External Transfers|Dep External Transfers Bal|# With External Transfers|With External Transfers Bal|# Dep Internal Transfers|Dep Internal Transfers Bal|# With Internal Transfers|With Internal Transfers Bal|# NSF CP Fees|NSF CP Fees Amt|End Balance|Monthly Avg Balance|SType|Description|City|State|Zip|YMbr|Age|Orig Branch|Cur Branch|Aggr Daily End Bal|# of Days Open During Month",
+				"type": "String"
+			}
+		]
+	}
+}

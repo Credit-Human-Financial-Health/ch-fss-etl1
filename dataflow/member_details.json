@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "member_details_sink",
+						"referenceName": "member_details_csv",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -24,9 +24,6 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
-				},
-				{
-					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -79,41 +76,12 @@
 				"          status = toString(MBRSTATUS),",
 				"          start_date = toDate(trim(replace(MBRCREATEDATE, ' +00', '')), 'yyyy-MM-dd'),",
 				"          member_id = toInteger(PWC_Key, '[^0-9]', '')) ~> derivedColumn1",
-				"derivedColumn1 derive(first_name = iif(isNull(name) || length(trim(name)) == 0, 'Unknown', replace(name, '\\u0000', ''))) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          member_id as integer,",
-				"          name as string,",
-				"          last_name as string,",
-				"          date_of_birth as date,",
-				"          ssn as string,",
-				"          address as string,",
-				"          city as string,",
-				"          state as string,",
-				"          zip_code as string,",
-				"          phone as string,",
-				"          email as string,",
-				"          branch as string,",
-				"          status as string,",
-				"          start_date as date",
+				"          {PWC_Key|Shr|Beg Balance|#Dep|Dep Amount|#With|With Amount|# Dep External Transfers|Dep External Transfers Bal|# With External Transfers|With External Transfers Bal|# Dep Internal Transfers|Dep Internal Transfers Bal|# With Internal Transfers|With Internal Transfers Bal|# NSF CP Fees|NSF CP Fees Amt|End Balance|Monthly Avg Balance|SType|Description|City|State|Zip|YMbr|Age|Orig Branch|Cur Branch|Aggr Daily End Bal|# of Days Open During Month} as string",
 				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     mapColumn(",
-				"          member_id,",
-				"          name = first_name,",
-				"          last_name = {last_name     },",
-				"          address,",
-				"          city = derivedColumn1@city,",
-				"          state = derivedColumn1@state,",
-				"          zip_code,",
-				"          status,",
-				"          start_date",
-				"     ),",
+				"     partitionFileNames:['member_details_csv'],",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
