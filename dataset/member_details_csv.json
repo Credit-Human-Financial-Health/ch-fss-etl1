@@ -19,7 +19,123 @@
 		},
 		"schema": [
 			{
-				"name": "PWC_Key|Shr|Beg Balance|#Dep|Dep Amount|#With|With Amount|# Dep External Transfers|Dep External Transfers Bal|# With External Transfers|With External Transfers Bal|# Dep Internal Transfers|Dep Internal Transfers Bal|# With Internal Transfers|With Internal Transfers Bal|# NSF CP Fees|NSF CP Fees Amt|End Balance|Monthly Avg Balance|SType|Description|City|State|Zip|YMbr|Age|Orig Branch|Cur Branch|Aggr Daily End Bal|# of Days Open During Month",
+				"name": "PWC_Key",
+				"type": "String"
+			},
+			{
+				"name": "Shr",
+				"type": "String"
+			},
+			{
+				"name": "Beg Balance",
+				"type": "String"
+			},
+			{
+				"name": "#Dep",
+				"type": "String"
+			},
+			{
+				"name": "Dep Amount",
+				"type": "String"
+			},
+			{
+				"name": "#With",
+				"type": "String"
+			},
+			{
+				"name": "With Amount",
+				"type": "String"
+			},
+			{
+				"name": "# Dep External Transfers",
+				"type": "String"
+			},
+			{
+				"name": "Dep External Transfers Bal",
+				"type": "String"
+			},
+			{
+				"name": "# With External Transfers",
+				"type": "String"
+			},
+			{
+				"name": "With External Transfers Bal",
+				"type": "String"
+			},
+			{
+				"name": "# Dep Internal Transfers",
+				"type": "String"
+			},
+			{
+				"name": "Dep Internal Transfers Bal",
+				"type": "String"
+			},
+			{
+				"name": "# With Internal Transfers",
+				"type": "String"
+			},
+			{
+				"name": "With Internal Transfers Bal",
+				"type": "String"
+			},
+			{
+				"name": "# NSF CP Fees",
+				"type": "String"
+			},
+			{
+				"name": "NSF CP Fees Amt",
+				"type": "String"
+			},
+			{
+				"name": "End Balance",
+				"type": "String"
+			},
+			{
+				"name": "Monthly Avg Balance",
+				"type": "String"
+			},
+			{
+				"name": "SType",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "City",
+				"type": "String"
+			},
+			{
+				"name": "State",
+				"type": "String"
+			},
+			{
+				"name": "Zip",
+				"type": "String"
+			},
+			{
+				"name": "YMbr",
+				"type": "String"
+			},
+			{
+				"name": "Age",
+				"type": "String"
+			},
+			{
+				"name": "Orig Branch",
+				"type": "String"
+			},
+			{
+				"name": "Cur Branch",
+				"type": "String"
+			},
+			{
+				"name": "Aggr Daily End Bal",
+				"type": "String"
+			},
+			{
+				"name": "# of Days Open During Month",
 				"type": "String"
 			}
 		]
