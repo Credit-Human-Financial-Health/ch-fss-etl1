@@ -31,8 +31,8 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          TranId as integer,",
-				"          CommentID as integer,",
+				"          TranId as string,",
+				"          CommentID as string,",
 				"          PARENTID as integer,",
 				"          SEQUENCENUMBER as string,",
 				"          EFFECTIVEDATE as string,",
@@ -44,7 +44,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(transaction_id = toString(PWC_Key) + toString(CommentID),",
+				"source1 derive(comment_id = concat(TranId, CommentID),",
 				"          time = lpad(toString(POSTTIME), 4, '0')) ~> derivedColumn1",
 				"derivedColumn1 derive(post_date = concat(\r",
 				"  toString(POSTDATE, 'yyyy-MM-dd'), \r",
@@ -74,10 +74,10 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
-				"          comment_id = CommentID,",
+				"          comment_id,",
 				"          post_date,",
 				"          comment_value = Comment,",
-				"          transaction_id",
+				"          transaction_id = TranId",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
