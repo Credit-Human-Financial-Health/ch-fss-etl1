@@ -24,6 +24,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -34,15 +37,23 @@
 				"          SEQUENCENUMBER as string,",
 				"          EFFECTIVEDATE as string,",
 				"          POSTDATE as date,",
-				"          POSTTIME as timestamp,",
+				"          POSTTIME as string,",
 				"          Comment as string,",
 				"          PWC_Key as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(comment_id = toString(PWC_Key) + toString(CommentID)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(transaction_id = toString(PWC_Key) + toString(CommentID),",
+				"          time = lpad(toString(POSTTIME), 4, '0')) ~> derivedColumn1",
+				"derivedColumn1 derive(post_date = concat(\r",
+				"  toString(POSTDATE, 'yyyy-MM-dd'), \r",
+				"  ' ', \r",
+				"  substring(lpad(toString(time), 4, '0'), 0, 2), \r",
+				"  ':', \r",
+				"  substring(lpad(toString(time), 4, '0'), 2, 2)\r",
+				")) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          comment_id as long,",
@@ -61,6 +72,12 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          comment_id = CommentID,",
+				"          post_date,",
+				"          comment_value = Comment,",
+				"          transaction_id",
+				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}

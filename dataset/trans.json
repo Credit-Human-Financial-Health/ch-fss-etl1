@@ -1,5 +1,5 @@
 {
-	"name": "1_transaction_csv",
+	"name": "trans",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "transaction.csv",
+				"fileName": "PWC_Trans_2025_10_31.csv",
 				"container": "incomingfiles"
 			},
 			"columnDelimiter": "|",
@@ -81,26 +81,6 @@
 			},
 			{
 				"name": "PWC_key",
-				"type": "String"
-			},
-			{
-				"name": "transaction_code",
-				"type": "String"
-			},
-			{
-				"name": "Transaction_amt",
-				"type": "String"
-			},
-			{
-				"name": "post_time",
-				"type": "String"
-			},
-			{
-				"name": "transaction_amount",
-				"type": "String"
-			},
-			{
-				"name": "transaction_date",
 				"type": "String"
 			}
 		]
