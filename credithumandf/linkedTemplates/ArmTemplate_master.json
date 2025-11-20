@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'PostgreSql'"
 		},
+		"financial_slack_score_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'financial_slack_score'"
+		},
 		"AzurePostgreSql1_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "credithumandb.postgres.database.azure.com"
@@ -40,6 +44,18 @@
 			"defaultValue": "credit_human_db"
 		},
 		"PostgreSql_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "credithumanadmin"
+		},
+		"financial_slack_score_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "credithumandb.postgres.database.azure.com"
+		},
+		"financial_slack_score_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "credit_human_db"
+		},
+		"financial_slack_score_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		},
@@ -79,6 +95,9 @@
 					"PostgreSql_password": {
 						"value": "[parameters('PostgreSql_password')]"
 					},
+					"financial_slack_score_password": {
+						"value": "[parameters('financial_slack_score_password')]"
+					},
 					"AzurePostgreSql1_properties_typeProperties_server": {
 						"value": "[parameters('AzurePostgreSql1_properties_typeProperties_server')]"
 					},
@@ -96,10 +115,59 @@
 					},
 					"PostgreSql_properties_typeProperties_username": {
 						"value": "[parameters('PostgreSql_properties_typeProperties_username')]"
+					},
+					"financial_slack_score_properties_typeProperties_server": {
+						"value": "[parameters('financial_slack_score_properties_typeProperties_server')]"
+					},
+					"financial_slack_score_properties_typeProperties_database": {
+						"value": "[parameters('financial_slack_score_properties_typeProperties_database')]"
+					},
+					"financial_slack_score_properties_typeProperties_username": {
+						"value": "[parameters('financial_slack_score_properties_typeProperties_username')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "credithumandf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'credithumandf_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "credithumandf_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'credithumandf_ArmTemplate_1')]"
+			]
 		}
 	]
 }
