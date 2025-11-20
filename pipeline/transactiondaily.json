@@ -1,0 +1,36 @@
+{
+	"name": "transactiondaily",
+	"properties": {
+		"activities": [
+			{
+				"name": "transactiondaily",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "WITH last_watermark AS (\n  SELECT COALESCE(MAX(\"date\")) AS last_date\n  FROM fss1.watermark_table\n  WHERE source_table = 'ch_transaction_1 ct'\n)\nINSERT INTO fss1.share_group_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  ct.share_id,\n  ct.transaction_type_code_id AS financial_stat_type_code_id,\n  ct.transaction_date::date AS date,\n  SUM(ct.transaction_amount) AS value\nFROM fss1.ch_transaction_1 ct\nWHERE ct.transaction_type_code_id IN (1, 2, 3)\nGROUP BY ct.share_id, ct.transaction_date::date, ct.transaction_type_code_id\n\nUNION ALL\n\nSELECT\n  ct.share_id,\n  4 AS financial_stat_type_code_id,\n  ct.transaction_date::date AS date,\n  ct.balance AS value\nFROM (\n  SELECT DISTINCT ON (share_id, transaction_date::date)\n    share_id,\n    transaction_date,\n    balance,\n    transaction_id\n  FROM fss1.ch_transaction_1\n  ORDER BY share_id, transaction_date::date, transaction_id DESC\n) ct;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-11-07T12:58:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

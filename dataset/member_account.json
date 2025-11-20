@@ -103,5 +103,6 @@
 			"schema": "ch_fss",
 			"table": "member_account"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

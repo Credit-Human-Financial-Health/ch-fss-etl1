@@ -103,5 +103,6 @@
 			"schema": "fss",
 			"table": "sample_output"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

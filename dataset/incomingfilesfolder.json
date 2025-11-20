@@ -1,5 +1,5 @@
 {
-	"name": "sample_output",
+	"name": "incomingfilesfolder",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PWC_Extract_SavingsTransaction_2025_10_24.csv",
+				"fileName": "transaction.csv",
 				"container": "incomingfiles"
 			},
 			"columnDelimiter": "|",
@@ -173,14 +173,6 @@
 			},
 			{
 				"name": "CONFIRMATIONSEQ",
-				"type": "String"
-			},
-			{
-				"name": "MICRACCTNUM",
-				"type": "String"
-			},
-			{
-				"name": "MICRRT",
 				"type": "String"
 			},
 			{

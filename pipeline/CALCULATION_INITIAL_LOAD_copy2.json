@@ -101,7 +101,10 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (7, 8)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL;"
+							"text": {
+								"value": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (7, 8)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL;",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -134,7 +137,10 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 4\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL;"
+							"text": {
+								"value": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 4\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL;",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -167,7 +173,10 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 6\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.income, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  11,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL;"
+							"text": {
+								"value": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 6\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.income, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  11,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL;",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -200,7 +209,10 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 8\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.balance, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  13,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL;\n"
+							"text": {
+								"value": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 8\n    AND date >= @{pipeline().parameters.month_start}::date\n    AND date < @{pipeline().parameters.month_end}::date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.balance, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  13,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL;\n",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -280,6 +292,8 @@
 				"type": "string"
 			}
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2025-11-19T21:46:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

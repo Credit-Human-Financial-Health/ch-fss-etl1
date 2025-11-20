@@ -1,11 +1,18 @@
 {
-	"name": "TRANSACTION_DATA_LOAD",
+	"name": "DF_TRANSACTION",
 	"properties": {
 		"activities": [
 			{
-				"name": "transaction_data_flow",
+				"name": "Dataflow",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Asondate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -16,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Transformation_transaction_data",
+						"referenceName": "DF_transaction_data",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -27,11 +34,11 @@
 				}
 			},
 			{
-				"name": "copy_transaction_csv",
+				"name": "CopyDataActivity",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "transaction_data_flow",
+						"activity": "Dataflow",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -62,6 +69,10 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
+						"preCopyScript": {
+							"value": "update fss1.watermark_table\nSET date = CAST('@{variables('currentDateTime')}' AS TIMESTAMP),\n    lines_copied = @{variables('rowsCopied')}\nWHERE \"source_table\" = 'ch_transaction_1';",
+							"type": "Expression"
+						},
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -70,36 +81,24 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "TranId",
+									"name": "transaction_date",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "transaction_id",
-									"type": "Int32",
-									"physicalType": "integer"
+									"name": "transaction_date",
+									"type": "DateTime",
+									"physicalType": "timestamp without time zone"
 								}
 							},
 							{
 								"source": {
-									"name": "BALANCECHANGE",
+									"name": "Transaction_amount",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
 									"name": "transaction_amount",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								}
-							},
-							{
-								"source": {
-									"name": "NEWBALANCE",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "balance",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								}
@@ -130,7 +129,7 @@
 							},
 							{
 								"source": {
-									"name": "ACTIONCODE",
+									"name": "transaction_code",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -142,7 +141,7 @@
 							},
 							{
 								"source": {
-									"name": "PWC_key",
+									"name": "PWC_Key",
 									"type": "String",
 									"physicalType": "String"
 								},
@@ -150,6 +149,18 @@
 									"name": "share_id",
 									"type": "Int64",
 									"physicalType": "bigint"
+								}
+							},
+							{
+								"source": {
+									"name": "NEWBALANCE",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "balance",
+									"type": "Decimal",
+									"physicalType": "numeric"
 								}
 							}
 						],
@@ -162,7 +173,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "1_transaction_csv",
+						"referenceName": "incomingfilesfolder",
 						"type": "DatasetReference"
 					}
 				],
@@ -172,10 +183,65 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Asondate",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "currentDateTime",
+					"value": {
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "rowsCopied",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "CopyDataActivity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "rowsCopied",
+					"value": {
+						"value": "@activity('CopyDataActivity').output.rowscopied",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"currentDateTime": {
+				"type": "String"
+			},
+			"rowsCopied": {
+				"type": "Integer"
+			},
+			"lastmodifiedreftime": {
+				"type": "String"
+			},
+			"latestfile": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
-		"lastPublishTime": "2025-11-19T21:46:21Z"
+		"lastPublishTime": "2025-11-08T19:05:37Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

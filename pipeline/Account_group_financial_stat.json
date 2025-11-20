@@ -136,8 +136,10 @@
 				}
 			},
 			{
-				"name": "avg_multiple_dates_copy1",
+				"name": "avg_multiple_dates",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "missing_ending_bal",
@@ -169,11 +171,11 @@
 				}
 			},
 			{
-				"name": "slack_score_with_fee_copy1",
+				"name": "slack_score_with_fee",
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "avg_multiple_dates_copy1",
+						"activity": "avg_multiple_dates",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -195,18 +197,18 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\r\n  SELECT\r\n    share_id,\r\n    date,\r\n    SUM(abs(value)) AS denom_sum\r\n  FROM ch_fss.share_financial_stat sfs\r\n  WHERE financial_stat_type_code_id IN (5, 7)\r\n  GROUP BY share_id, date\r\n),\r\nnumerators AS (\r\n  SELECT\r\n    share_id,\r\n    date,\r\n    value::numeric AS numerator\r\n  FROM ch_fss.share_financial_stat sfs\r\n  WHERE financial_stat_type_code_id = 8\r\n),\r\nvals AS (\r\n  SELECT\r\n    n.share_id,\r\n    n.date,\r\n    n.numerator,\r\n    d.denom_sum,\r\n    CASE \r\n    WHEN d.denom_sum = 0 THEN NULL\r\n      ELSE n.numerator / d.denom_sum\r\n    END AS ratio\r\n  FROM numerators n\r\n  JOIN denominators d\r\n    ON n.share_id = d.share_id\r\n   AND n.date = d.date\r\n)\r\nINSERT INTO ch_fss.share_financial_stat (\r\n  share_id,\r\n  financial_stat_type_code_id,\r\n  date,\r\n  value\r\n)\r\nSELECT \r\n  share_id,\r\n  9,\r\n  date,\r\n  ratio\r\nFROM vals"
+							"text": "WITH denominators AS (\r\n  SELECT\r\n    scoring_group_id,\r\n    date,\r\n    SUM(abs(value)) AS denom_sum\r\n  FROM ch_fss.account_group_financial_stat sfs\r\n  WHERE financial_stat_type_code_id IN (5, 7)\r\n  GROUP BY share_id, date\r\n),\r\nnumerators AS (\r\n  SELECT\r\n    scoring_group_id,\r\n    date,\r\n    value::numeric AS numerator\r\n  FROM ch_fss.account_group_financial_stat sfs\r\n  WHERE financial_stat_type_code_id = 8\r\n),\r\nvals AS (\r\n  SELECT\r\n    n.scoring_group_id,\r\n    n.date,\r\n    n.numerator,\r\n    d.denom_sum,\r\n    CASE \r\n    WHEN d.denom_sum = 0 THEN NULL\r\n      ELSE n.numerator / d.denom_sum\r\n    END AS ratio\r\n  FROM numerators n\r\n  JOIN denominators d\r\n    ON n.scoring_group_id = d.scoring_group_id\r\n   AND n.date = d.date\r\n)\r\nINSERT INTO ch_fss.account_group_financial_stat (\r\n  scoring_group_id,\r\n  financial_stat_type_code_id,\r\n  date,\r\n  value\r\n)\r\nSELECT \r\n  scoring_group_id,\r\n  9,\r\n  date,\r\n  ratio\r\nFROM vals"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			},
 			{
-				"name": "slack score without fee_copy1",
+				"name": "slack score without fee",
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "slack_score_with_fee_copy1",
+						"activity": "slack_score_with_fee",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -228,18 +230,18 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n  share_id,\n  date,\n  SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n  share_id,\n  date,\n  SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (7,8)\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals"
+							"text": "WITH denominators AS (\n  SELECT\n  scoring_group_id,\n  date,\n  SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n  scoring_group_id,\n  date,\n  SUM(value)::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (7,8)\n  GROUP BY scoring_group_id, date\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  10,\n  date,\n  ratio\nFROM vals"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			},
 			{
-				"name": "spot slack_copy1",
+				"name": "spot slack",
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "slack score without fee_copy1",
+						"activity": "slack score without fee",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -261,13 +263,81 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals"
+							"text": "WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  12,\n  date,\n  ratio\nFROM vals"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "flow slack",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "spot slack",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id = 6\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.income -  n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.scoring_group_id = d.scoring_group_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  11,\n  date,\n  diff\nFROM vals"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "stock slack",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "flow slack",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.balance -  n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.scoring_group_id = d.scoring_group_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  13,\n  date,\n  diff\nFROM vals\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2025-11-20T05:27:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

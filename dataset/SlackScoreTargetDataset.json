@@ -12,5 +12,6 @@
 			"schema": "fss1",
 			"table": "share_group_financial_stat"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
