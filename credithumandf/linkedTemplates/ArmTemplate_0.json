@@ -1831,119 +1831,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/1_transaction_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "transaction.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "TranId",
-						"type": "String"
-					},
-					{
-						"name": "PARENTID",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "DESCRIPTION",
-						"type": "String"
-					},
-					{
-						"name": "ACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SOURCECODE",
-						"type": "String"
-					},
-					{
-						"name": "BALANCECHANGE",
-						"type": "String"
-					},
-					{
-						"name": "INTEREST",
-						"type": "String"
-					},
-					{
-						"name": "NEWBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "FEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "COMMENT",
-						"type": "String"
-					},
-					{
-						"name": "BRANCH",
-						"type": "String"
-					},
-					{
-						"name": "PWC_key",
-						"type": "String"
-					},
-					{
-						"name": "transaction_code",
-						"type": "String"
-					},
-					{
-						"name": "Transaction_amt",
-						"type": "String"
-					},
-					{
-						"name": "post_time",
-						"type": "String"
-					},
-					{
-						"name": "transaction_amount",
-						"type": "String"
-					},
-					{
-						"name": "transaction_date",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/AzurePostgreSqlTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3376,6 +3263,71 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trans_comments')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "PWC_Trans_comment_2025_10_31.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "TranId",
+						"type": "String"
+					},
+					{
+						"name": "CommentID",
+						"type": "String"
+					},
+					{
+						"name": "PARENTID",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		}
 	]
