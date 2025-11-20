@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "member_details_csv",
-				"container": "sampleoutput"
+				"fileName": "PWC_Extract_Name_2025_11_5 (1).csv",
+				"container": "incomingfiles"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
