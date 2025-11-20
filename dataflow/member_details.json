@@ -102,7 +102,7 @@
 				"          last_name = LastName,",
 				"          address = STREET,",
 				"          city = CITY,",
-				"          state = STATE,",
+				"          state = derivedColumn1@state,",
 				"          zip_code = ZIPCODE,",
 				"          start_date = MBRCREATEDATE,",
 				"          email = {e-mail}",
