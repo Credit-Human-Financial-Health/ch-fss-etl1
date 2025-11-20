@@ -5,8 +5,6 @@
 			{
 				"name": "transaction_daily",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -33,8 +31,6 @@
 			{
 				"name": "ending_bal",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "transaction_daily",
@@ -59,7 +55,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "WITH latest_transactions AS (\n  SELECT\n    t.share_id,\n    t.transaction_date::date AS txn_date,\n    t.balance\n  FROM (\n    SELECT\n      t.*,\n      ROW_NUMBER() OVER (PARTITION BY t.share_id, t.transaction_date::date ORDER BY t.transaction_date DESC) as rn\n    FROM ch_fss.\"transaction\" t\n  ) t\n  WHERE t.rn = 1\n),\ndaily_balances AS (\n  SELECT\n    sa.account_id,\n    lt.txn_date,\n    SUM(lt.balance) AS total_balance\n  FROM latest_transactions lt\n  JOIN ch_fss.share_account sa ON lt.share_id = sa.share_id\n  GROUP BY sa.account_id, lt.txn_date\n)\nINSERT INTO ch_fss.account_group_financial_stat (scoring_group_id, date, value,financial_stat_type_code_id )\nSELECT\n  sg.scoring_group_id,\n  db.txn_date AS date,\n  db.total_balance AS balance, \n  4\nFROM daily_balances db\nJOIN ch_fss.scoring_group sg ON sg.account_id = db.account_id;\n "
+							"text": "WITH latest_transactions AS (\n  SELECT\n    t.share_id,\n    t.transaction_date::date AS txn_date,\n    t.balance\n  FROM (\n    SELECT\n      t.*,\n      ROW_NUMBER() OVER (PARTITION BY t.share_id, t.transaction_date::date ORDER BY t.transaction_id DESC) as rn\n    FROM ch_fss.\"transaction\" t\n  ) t\n  WHERE t.rn = 1\n),\ndaily_balances AS (\n  SELECT\n    sa.account_id,\n    lt.txn_date,\n    SUM(lt.balance) AS total_balance\n  FROM latest_transactions lt\n  JOIN ch_fss.share_account sa ON lt.share_id = sa.share_id\n  GROUP BY sa.account_id, lt.txn_date\n)\nINSERT INTO ch_fss.account_group_financial_stat (scoring_group_id, date, value,financial_stat_type_code_id )\nSELECT\n  sg.scoring_group_id,\n  db.txn_date AS date,\n  db.total_balance AS balance, \n  4\nFROM daily_balances db\nJOIN ch_fss.scoring_group sg ON sg.account_id = db.account_id;\n "
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -68,8 +64,6 @@
 			{
 				"name": "bal_staging",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "ending_bal",
@@ -103,8 +97,6 @@
 			{
 				"name": "missing_ending_bal",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "bal_staging",
@@ -138,8 +130,6 @@
 			{
 				"name": "avg_multiple_dates",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "missing_ending_bal",

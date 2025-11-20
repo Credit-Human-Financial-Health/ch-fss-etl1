@@ -29,6 +29,8 @@
 			{
 				"name": "copy_transaction_csv",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "transaction_data_flow",

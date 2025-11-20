@@ -26,7 +26,7 @@
 					"name": "derivedColumn1"
 				},
 				{
-					"name": "derivedColumn2"
+					"name": "surrogateKey"
 				}
 			],
 			"scriptLines": [
@@ -45,16 +45,12 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(comment_id = concat(TranId, CommentID),",
-				"          time = lpad(toString(POSTTIME), 4, '0')) ~> derivedColumn1",
-				"derivedColumn1 derive(post_date = concat(\r",
-				"  toString(POSTDATE, 'yyyy-MM-dd'), \r",
-				"  ' ', \r",
-				"  substring(lpad(toString(time), 4, '0'), 0, 2), \r",
-				"  ':', \r",
-				"  substring(lpad(toString(time), 4, '0'), 2, 2)\r",
-				"),",
-				"     partitionBy('hash', 1)) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"          transaction_id = PARENTID) ~> derivedColumn1",
+				"derivedColumn1 keyGenerate(output(transaction_id as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L,",
+				"     partitionBy('hash', 1)) ~> surrogateKey",
+				"surrogateKey sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          comment_id as long,",
@@ -75,9 +71,9 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          comment_id,",
-				"          post_date,",
+				"          post_date = POSTDATE,",
 				"          comment_value = Comment,",
-				"          transaction_id = TranId",
+				"          transaction_id",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
