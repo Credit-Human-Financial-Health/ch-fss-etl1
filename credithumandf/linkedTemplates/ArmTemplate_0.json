@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'financial_slack_score'"
 		},
+		"AzurePostgreSql2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzurePostgreSql2'"
+		},
 		"AzurePostgreSql1_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "credithumandb.postgres.database.azure.com"
@@ -56,6 +60,18 @@
 			"defaultValue": "credit_human_db"
 		},
 		"financial_slack_score_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "credithumanadmin"
+		},
+		"AzurePostgreSql2_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "credithumandb.postgres.database.azure.com"
+		},
+		"AzurePostgreSql2_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "credit_human_db"
+		},
+		"AzurePostgreSql2_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		}
@@ -139,6 +155,29 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('financial_slack_score_password')]"
+					},
+					"authenticationType": "Basic"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzurePostgreSql2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"version": "2.0",
+				"typeProperties": {
+					"server": "[parameters('AzurePostgreSql2_properties_typeProperties_server')]",
+					"port": "5432",
+					"database": "[parameters('AzurePostgreSql2_properties_typeProperties_database')]",
+					"sslMode": 2,
+					"username": "[parameters('AzurePostgreSql2_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzurePostgreSql2_password')]"
 					},
 					"authenticationType": "Basic"
 				}
@@ -1726,181 +1765,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-20T05:27:08Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "slack_score_with_fee",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and  financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE\n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  share_id,\n  9,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "slack score without fee",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "slack_score_with_fee",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value)::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (7,8)\n  GROUP BY share_id, date\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  10,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "spot slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "slack score without fee",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH denominators AS (\n  SELECT\n    share_id,\n    date,\n    SUM(value) AS denom_sum\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5, 7)\n  GROUP BY share_id, date\n),\nnumerators AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  12,\n  date,\n  ratio\nFROM vals\nWHERE ratio IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "flow slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "spot slack",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5,7)\n  GROUP BY share_id, date\n),\ndeposits AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 6\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.income, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.share_id = d.share_id\n   AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  11,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "stock slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "flow slack",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH expenses AS (\n  SELECT\n    share_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id IN (5,7)\n  GROUP BY share_id, date\n),\nbalances AS (\n  SELECT\n    share_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.share_financial_stat sfs\n  WHERE date >= '2020-07-01'::date\n    AND date < '2020-08-01'::date\n    and financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.share_id,\n    n.date,\n    COALESCE(d.balance, 0) - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.share_id = d.share_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  share_id,\n  13,\n  date,\n  diff\nFROM vals\nWHERE diff IS NOT NULL\n  AND date >= '2020-07-01'::date\n  AND date < '2020-08-01'::date;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:17Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"

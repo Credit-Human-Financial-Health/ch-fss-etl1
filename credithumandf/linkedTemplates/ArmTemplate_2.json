@@ -13,17 +13,46 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/multiple_copy_activity')]",
+			"name": "[concat(parameters('factoryName'), '/PL_sample_output')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Get_data_from_blob",
-						"type": "GetMetadata",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
+						"name": "Start_time",
+						"type": "SetVariable",
 						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "pipelinerunstatus",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "End_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "Copy data",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -32,90 +61,34 @@
 							"secureInput": false
 						},
 						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
 						"typeProperties": {
-							"fieldList": []
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('Copy data').status}',\n  '@{if(equals(activity('Copy data').status, 'Failed'), activity('Copy data').error_message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
+						"name": "Copy data",
+						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Get_data_from_blob",
+								"activity": "Start_time",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
-						"userProperties": [],
-						"typeProperties": {
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzurePostgreSqlSink",
-											"writeBatchSize": 1000000,
-											"writeBatchTimeout": "00:30:00",
-											"writeMethod": "CopyCommand"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "incomingfilesfolder",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "AzurePostgreSqlTable1",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookupfilemapping",
-						"type": "Lookup",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -126,15 +99,239 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzurePostgreSqlSource",
-								"query": "select * from [fss1].[filemapping_mast] where active = 1",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
-							"dataset": {
-								"referenceName": "AzurePostgreSqlTable1",
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"writeMethod": "BulkInsert"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "PWC_Key",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "account_id",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "Shr",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "share_type",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "Beg Balance",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "beg_balance",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "Dep Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "dep_amount",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "With Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "with_amount",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "NSF CP Fees Amt",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "nsf_cp_fees_amt",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "End Balance",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "end_balance",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "Monthly Avg Balance",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "monthly_avg_balance",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "SType",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "stype",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "description",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "Orig Branch",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "orig_branch",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "Cur Branch",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cur_branch",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "Aggr Daily End Bal",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "aggr_daily_end_bal",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "# of Days Open During Month",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "days_open_during_month",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sample_output",
 								"type": "DatasetReference",
 								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sample_output_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "End_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Copy data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "End_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
 							}
 						}
 					}
@@ -142,8 +339,22 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"Start_time": {
+						"type": "String"
+					},
+					"End_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "Array"
+					}
+				},
 				"annotations": [],
-				"lastPublishTime": "2025-10-24T15:26:05Z"
+				"lastPublishTime": "2025-11-19T21:46:19Z"
 			},
 			"dependsOn": []
 		},
@@ -1956,6 +2167,170 @@
 						"     )) ~> sink"
 					]
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/share_financial_stat')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "transaction_daily",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "ending_bal_cal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "transaction_daily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "INSERT INTO ch_fss.share_financial_stat (\r\n  share_id,\r\n  financial_stat_type_code_id,\r\n  date,\r\n  value\r\n)\r\nSELECT\r\n  sub.share_id,\r\n  4 AS financial_stat_type_code_id,\r\n  sub.transaction_date::date AS date,\r\n  sub.balance AS value\r\nFROM (\r\n  SELECT DISTINCT ON (t.share_id, t.transaction_date::date)\r\n    t.share_id,\r\n    t.transaction_date,\r\n    t.balance,\r\n    t.transaction_id\r\n  FROM ch_fss.\"transaction\" t\r\n  ORDER BY t.share_id, t.transaction_date::date, t.transaction_id DESC\r\n) sub;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "stg_ending_bal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "ending_bal_cal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "WITH date_range AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series('2020-01-01'::date, '2025-10-31'::date, interval '1 day')\n),\ngroups AS (\n  SELECT DISTINCT share_id\n  FROM ch_fss.share_financial_stat\n),\nall_combinations AS (\n  SELECT g.share_id, d.dt AS date\n  FROM groups g CROSS JOIN date_range d\n)\ninsert into fss_stg.stg_missing_share_ending_bal(\nshare_id, \ndate) \nSELECT ac.share_id, ac.date\nFROM all_combinations ac\nLEFT JOIN ch_fss.share_financial_stat agfs\n  ON agfs.share_id = ac.share_id\n  AND agfs.date = ac.date\n  AND agfs.financial_stat_type_code_id = 4\nWHERE agfs.financial_stat_id IS NULL;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "stg_missing_ending_bal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "stg_ending_bal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "INSERT INTO ch_fss.share_financial_stat (\n  value,\n  date,\n  financial_stat_type_code_id,\n  share_id,\n  created_date,\n  created_by\n)\nSELECT\n  prev.value,\n  tm.date,\n  4,\n  tm.share_id,\n  NOW() AS created_date,\n  'system' AS created_by\nFROM fss_stg.stg_missing_share_ending_bal tm\nLEFT JOIN LATERAL (\n  SELECT value\n  FROM  ch_fss.share_financial_stat agfs\n  WHERE agfs.share_id = tm.share_id\n    AND agfs.financial_stat_type_code_id = 4\n    AND agfs.date < tm.date\n  ORDER BY date DESC\n  LIMIT 1\n) prev ON true\nand prev.value IS NOT null"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "account_group_fin_stat",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "stg_missing_ending_bal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Account_group_financial_stat",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-20T05:27:08Z"
 			},
 			"dependsOn": []
 		},
