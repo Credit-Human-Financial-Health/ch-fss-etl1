@@ -23,7 +23,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= todate(@{pipeline().parameters.month_start} :: date)\n  AND t.transaction_date::date < todate(to_timestamp(@{pipeline().parameters.month_start}) :: date)\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;",
+								"value": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n  )\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= toDate(@{pipeline().parameters.month_start} :: date)\n  AND t.transaction_date::date < toDate(@{pipeline().parameters.month_end}) :: date)\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;",
 								"type": "Expression"
 							}
 						}
@@ -34,6 +34,8 @@
 			{
 				"name": "ending_bal_cal",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "transaction_daily",
@@ -70,6 +72,8 @@
 			{
 				"name": "avg_multiple_dates",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "ending_bal_cal",
