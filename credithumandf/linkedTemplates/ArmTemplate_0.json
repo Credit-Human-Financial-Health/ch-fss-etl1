@@ -15,17 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzurePostgreSql1'"
 		},
-		"AzurePostgreSql2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'AzurePostgreSql2'"
-		},
 		"PostgreSql_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'PostgreSql'"
-		},
-		"financial_slack_score_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'financial_slack_score'"
 		},
 		"AzurePostgreSql1_properties_typeProperties_server": {
 			"type": "string",
@@ -39,18 +31,6 @@
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		},
-		"AzurePostgreSql2_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "credithumandb.postgres.database.azure.com"
-		},
-		"AzurePostgreSql2_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "credit_human_db"
-		},
-		"AzurePostgreSql2_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "credithumanadmin"
-		},
 		"PostgreSql_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "credithumandb.postgres.database.azure.com"
@@ -60,18 +40,6 @@
 			"defaultValue": "credit_human_db"
 		},
 		"PostgreSql_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "credithumanadmin"
-		},
-		"financial_slack_score_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "credithumandb.postgres.database.azure.com"
-		},
-		"financial_slack_score_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "credit_human_db"
-		},
-		"financial_slack_score_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		}
@@ -117,29 +85,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzurePostgreSql2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzurePostgreSql",
-				"version": "2.0",
-				"typeProperties": {
-					"server": "[parameters('AzurePostgreSql2_properties_typeProperties_server')]",
-					"port": "5432",
-					"database": "[parameters('AzurePostgreSql2_properties_typeProperties_database')]",
-					"sslMode": 2,
-					"username": "[parameters('AzurePostgreSql2_properties_typeProperties_username')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('AzurePostgreSql2_password')]"
-					},
-					"authenticationType": "Basic"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PostgreSql')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -162,30 +107,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/financial_slack_score')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzurePostgreSql",
-				"version": "2.0",
-				"typeProperties": {
-					"server": "[parameters('financial_slack_score_properties_typeProperties_server')]",
-					"port": "5432",
-					"database": "[parameters('financial_slack_score_properties_typeProperties_database')]",
-					"sslMode": 2,
-					"username": "[parameters('financial_slack_score_properties_typeProperties_username')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('financial_slack_score_password')]"
-					},
-					"authenticationType": "Basic"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Account_group_fin_stat')]",
+			"name": "[concat(parameters('factoryName'), '/account_group_fin_stat')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1290,7 +1212,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= todate(@{pipeline().parameters.month_start} :: date)\n  AND t.transaction_date::date < todate(to_timestamp(@{pipeline().parameters.month_start}) :: date)\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;",
+										"value": "@concat('\nINSERT INTO fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= ''',\n pipeline().parameters.month_start,\n '''::date\n  AND t.transaction_date::date <= ''',\n pipeline().parameters.month_end,\n '''::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n')",
 										"type": "Expression"
 									}
 								}
@@ -1301,6 +1223,8 @@
 					{
 						"name": "ending_bal_cal",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "transaction_daily",
@@ -1337,6 +1261,8 @@
 					{
 						"name": "avg_multiple_dates",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "ending_bal_cal",
@@ -1383,6 +1309,9 @@
 						"type": "string",
 						"defaultValue": "@item().month_end"
 					}
+				},
+				"folder": {
+					"name": "batch_wise_cal"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-19T21:46:17Z"
@@ -3590,6 +3519,141 @@
 				"type": "AzurePostgreSqlTable",
 				"schema": [],
 				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trans_comments')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "PWC_Trans_comment_2025_10_31.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "TranId",
+						"type": "String"
+					},
+					{
+						"name": "CommentID",
+						"type": "String"
+					},
+					{
+						"name": "PARENTID",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/comments_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "comment_id",
+						"type": "bigint",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "post_date",
+						"type": "timestamp without time zone",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "comment_value",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "created_date",
+						"type": "timestamp without time zone",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "created_by",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "updated_date",
+						"type": "timestamp without time zone",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "updated_by",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "transaction_id",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "ch_fss",
+					"table": "transaction_comment"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"

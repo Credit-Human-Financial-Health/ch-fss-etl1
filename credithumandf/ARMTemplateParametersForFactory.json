@@ -11,13 +11,7 @@
 		"AzurePostgreSql1_password": {
 			"value": ""
 		},
-		"AzurePostgreSql2_password": {
-			"value": ""
-		},
 		"PostgreSql_password": {
-			"value": ""
-		},
-		"financial_slack_score_password": {
 			"value": ""
 		},
 		"AzurePostgreSql1_properties_typeProperties_server": {
@@ -29,15 +23,6 @@
 		"AzurePostgreSql1_properties_typeProperties_username": {
 			"value": "credithumanadmin"
 		},
-		"AzurePostgreSql2_properties_typeProperties_server": {
-			"value": "credithumandb.postgres.database.azure.com"
-		},
-		"AzurePostgreSql2_properties_typeProperties_database": {
-			"value": "credit_human_db"
-		},
-		"AzurePostgreSql2_properties_typeProperties_username": {
-			"value": "credithumanadmin"
-		},
 		"PostgreSql_properties_typeProperties_server": {
 			"value": "credithumandb.postgres.database.azure.com"
 		},
@@ -45,15 +30,6 @@
 			"value": "credit_human_db"
 		},
 		"PostgreSql_properties_typeProperties_username": {
-			"value": "credithumanadmin"
-		},
-		"financial_slack_score_properties_typeProperties_server": {
-			"value": "credithumandb.postgres.database.azure.com"
-		},
-		"financial_slack_score_properties_typeProperties_database": {
-			"value": "credit_human_db"
-		},
-		"financial_slack_score_properties_typeProperties_username": {
 			"value": "credithumanadmin"
 		}
 	}

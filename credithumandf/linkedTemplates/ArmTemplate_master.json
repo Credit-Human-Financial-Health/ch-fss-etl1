@@ -15,17 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzurePostgreSql1'"
 		},
-		"AzurePostgreSql2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'AzurePostgreSql2'"
-		},
 		"PostgreSql_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'PostgreSql'"
-		},
-		"financial_slack_score_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'financial_slack_score'"
 		},
 		"AzurePostgreSql1_properties_typeProperties_server": {
 			"type": "string",
@@ -39,18 +31,6 @@
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		},
-		"AzurePostgreSql2_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "credithumandb.postgres.database.azure.com"
-		},
-		"AzurePostgreSql2_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "credit_human_db"
-		},
-		"AzurePostgreSql2_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "credithumanadmin"
-		},
 		"PostgreSql_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "credithumandb.postgres.database.azure.com"
@@ -60,18 +40,6 @@
 			"defaultValue": "credit_human_db"
 		},
 		"PostgreSql_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "credithumanadmin"
-		},
-		"financial_slack_score_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "credithumandb.postgres.database.azure.com"
-		},
-		"financial_slack_score_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "credit_human_db"
-		},
-		"financial_slack_score_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "credithumanadmin"
 		},
@@ -108,14 +76,8 @@
 					"AzurePostgreSql1_password": {
 						"value": "[parameters('AzurePostgreSql1_password')]"
 					},
-					"AzurePostgreSql2_password": {
-						"value": "[parameters('AzurePostgreSql2_password')]"
-					},
 					"PostgreSql_password": {
 						"value": "[parameters('PostgreSql_password')]"
-					},
-					"financial_slack_score_password": {
-						"value": "[parameters('financial_slack_score_password')]"
 					},
 					"AzurePostgreSql1_properties_typeProperties_server": {
 						"value": "[parameters('AzurePostgreSql1_properties_typeProperties_server')]"
@@ -126,15 +88,6 @@
 					"AzurePostgreSql1_properties_typeProperties_username": {
 						"value": "[parameters('AzurePostgreSql1_properties_typeProperties_username')]"
 					},
-					"AzurePostgreSql2_properties_typeProperties_server": {
-						"value": "[parameters('AzurePostgreSql2_properties_typeProperties_server')]"
-					},
-					"AzurePostgreSql2_properties_typeProperties_database": {
-						"value": "[parameters('AzurePostgreSql2_properties_typeProperties_database')]"
-					},
-					"AzurePostgreSql2_properties_typeProperties_username": {
-						"value": "[parameters('AzurePostgreSql2_properties_typeProperties_username')]"
-					},
 					"PostgreSql_properties_typeProperties_server": {
 						"value": "[parameters('PostgreSql_properties_typeProperties_server')]"
 					},
@@ -143,15 +96,6 @@
 					},
 					"PostgreSql_properties_typeProperties_username": {
 						"value": "[parameters('PostgreSql_properties_typeProperties_username')]"
-					},
-					"financial_slack_score_properties_typeProperties_server": {
-						"value": "[parameters('financial_slack_score_properties_typeProperties_server')]"
-					},
-					"financial_slack_score_properties_typeProperties_database": {
-						"value": "[parameters('financial_slack_score_properties_typeProperties_database')]"
-					},
-					"financial_slack_score_properties_typeProperties_username": {
-						"value": "[parameters('financial_slack_score_properties_typeProperties_username')]"
 					}
 				}
 			},
