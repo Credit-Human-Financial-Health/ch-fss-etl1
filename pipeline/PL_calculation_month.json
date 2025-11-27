@@ -134,6 +134,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "batch_wise_cal"
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-19T21:46:19Z"
 	},
