@@ -29,7 +29,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "INSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  s.scoring_group_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nJOIN ch_fss.share_account sa ON t.share_id = sa.share_id\nJOIN ch_fss.scoring_group s ON sa.account_id = s.account_id\nWHERE t.transaction_date >= '2025-09-20'::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\n  AND s.scoring_group_id = 2163\nGROUP BY s.scoring_group_id, date, financial_stat_type_code_id"
+							"text": "INSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  s.scoring_group_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nJOIN ch_fss.share_account sa ON t.share_id = sa.share_id\nJOIN ch_fss.scoring_group s ON sa.account_id = s.account_id\nWHERE t.transaction_date >= '2025-09-20'::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\n  AND s.scoring_group_id = 2163\nGROUP BY s.scoring_group_id, t.transaction_date::date, t.transaction_type_code_id\nON CONFLICT (scoring_group_id, financial_stat_type_code_id, date)\nDO UPDATE SET\n  value = EXCLUDED.value;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
