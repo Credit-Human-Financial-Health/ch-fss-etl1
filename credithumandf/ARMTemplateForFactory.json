@@ -2073,17 +2073,40 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_monthly calculation')]",
+			"name": "[concat(parameters('factoryName'), '/PL_calculation_monthly')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "LookupWatermark",
-						"type": "Lookup",
+						"name": "Start_time",
+						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "0.12:00:00",
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "LookupWatermark",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -2092,12 +2115,45 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "PostgreSqlV2Source",
-								"query": "SELECT last_processed_year, last_processed_month\nFROM ch_fss.watermark_table\nWHERE process_name = 'monthly_calculation';",
-								"queryTimeout": "02:00:00"
+								"type": "AzurePostgreSqlSource",
+								"query": "SELECT last_processed_date::text AS last_processed_date FROM ch_fss.watermark_table WHERE process_name = 'TransactionProcessing';"
 							},
 							"dataset": {
-								"referenceName": "watremark_table",
+								"referenceName": "AzurePostgreSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "LookupMonthsArray",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupWatermark",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"sqlReaderQuery": "\nWITH bounds AS (\n  SELECT date_trunc('month', COALESCE(:start_date::timestamp, '1900-01-01')) AS min_month,\n         date_trunc('month', NOW()) AS max_month\n), months AS (\n  SELECT generate_series(min_month, max_month, INTERVAL '1 month') AS month_start\n  FROM bounds\n), limited_months AS (\n  SELECT month_start,\n         CASE WHEN month_start + INTERVAL '1 month' > NOW() - INTERVAL '1 day' THEN NOW() - INTERVAL '1 day' ELSE month_start + INTERVAL '1 month' - INTERVAL '0.001 second' END AS month_end\n  FROM months\n)\nSELECT to_char(month_start, 'YYYY-MM-DD') AS month_start,\n       to_char(month_end, 'YYYY-MM-DD') AS month_end\nFROM limited_months\nWHERE month_start <= NOW() - INTERVAL '1 day'\nORDER BY month_start;",
+								"parameters": {
+									"start_date": "@activity('LookupWatermark').output.firstRow.last_processed_date"
+								}
+							},
+							"dataset": {
+								"referenceName": "transaction_sink",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -2105,112 +2161,56 @@
 						}
 					},
 					{
-						"name": "LastProcessedYear",
-						"type": "SetVariable",
+						"name": "ForEach1",
+						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "LookupWatermark",
+								"activity": "LookupMonthsArray",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "LastProcessedYear",
-							"value": {
-								"value": "@if(\n  empty(activity('LookupWatermark').output.value), \n  0, \n  int(activity('LookupWatermark').output.value[0].last_processed_year)\n)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "LastProcessedMonth",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "LookupWatermark",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "LastProcessedMonth",
-							"value": {
-								"value": "@if(\n  empty(activity('LookupWatermark').output.value), \n  0, \n  int(activity('LookupWatermark').output.value[0].last_processed_month)\n)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "IsFirstRun",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "LastProcessedMonth",
-								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
-								]
-							},
-							{
-								"activity": "LastProcessedYear",
-								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(variables('LastProcessedYear'), 0)",
+							"items": {
+								"value": "@activity('LookupMonthsArray').output.value",
 								"type": "Expression"
 							},
-							"ifTrueActivities": [
+							"isSequential": true,
+							"activities": [
 								{
-									"name": "LookupMinTransactionDate",
-									"type": "Lookup",
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
 										"secureInput": false
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"source": {
-											"type": "AzurePostgreSqlSource",
-											"query": "SELECT EXTRACT(YEAR FROM MIN(transaction_date)) AS min_year,\n       EXTRACT(MONTH FROM MIN(transaction_date)) AS min_month\nFROM ch_fss.\"transaction\";",
-											"partitionOption": "None",
-											"queryTimeout": "02:00:00"
+										"pipeline": {
+											"referenceName": "CALCULATION_INITIAL_LOAD_copy1",
+											"type": "PipelineReference"
 										},
-										"dataset": {
-											"referenceName": "transaction_sink",
-											"type": "DatasetReference",
-											"parameters": {}
-										},
-										"firstRowOnly": false
+										"waitOnCompletion": true,
+										"parameters": {
+											"month_start": {
+												"value": "@item().month_start",
+												"type": "Expression"
+											},
+											"month_end": {
+												"value": "@item().month_end",
+												"type": "Expression"
+											}
+										}
 									}
 								},
 								{
-									"name": "Setlastprocessedyear",
+									"name": "SetLatestProcessedEndDateInForEach",
 									"type": "SetVariable",
 									"dependsOn": [
 										{
-											"activity": "LookupMinTransactionDate",
+											"activity": "Execute Pipeline1",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -2222,38 +2222,74 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"variableName": "LastProcessedYear",
+										"variableName": "LatestProcessedEndDate",
 										"value": {
-											"value": "@if(empty(activity('LookupWatermark').output.value), 0, int(activity('LookupWatermark').output.value[0].last_processed_year))",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "SetLastProcessedMonth",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "LookupMinTransactionDate",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "LastProcessedMonth",
-										"value": {
-											"value": "@if(\n  empty(activity('LookupWatermark').output.value), \n  0, \n  int(activity('LookupWatermark').output.value[0].last_processed_month)\n)",
+											"value": "@item().month_end",
 											"type": "Expression"
 										}
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "UpdateWatermark",
+						"type": "AzurePostgreSqlScript",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"script": "UPDATE ch_fss.watermark_table SET last_processed_date = TO_TIMESTAMP(:NewLastProcessedDate, 'YYYY-MM-DD') + INTERVAL '1 day', updated_date = now(), updated_by = :UpdatedBy WHERE process_name = 'TransactionProcessing';",
+							"parameters": {
+								"NewLastProcessedDate": {
+									"value": "@variables('LatestProcessedEndDate')",
+									"type": "Expression"
+								},
+								"UpdatedBy": {
+									"value": "ADF_PIPELINE",
+									"type": "Literal"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Azurepostgresql1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "End_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "UpdateWatermark",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "End_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -2261,28 +2297,29 @@
 					"elapsedTimeMetric": {}
 				},
 				"variables": {
-					"LastProcessedYear": {
-						"type": "Integer"
-					},
-					"LastProcessedMonth": {
-						"type": "Integer"
-					},
-					"NextProcessingDate": {
+					"Start_time": {
 						"type": "String"
 					},
-					"ProcessingYear": {
-						"type": "Integer"
+					"End_time": {
+						"type": "String"
 					},
-					"ProcessingMonth": {
-						"type": "Integer"
+					"ProcessedMonthEnds": {
+						"type": "Array",
+						"defaultValue": []
+					},
+					"LatestProcessedEndDate": {
+						"type": "String"
 					}
 				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:19Z"
+				"folder": {
+					"name": "batch_wise_cal"
+				},
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/watremark_table')]",
-				"[concat(variables('factoryId'), '/datasets/transaction_sink')]"
+				"[concat(variables('factoryId'), '/datasets/AzurePostgreSqlTable1')]",
+				"[concat(variables('factoryId'), '/datasets/transaction_sink')]",
+				"[concat(variables('factoryId'), '/pipelines/CALCULATION_INITIAL_LOAD_copy1')]"
 			]
 		},
 		{
@@ -3401,7 +3438,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "delete from ch_fss.account_group_financial_stat where scoring_group_id= 2110070001"
+									"text": "delete from ch_fss.account_group_financial_stat where scoring_group_id= 2163"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"

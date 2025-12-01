@@ -2097,7 +2097,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "delete from ch_fss.account_group_financial_stat where scoring_group_id= 2110070001"
+									"text": "delete from ch_fss.account_group_financial_stat where scoring_group_id= 2163"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
