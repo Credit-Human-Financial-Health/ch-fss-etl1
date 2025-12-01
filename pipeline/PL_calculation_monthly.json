@@ -70,6 +70,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzurePostgreSqlSource",
+						"query": "WITH bounds AS (\n  SELECT \n    date_trunc('month', MIN(transaction_date)) AS min_month,\n    date_trunc('month', MAX(transaction_date)) AS max_month\n  FROM ch_fss.\"transaction\"\n),\nmonths AS (\n  SELECT \n    generate_series(min_month, max_month, interval '1 month') AS month_start\n  FROM bounds\n)\nSELECT \n  to_char(month_start, 'YYYY-MM-DD') AS month_start,\n  to_char(month_start + INTERVAL '1 month' - INTERVAL '0.001 second', 'YYYY-MM-DD') AS month_end\nFROM months\nORDER BY month_start;",
 						"sqlReaderQuery": "\nWITH bounds AS (\n  SELECT date_trunc('month', COALESCE(:start_date::timestamp, '1900-01-01')) AS min_month,\n         date_trunc('month', NOW()) AS max_month\n), months AS (\n  SELECT generate_series(min_month, max_month, INTERVAL '1 month') AS month_start\n  FROM bounds\n), limited_months AS (\n  SELECT month_start,\n         CASE WHEN month_start + INTERVAL '1 month' > NOW() - INTERVAL '1 day' THEN NOW() - INTERVAL '1 day' ELSE month_start + INTERVAL '1 month' - INTERVAL '0.001 second' END AS month_end\n  FROM months\n)\nSELECT to_char(month_start, 'YYYY-MM-DD') AS month_start,\n       to_char(month_end, 'YYYY-MM-DD') AS month_end\nFROM limited_months\nWHERE month_start <= NOW() - INTERVAL '1 day'\nORDER BY month_start;",
 						"parameters": {
 							"start_date": "@activity('LookupWatermark').output.firstRow.last_processed_date"
@@ -155,47 +156,11 @@
 				}
 			},
 			{
-				"name": "UpdateWatermark",
-				"type": "AzurePostgreSqlScript",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"script": "UPDATE ch_fss.watermark_table SET last_processed_date = TO_TIMESTAMP(:NewLastProcessedDate, 'YYYY-MM-DD') + INTERVAL '1 day', updated_date = now(), updated_by = :UpdatedBy WHERE process_name = 'TransactionProcessing';",
-					"parameters": {
-						"NewLastProcessedDate": {
-							"value": "@variables('LatestProcessedEndDate')",
-							"type": "Expression"
-						},
-						"UpdatedBy": {
-							"value": "ADF_PIPELINE",
-							"type": "Literal"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "Azurepostgresql1",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "End_time",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "UpdateWatermark",
+						"activity": "updatewatermark",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -212,6 +177,39 @@
 						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "updatewatermark",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "UPDATE ch_fss.watermark_table \r\nSET last_processed_date = TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\r\n    updated_date = now(),\r\n    updated_by = 'Admin'\r\nWHERE process_name = 'TransactionProcessing';"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
