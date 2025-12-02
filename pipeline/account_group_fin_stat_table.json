@@ -1,5 +1,5 @@
 {
-	"name": "account_group_fin_stat_copy2",
+	"name": "account_group_fin_stat_table",
 	"properties": {
 		"activities": [
 			{
@@ -339,7 +339,7 @@
 			}
 		},
 		"folder": {
-			"name": "Ch_environment"
+			"name": "batch_wise_cal"
 		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-20T05:27:08Z"

@@ -1,5 +1,5 @@
 {
-	"name": "share_financial_stat_copy2",
+	"name": "share_financial_stat_table",
 	"properties": {
 		"activities": [
 			{
@@ -210,23 +210,26 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "delete from ch_fss.share_financial_stat where \ndate >= @START_DATE\nand date  < @END_DATE"
+							"text": {
+								"value": "@DELETE FROM ch_fss.share_financial_stat\nWHERE date >= variables('Start_time')\n  AND date < variables('End_time');",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
-		"parameters": {
-			"START_DATE": {
-				"type": "string"
+		"variables": {
+			"Start_time": {
+				"type": "String"
 			},
-			"END_DATE": {
-				"type": "string"
+			"End_time": {
+				"type": "String"
 			}
 		},
 		"folder": {
-			"name": "Ch_environment"
+			"name": "batch_wise_cal"
 		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-20T05:27:08Z"

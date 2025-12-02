@@ -112,7 +112,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "CALCULATION_INITIAL_LOAD_copy1",
+									"referenceName": "share_financial_stat_table",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true
@@ -197,7 +197,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "UPDATE ch_fss.watermark_table \nSET last_processed_date = TO_TIMESTAMP('@{variables('ProcessedMonthEnds')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    updated_date = now(),\n    updated_by = 'Admin'\nWHERE process_name = 'TransactionProcessing';",
+								"value": "INSERT INTO ch_fss.watermark_table (process_name, last_processed_date, updated_date, updated_by)\nVALUES (\n    'TransactionProcessing',\n    TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    NOW(),\n    'Admin'\n);",
 								"type": "Expression"
 							}
 						}
@@ -214,7 +214,7 @@
 				"type": "String"
 			},
 			"ProcessedMonthEnds": {
-				"type": "Array"
+				"type": "String"
 			},
 			"LatestProcessedEndDate": {
 				"type": "String"
