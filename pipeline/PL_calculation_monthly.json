@@ -112,17 +112,17 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "CALCULATION_INITIAL_LOAD_copy1",
+									"referenceName": "share_financial_stat_copy2",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"month_start": {
-										"value": "@item().month_start",
+									"START_DATE": {
+										"value": "@variables('Start_time')",
 										"type": "Expression"
 									},
-									"month_end": {
-										"value": "@item().month_end",
+									"END_DATE": {
+										"value": "@variables('End_time')",
 										"type": "Expression"
 									}
 								}
@@ -206,7 +206,10 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "UPDATE ch_fss.watermark_table \r\nSET last_processed_date = TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\r\n    updated_date = now(),\r\n    updated_by = 'Admin'\r\nWHERE process_name = 'TransactionProcessing';"
+							"text": {
+								"value": "UPDATE ch_fss.watermark_table \r\nSET last_processed_date = TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\r\n    updated_date = now(),\r\n    updated_by = 'Admin'\r\nWHERE process_name = 'TransactionProcessing';",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"

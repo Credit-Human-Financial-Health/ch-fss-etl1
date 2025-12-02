@@ -328,6 +328,14 @@
 				}
 			}
 		],
+		"parameters": {
+			"START_DATE": {
+				"type": "string"
+			},
+			"END_DATE": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Ch_environment"
 		},

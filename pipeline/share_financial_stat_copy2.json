@@ -210,13 +210,21 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "TRUNCATE TABLE ch_fss.share_financial_stat CASCADE;"
+							"text": "delete from ch_fss.share_financial_stat where \ndate >= @START_DATE\nand date  < @END_DATE"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
+		"parameters": {
+			"START_DATE": {
+				"type": "string"
+			},
+			"END_DATE": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Ch_environment"
 		},
