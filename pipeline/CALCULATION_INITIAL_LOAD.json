@@ -260,6 +260,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "pwc_pipelines"
+		},
 		"annotations": []
 	}
 }

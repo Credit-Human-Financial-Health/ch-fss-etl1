@@ -29,6 +29,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "pwc_pipelines"
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-07T12:58:39Z"
 	},

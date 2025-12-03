@@ -1,6 +1,9 @@
 {
 	"name": "DF_share_account",
 	"properties": {
+		"folder": {
+			"name": "DATA FLOWS OF DATA"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

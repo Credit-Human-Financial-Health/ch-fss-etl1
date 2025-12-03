@@ -1,5 +1,5 @@
 {
-	"name": "member_stories",
+	"name": "DF_MEMBERSTORIES",
 	"properties": {
 		"activities": [
 			{
@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "member_stories",
+						"referenceName": "DF_MEMBERSTORIES",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -131,6 +131,9 @@
 			"Error_message": {
 				"type": "String"
 			}
+		},
+		"folder": {
+			"name": "data_flow_pipelines"
 		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-19T21:46:21Z"

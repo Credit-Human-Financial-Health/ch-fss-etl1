@@ -1,6 +1,9 @@
 {
-	"name": "member_details",
+	"name": "DF_MEMBERDETAILS",
 	"properties": {
+		"folder": {
+			"name": "DATA FLOWS OF DATA"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

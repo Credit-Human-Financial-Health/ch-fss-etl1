@@ -5,6 +5,9 @@
 			"referenceName": "AzurePostgreSql1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DS_MEMBERSTORIES"
+		},
 		"annotations": [],
 		"type": "AzurePostgreSqlTable",
 		"schema": [

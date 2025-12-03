@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "comments_transaction",
+						"referenceName": "DF_COMMENTS",
 						"type": "DataFlowReference"
 					},
 					"compute": {

@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "member_details",
+						"referenceName": "DF_MEMBERDETAILS",
 						"type": "DataFlowReference"
 					},
 					"compute": {

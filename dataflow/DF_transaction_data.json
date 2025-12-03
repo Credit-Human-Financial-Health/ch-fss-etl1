@@ -1,6 +1,9 @@
 {
 	"name": "DF_transaction_data",
 	"properties": {
+		"folder": {
+			"name": "DATA FLOWS OF DATA"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

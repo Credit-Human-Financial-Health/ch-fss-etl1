@@ -1,6 +1,9 @@
 {
 	"name": "Transformation_transaction_data",
 	"properties": {
+		"folder": {
+			"name": "INTIAL LOAD"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

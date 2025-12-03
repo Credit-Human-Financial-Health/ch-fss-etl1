@@ -5,6 +5,9 @@
 			"referenceName": "PostgreSql",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DS_PWC"
+		},
 		"annotations": [],
 		"type": "PostgreSqlV2Table",
 		"schema": [],

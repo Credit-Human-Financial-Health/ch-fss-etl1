@@ -1,6 +1,9 @@
 {
-	"name": "comments_transaction",
+	"name": "DF_COMMENTS",
 	"properties": {
+		"folder": {
+			"name": "DATA FLOWS OF DATA"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
