@@ -1,18 +1,11 @@
 {
-	"name": "DF_TRANSACTION",
+	"name": "PL_TRANSACTION",
 	"properties": {
 		"activities": [
 			{
 				"name": "Dataflow",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "Asondate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -69,10 +62,6 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": {
-							"value": "update fss1.watermark_table\nSET date = CAST('@{variables('currentDateTime')}' AS TIMESTAMP),\n    lines_copied = @{variables('rowsCopied')}\nWHERE \"source_table\" = 'ch_transaction_1';",
-							"type": "Expression"
-						},
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -173,7 +162,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "incomingfilesfolder",
+						"referenceName": "transactioncsv_admin",
 						"type": "DatasetReference"
 					}
 				],
@@ -183,47 +172,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Asondate",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "currentDateTime",
-					"value": {
-						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "rowsCopied",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "CopyDataActivity",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "rowsCopied",
-					"value": {
-						"value": "@activity('CopyDataActivity').output.rowscopied",
-						"type": "Expression"
-					}
-				}
 			}
 		],
 		"variables": {

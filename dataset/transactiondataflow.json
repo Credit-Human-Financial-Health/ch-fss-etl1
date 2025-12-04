@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DS_PWC"
+			"name": "DS_TRANSACTION"
 		},
 		"annotations": [],
 		"type": "DelimitedText",

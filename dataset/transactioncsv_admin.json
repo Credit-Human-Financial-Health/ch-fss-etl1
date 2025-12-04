@@ -1,12 +1,12 @@
 {
-	"name": "incomingfilesfolder",
+	"name": "transactioncsv_admin",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DS_PWC"
+			"name": "DS_TRANSACTION"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
