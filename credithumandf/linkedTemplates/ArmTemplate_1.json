@@ -84,272 +84,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/incomingfilesfolder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_PWC"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "transaction.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGCOUNT",
-						"type": "String"
-					},
-					{
-						"name": "COMMENTCODE",
-						"type": "String"
-					},
-					{
-						"name": "TRANSFERCODE",
-						"type": "String"
-					},
-					{
-						"name": "ADJUSTMENTCODE",
-						"type": "String"
-					},
-					{
-						"name": "REGECODE",
-						"type": "String"
-					},
-					{
-						"name": "REGDCHECKCODE",
-						"type": "String"
-					},
-					{
-						"name": "REGDTRANSFERCODE",
-						"type": "String"
-					},
-					{
-						"name": "VOIDCODE",
-						"type": "String"
-					},
-					{
-						"name": "SUBACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "USERNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "USEROVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SECURITYLEVELS",
-						"type": "String"
-					},
-					{
-						"name": "DESCRIPTION",
-						"type": "String"
-					},
-					{
-						"name": "ACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SOURCECODE",
-						"type": "String"
-					},
-					{
-						"name": "BALANCECHANGE",
-						"type": "String"
-					},
-					{
-						"name": "INTEREST",
-						"type": "String"
-					},
-					{
-						"name": "NEWBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "FEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "LASTTRANDATE",
-						"type": "String"
-					},
-					{
-						"name": "MATURITYLOANDUEDATE",
-						"type": "String"
-					},
-					{
-						"name": "COMMENT",
-						"type": "String"
-					},
-					{
-						"name": "BRANCH",
-						"type": "String"
-					},
-					{
-						"name": "CONSOLENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "BATCHSEQUENCE",
-						"type": "String"
-					},
-					{
-						"name": "SALESTAXAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "ACTIVITYDATE",
-						"type": "String"
-					},
-					{
-						"name": "BILLEDFEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "PROCESSORUSER",
-						"type": "String"
-					},
-					{
-						"name": "MEMBERBRANCH",
-						"type": "String"
-					},
-					{
-						"name": "PREVAVAILBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "SUBSOURCE",
-						"type": "String"
-					},
-					{
-						"name": "CONFIRMATIONSEQ",
-						"type": "String"
-					},
-					{
-						"name": "RECURRINGTRAN",
-						"type": "String"
-					},
-					{
-						"name": "FEEEXMTCRTSYAMT",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWUNPAIDBALCHG",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWAPPLIEDBALCHG",
-						"type": "String"
-					},
-					{
-						"name": "UNAPPLIEDPARTIALPMTCHG",
-						"type": "String"
-					},
-					{
-						"name": "FEECOUNTBY",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGWAIVEDAMT",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGUNPAIDCHGAMT",
-						"type": "String"
-					},
-					{
-						"name": "PREVLATECHGDATE",
-						"type": "String"
-					},
-					{
-						"name": "PREVLATECHGACCRUED",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGFIELDSVALID",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGID1",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGPMTCHANGEDATE1",
-						"type": "String"
-					},
-					{
-						"name": "INTEFFECTDATE",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGPREVFIRSTPMTDATE1",
-						"type": "String"
-					},
-					{
-						"name": "DRAFTNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "TRACERNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DISPOSITIONFEE",
-						"type": "String"
-					},
-					{
-						"name": "TERMINATIONFEE",
-						"type": "String"
-					},
-					{
-						"name": "MISCEXPENSEAMOUNT",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/latestfile')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1739,6 +1473,97 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/multiple_transaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trans_comments_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DS_COMMENTS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "PWC_Trans_comment_2025_10_31.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "TranId",
+						"type": "String"
+					},
+					{
+						"name": "CommentID",
+						"type": "String"
+					},
+					{
+						"name": "PARENTID",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/transaction_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1940,6 +1765,272 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/transactioncsv_admin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DS_TRANSACTION"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "transaction.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "COMMENTCODE",
+						"type": "String"
+					},
+					{
+						"name": "TRANSFERCODE",
+						"type": "String"
+					},
+					{
+						"name": "ADJUSTMENTCODE",
+						"type": "String"
+					},
+					{
+						"name": "REGECODE",
+						"type": "String"
+					},
+					{
+						"name": "REGDCHECKCODE",
+						"type": "String"
+					},
+					{
+						"name": "REGDTRANSFERCODE",
+						"type": "String"
+					},
+					{
+						"name": "VOIDCODE",
+						"type": "String"
+					},
+					{
+						"name": "SUBACTIONCODE",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "USERNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "USEROVERRIDE",
+						"type": "String"
+					},
+					{
+						"name": "SECURITYLEVELS",
+						"type": "String"
+					},
+					{
+						"name": "DESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "ACTIONCODE",
+						"type": "String"
+					},
+					{
+						"name": "SOURCECODE",
+						"type": "String"
+					},
+					{
+						"name": "BALANCECHANGE",
+						"type": "String"
+					},
+					{
+						"name": "INTEREST",
+						"type": "String"
+					},
+					{
+						"name": "NEWBALANCE",
+						"type": "String"
+					},
+					{
+						"name": "FEEAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "LASTTRANDATE",
+						"type": "String"
+					},
+					{
+						"name": "MATURITYLOANDUEDATE",
+						"type": "String"
+					},
+					{
+						"name": "COMMENT",
+						"type": "String"
+					},
+					{
+						"name": "BRANCH",
+						"type": "String"
+					},
+					{
+						"name": "CONSOLENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "BATCHSEQUENCE",
+						"type": "String"
+					},
+					{
+						"name": "SALESTAXAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "ACTIVITYDATE",
+						"type": "String"
+					},
+					{
+						"name": "BILLEDFEEAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "PROCESSORUSER",
+						"type": "String"
+					},
+					{
+						"name": "MEMBERBRANCH",
+						"type": "String"
+					},
+					{
+						"name": "PREVAVAILBALANCE",
+						"type": "String"
+					},
+					{
+						"name": "SUBSOURCE",
+						"type": "String"
+					},
+					{
+						"name": "CONFIRMATIONSEQ",
+						"type": "String"
+					},
+					{
+						"name": "RECURRINGTRAN",
+						"type": "String"
+					},
+					{
+						"name": "FEEEXMTCRTSYAMT",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWUNPAIDBALCHG",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWAPPLIEDBALCHG",
+						"type": "String"
+					},
+					{
+						"name": "UNAPPLIEDPARTIALPMTCHG",
+						"type": "String"
+					},
+					{
+						"name": "FEECOUNTBY",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGWAIVEDAMT",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGUNPAIDCHGAMT",
+						"type": "String"
+					},
+					{
+						"name": "PREVLATECHGDATE",
+						"type": "String"
+					},
+					{
+						"name": "PREVLATECHGACCRUED",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGFIELDSVALID",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGID1",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGPMTCHANGEDATE1",
+						"type": "String"
+					},
+					{
+						"name": "INTEFFECTDATE",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGPREVFIRSTPMTDATE1",
+						"type": "String"
+					},
+					{
+						"name": "DRAFTNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "TRACERNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DISPOSITIONFEE",
+						"type": "String"
+					},
+					{
+						"name": "TERMINATIONFEE",
+						"type": "String"
+					},
+					{
+						"name": "MISCEXPENSEAMOUNT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/transactiondataflow')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1949,15 +2040,15 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DS_PWC"
+					"name": "DS_TRANSACTION"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Extract_SavingsTransaction_2025_10_24.csv",
-						"container": "incomingfiles"
+						"fileName": "transaction.csv",
+						"container": "archive"
 					},
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
@@ -2236,7 +2327,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_calculation_monthly')]",
+			"name": "[concat(parameters('factoryName'), '/PL_FSS_CALCULATION')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2287,7 +2378,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "share_financial_stat_table",
+											"referenceName": "PL_SHARE_FIN_STAT",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -2344,7 +2435,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "account_group_fin_stat_table",
+											"referenceName": "PL_ACCOUNT_GRP_FIN_STAT",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -2472,7 +2563,7 @@
 					}
 				},
 				"folder": {
-					"name": "batch_wise_cal"
+					"name": "FSS_CALCULATION_PL"
 				},
 				"annotations": []
 			},
@@ -2943,218 +3034,6 @@
 				"lastPublishTime": "2025-11-20T05:27:08Z"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Trans_comments",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "comments_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "surrogateKey"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          TranId as string,",
-						"          CommentID as string,",
-						"          PARENTID as integer,",
-						"          SEQUENCENUMBER as string,",
-						"          EFFECTIVEDATE as string,",
-						"          POSTDATE as date,",
-						"          POSTTIME as string,",
-						"          Comment as string,",
-						"          PWC_Key as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(comment_id = concat(TranId, CommentID),",
-						"          transaction_id = PARENTID) ~> derivedColumn1",
-						"derivedColumn1 keyGenerate(output(transaction_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L,",
-						"     partitionBy('hash', 1)) ~> surrogateKey",
-						"surrogateKey sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          comment_id as long,",
-						"          post_date as timestamp,",
-						"          comment_value as string,",
-						"          created_date as timestamp,",
-						"          created_by as string,",
-						"          updated_date as timestamp,",
-						"          updated_by as string,",
-						"          transaction_id as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          comment_id,",
-						"          post_date = POSTDATE,",
-						"          comment_value = Comment,",
-						"          transaction_id",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "member_details_csv",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "member_details_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          add_date as string,",
-						"          PWC_Key as integer,",
-						"          ORDINAL as string,",
-						"          TYPE as string,",
-						"          SUBTYPE as string,",
-						"          MAILOVERRIDE as string,",
-						"          SSNOVERRIDE as string,",
-						"          SSNCERTIFICATION as string,",
-						"          SSNTYPE as string,",
-						"          EFFECTIVEDATE as string,",
-						"          EXPIRATIONDATE as string,",
-						"          FirstName as string,",
-						"          MiddleName as string,",
-						"          LastName as string,",
-						"          SUFFIX as string,",
-						"          EXTRAADDRESS as string,",
-						"          STREET as string,",
-						"          CITY as string,",
-						"          STATE as string,",
-						"          ZIPCODE as string,",
-						"          LASTFMDATE as string,",
-						"          CARRIERROUTE as string,",
-						"          ADDRESSTYPE as string,",
-						"          DEATHDATE as string,",
-						"          ECOACODE as string,",
-						"          COUNTRY as string,",
-						"          COUNTRYCODE as string,",
-						"          RECORDCHANGEDATE as string,",
-						"          MBRSTATUS as string,",
-						"          MBRSTATUSFMDATE as string,",
-						"          MBRCREATEDATE as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(name = replace(FirstName, char(0), ''),",
-						"          {e-mail} = LastName,",
-						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          member_id as integer,",
-						"          name as string,",
-						"          last_name as string,",
-						"          date_of_birth as date,",
-						"          ssn as string,",
-						"          address as string,",
-						"          city as string,",
-						"          state as string,",
-						"          zip_code as string,",
-						"          phone as string,",
-						"          email as string,",
-						"          branch as string,",
-						"          status as string,",
-						"          start_date as date",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          member_id = PWC_Key,",
-						"          name,",
-						"          last_name = LastName,",
-						"          address = STREET,",
-						"          city = CITY,",
-						"          state = derivedColumn1@state,",
-						"          zip_code = ZIPCODE,",
-						"          start_date = MBRCREATEDATE,",
-						"          email = {e-mail}",
-						"     )) ~> sink"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/member_details_csv')]",
-				"[concat(variables('factoryId'), '/datasets/member_details_sink')]"
-			]
 		}
 	]
 }

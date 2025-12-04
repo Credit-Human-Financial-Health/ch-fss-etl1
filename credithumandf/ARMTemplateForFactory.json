@@ -787,628 +787,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "comments",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_COMMENTS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERACCOUNT')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "member_account_data",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Member_account",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-08T19:05:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Member_account')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_MEMBERDETAILS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "member_stories",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Start_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_MEMBERSTORIES",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Start_time",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Start_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "End_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "member_stories",
-								"dependencyConditions": [
-									"Failed",
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "End_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "pipelinerunstatus",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "End_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "member_stories",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').error.message, null)}'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"Start_time": {
-						"type": "String"
-					},
-					"End_time": {
-						"type": "String"
-					},
-					"Status": {
-						"type": "String"
-					},
-					"Error_message": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_SHAREACCOUNT')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DF_SHARE_ACCOUNT",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_share_account",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-08T19:05:36Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_share_account')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_TRANSACTION')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dataflow",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Asondate",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_transaction_data",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 32,
-								"computeType": "MemoryOptimized"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "CopyDataActivity",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Dataflow",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "transaction.csv",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzurePostgreSqlSink",
-								"writeBatchSize": 1000000,
-								"writeBatchTimeout": "00:30:00",
-								"preCopyScript": {
-									"value": "update fss1.watermark_table\nSET date = CAST('@{variables('currentDateTime')}' AS TIMESTAMP),\n    lines_copied = @{variables('rowsCopied')}\nWHERE \"source_table\" = 'ch_transaction_1';",
-									"type": "Expression"
-								},
-								"writeMethod": "CopyCommand"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "transaction_date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_date",
-											"type": "DateTime",
-											"physicalType": "timestamp without time zone"
-										}
-									},
-									{
-										"source": {
-											"name": "Transaction_amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_amount",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									},
-									{
-										"source": {
-											"name": "DESCRIPTION",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "description",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "SOURCECODE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "payment_method",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "transaction_code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_type_code_id",
-											"type": "Int32",
-											"physicalType": "integer"
-										}
-									},
-									{
-										"source": {
-											"name": "PWC_Key",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "share_id",
-											"type": "Int64",
-											"physicalType": "bigint"
-										}
-									},
-									{
-										"source": {
-											"name": "NEWBALANCE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "balance",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "incomingfilesfolder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "transaction_sink",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Asondate",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "currentDateTime",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "rowsCopied",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "CopyDataActivity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "rowsCopied",
-							"value": {
-								"value": "@activity('CopyDataActivity').output.rowscopied",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"currentDateTime": {
-						"type": "String"
-					},
-					"rowsCopied": {
-						"type": "Integer"
-					},
-					"lastmodifiedreftime": {
-						"type": "String"
-					},
-					"latestfile": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-08T19:05:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_transaction_data')]",
-				"[concat(variables('factoryId'), '/datasets/incomingfilesfolder')]",
-				"[concat(variables('factoryId'), '/datasets/transaction_sink')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Initialload')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1568,7 +946,7 @@
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Start_time",
+								"activity": "start_time",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1601,14 +979,20 @@
 						}
 					},
 					{
-						"name": "pipelinerunstatus",
+						"name": "job_run_status",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "End_time",
+								"activity": "end_time",
 								"dependencyConditions": [
 									"Succeeded",
 									"Failed"
+								]
+							},
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Completed"
 								]
 							}
 						],
@@ -1629,7 +1013,7 @@
 								{
 									"type": "NonQuery",
 									"text": {
-										"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{variables('status')}',\n  '@{variables('error_message')}'\n)",
+										"value": "insert into ch-fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{variables('status')}',\n  '@{variables('error_message')}'\n)",
 										"type": "Expression"
 									}
 								}
@@ -1638,7 +1022,7 @@
 						}
 					},
 					{
-						"name": "Start_time",
+						"name": "start_time",
 						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
@@ -1647,7 +1031,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "Start_time",
+							"variableName": "start_time",
 							"value": {
 								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 								"type": "Expression"
@@ -1655,7 +1039,7 @@
 						}
 					},
 					{
-						"name": "End_time",
+						"name": "end_time",
 						"type": "SetVariable",
 						"dependsOn": [
 							{
@@ -1672,7 +1056,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "End_time",
+							"variableName": "end_time",
 							"value": {
 								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
 								"type": "Expression"
@@ -1684,10 +1068,10 @@
 					"elapsedTimeMetric": {}
 				},
 				"variables": {
-					"End_time": {
+					"end_time": {
 						"type": "String"
 					},
-					"Start_time": {
+					"start_time": {
 						"type": "String"
 					},
 					"status": {
@@ -1698,7 +1082,7 @@
 					}
 				},
 				"folder": {
-					"name": "data_flow_pipelines"
+					"name": "FSS_DATALOAD_PL"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-19T21:46:21Z"
@@ -1709,7 +1093,661 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_calculation_monthly')]",
+			"name": "[concat(parameters('factoryName'), '/PL_ACCOUNT_GRP_FIN_STAT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "transaction_daily",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "transaction_table_",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  s.scoring_group_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nJOIN ch_fss.share_account sa ON t.share_id = sa.share_id\nJOIN ch_fss.scoring_group s ON sa.account_id = s.account_id\nWHERE t.transaction_date >= ''',\npipeline().parameters.start_date,\n'''\nAND t.transaction_date < ''',\npipeline().parameters.end_date,\n'''\nGROUP BY s.scoring_group_id, date, financial_stat_type_code_id;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "ending_bal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "transaction_daily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat(scoring_group_id, date, value, financial_stat_type_code_id, created_date, created_by)\nSELECT\n    sg.scoring_group_id,\n    agg.date,\n    agg.total_value,\n    4,\n    NOW() AS created_date,\n    ''system'' AS created_by\nFROM\n(\n    SELECT sa.account_id, sfs.date, SUM(sfs.value) AS total_value\n    FROM ch_fss.share_financial_stat sfs\n    JOIN ch_fss.share_account sa ON sa.share_id = sfs.share_id\n    WHERE sfs.\"date\" >= ''',\n    pipeline().parameters.start_date,\n    '''\n    AND sfs.\"date\" < ''',\n    pipeline().parameters.end_date,\n    '''\n    AND sfs.financial_stat_type_code_id = 4\n    GROUP BY sa.account_id, sfs.date\n) agg\nJOIN ch_fss.scoring_group sg ON sg.account_id = agg.account_id;'\n)\n ",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "avg_multiple_dates",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "ending_bal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat\n(\n   scoring_group_id,\n   financial_stat_type_code_id,\n   date,\n   value\n)\nWITH date_series AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series(''',\npipeline().parameters.start_date,\n'''::date, ''',\npipeline().parameters.end_date,\n'''::date - interval ''1 day'', interval ''1 day'')\n),\navg_values AS (\n    SELECT\n        sfs.scoring_group_id,\n        sfs.financial_stat_type_code_id,\n        ds.dt AS date,\n        SUM(sfs.value)/30 AS avg_value\n    FROM ch_fss.account_group_financial_stat sfs \n    CROSS JOIN date_series ds\n    WHERE sfs.financial_stat_type_code_id IN (1, 2, 3, 4)\n      AND sfs.date BETWEEN ds.dt - INTERVAL ''29 days'' AND ds.dt  -- last 30 days including the day\n    GROUP BY sfs.scoring_group_id, sfs.financial_stat_type_code_id, ds.dt\n),\nmapped_avg AS (\n    SELECT\n        scoring_group_id,\n        CASE financial_stat_type_code_id\n            WHEN 1 THEN 5\n            WHEN 2 THEN 6\n            WHEN 3 THEN 7\n            WHEN 4 THEN 8\n        END AS financial_stat_type_code_id,\n        date,\n        avg_value\n    FROM avg_values\n)\nSELECT\n    scoring_group_id,\n    financial_stat_type_code_id,\n    date,\n    avg_value AS value\nFROM mapped_avg\nWHERE avg_value IS NOT NULL;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "slack_score_with_fee",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "avg_multiple_dates",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n pipeline().parameters.start_date,\n  ''' \n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat (\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  9,\n  date,\n  ratio\nFROM vals;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "slack score without fee",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "slack_score_with_fee",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(\n      CASE \n        WHEN financial_stat_type_code_id = 7 THEN abs(value)\n        WHEN financial_stat_type_code_id = 8 THEN value\n        ELSE 0 -- in case other codes appear\n      END\n    )::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (7, 8)\n  GROUP BY scoring_group_id, date\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  10,\n  date,\n  ratio\nFROM vals;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "spot slack",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "slack score without fee",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  11,\n  date,\n  ratio\nFROM vals;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "flow slack",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "spot slack",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\ndeposits AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 5\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.income - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  12,\n  date,\n  diff*30\nFROM vals;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "stock slack",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "flow slack",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) * 30 AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nbalances AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.balance - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  13,\n  date,\n  diff\nFROM vals;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "transaction_table_",
+						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "truncate_account_group",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "truncate_account_group",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\r\n'DELETE FROM ch_fss.account_group_financial_stat\r\nWHERE date >= ''',\r\npipeline().parameters.start_date,\r\n''' \r\nAND date < ''',\r\npipeline().parameters.end_date,\r\n''';'\r\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"start_date": {
+						"type": "string",
+						"defaultValue": "@item().start_date"
+					},
+					"end_date": {
+						"type": "string",
+						"defaultValue": "@item().end_date"
+					}
+				},
+				"folder": {
+					"name": "FSS_CALCULATION_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-20T05:27:08Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_COMMENTS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "comments",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_COMMENTS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcecomments": {},
+									"sinkfile": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "comment_data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "comment_data",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('comment_data').status}',\n  '@{if(equals(activity('comment_data').status, 'Failed'), activity('comment_data').Message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "comment_data",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "comments",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "comments_csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "comment_id",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "comment_id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "transction_date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "post_date",
+											"type": "DateTime",
+											"physicalType": "timestamp without time zone"
+										}
+									},
+									{
+										"source": {
+											"name": "Comment",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "comment_value",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "TranId",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_id",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "comments_csv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "comments_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
+				"[concat(variables('factoryId'), '/datasets/comments_csv')]",
+				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_FSS_CALCULATION')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1760,7 +1798,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "share_financial_stat_table",
+											"referenceName": "PL_SHARE_FIN_STAT",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -1817,7 +1855,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "account_group_fin_stat_table",
+											"referenceName": "PL_ACCOUNT_GRP_FIN_STAT",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -1945,15 +1983,1302 @@
 					}
 				},
 				"folder": {
-					"name": "batch_wise_cal"
+					"name": "FSS_CALCULATION_PL"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Lookupmonthsarray')]",
-				"[concat(variables('factoryId'), '/pipelines/share_financial_stat_table')]",
-				"[concat(variables('factoryId'), '/pipelines/account_group_fin_stat_table')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_SHARE_FIN_STAT')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_ACCOUNT_GRP_FIN_STAT')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "member_account_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERACCOUNT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_account_data').status}',\n  '@{if(equals(activity('member_account_data').status, 'Failed'), activity('member_account_data').error.message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-08T19:05:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERACCOUNT')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERDETAILS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERDETAILS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "member_stories",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERSTORIES",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Failed",
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').error.message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"Status": {
+						"type": "String"
+					},
+					"Error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SHAREACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_SHARE_ACCOUNT",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_SHAREACCOUNT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-08T19:05:36Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_SHAREACCOUNT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SHARE_FIN_STAT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "transaction_daily",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Truncate_table_financial_stat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat('\nINSERT INTO fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= ''',\n pipeline().parameters.start_date,\n '''::date\n  AND t.transaction_date::date <= ''',\n pipeline().parameters.end_date,\n '''::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n')",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "ending_bal_cal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "transaction_daily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  sub.share_id,\n  4 AS financial_stat_type_code_id,\n  sub.transaction_date::date AS date,\n  sub.balance AS value\nFROM (\n  SELECT DISTINCT ON (t.share_id, t.transaction_date::date)\n    t.share_id,\n    t.transaction_date,\n    t.balance,\n    t.transaction_id\n  FROM ch_fss.\"transaction\" t\n  WHERE t.transaction_date >= ''',\n  pipeline().parameters.start_date,\n  ''' \n  and t.transaction_date  < ''',\n  pipeline().parameters.end_date,\n  '''\n  ORDER BY t.share_id, t.transaction_date::date, t.transaction_id DESC\n) sub;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "stg_ending_bal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "truncate_stg_table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'WITH date_range AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series(''',\n  pipeline().parameters.start_date,\n  '''::date, ''',\n  pipeline().parameters.end_date,\n  '''::date - interval ''1 day'', interval ''1 day'')\n),\ngroups AS (\n  SELECT DISTINCT share_id\n  FROM ch_fss.share_account sa\n  WHERE sa.close_date IS NULL\n),\nall_combinations AS (\n  SELECT g.share_id, d.dt AS date\n  FROM groups g CROSS JOIN date_range d\n)\nINSERT INTO fss_stg.stg_missing_share_ending_bal(\n  share_id, \n  date\n) \nSELECT ac.share_id, ac.date\nFROM all_combinations ac\nLEFT JOIN ch_fss.share_financial_stat agfs\n  ON agfs.share_id = ac.share_id\n  AND agfs.date = ac.date\n  AND agfs.financial_stat_type_code_id = 4\nWHERE agfs.financial_stat_id IS NULL;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Insert_missing_ending_bal",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "stg_ending_bal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'INSERT INTO ch_fss.share_financial_stat (\n  value,\n  date,\n  financial_stat_type_code_id,\n  share_id,\n  created_date,\n  created_by\n)\nSELECT\n  prev.value,\n  tm.date,\n  4,\n  tm.share_id,\n  NOW() AS created_date,\n  ''system'' AS created_by\nFROM fss_stg.stg_missing_share_ending_bal tm\nLEFT JOIN LATERAL (\n  SELECT value\n  FROM  ch_fss.share_financial_stat agfs\n  WHERE agfs.share_id = tm.share_id\n    AND agfs.financial_stat_type_code_id = 4\n    AND agfs.date < tm.date\n  ORDER BY date DESC\n  LIMIT 1\n) prev ON true\nAND prev.value IS NOT null;'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "truncate_stg_table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "ending_bal_cal",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "TRUNCATE TABLE fss_stg.stg_missing_share_ending_bal CASCADE;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Truncate_table_financial_stat",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'DELETE FROM ch_fss.share_financial_stat\nWHERE date >= ''',\npipeline().parameters.start_date,\n''' \nAND date < ''',\npipeline().parameters.end_date,\n''';'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"start_date": {
+						"type": "string",
+						"defaultValue": "@item.start_date"
+					},
+					"end_date": {
+						"type": "string",
+						"defaultValue": "@item.end_date"
+					}
+				},
+				"folder": {
+					"name": "FSS_CALCULATION_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-20T05:27:08Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_TRANSACTION')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_TRANSACTION",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 32,
+								"computeType": "MemoryOptimized"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "CopyDataActivity",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Dataflow",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "transaction.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "transaction_date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_date",
+											"type": "DateTime",
+											"physicalType": "timestamp without time zone"
+										}
+									},
+									{
+										"source": {
+											"name": "Transaction_amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_amount",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "DESCRIPTION",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "description",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "SOURCECODE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "payment_method",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "transaction_code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "transaction_type_code_id",
+											"type": "Int32",
+											"physicalType": "integer"
+										}
+									},
+									{
+										"source": {
+											"name": "PWC_Key",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "share_id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "NEWBALANCE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "balance",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "transactioncsv_admin",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "transaction_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"currentDateTime": {
+						"type": "String"
+					},
+					"rowsCopied": {
+						"type": "Integer"
+					},
+					"lastmodifiedreftime": {
+						"type": "String"
+					},
+					"latestfile": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-08T19:05:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION')]",
+				"[concat(variables('factoryId'), '/datasets/transactioncsv_admin')]",
+				"[concat(variables('factoryId'), '/datasets/transaction_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_TRANSACTION_MULTIFILE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get files data",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "multiple_transaction",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems",
+								"itemName"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "loop data",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get files data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get files data').output.itemName",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "transaction_data",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "DF_TRANSACTION",
+											"type": "DataFlowReference",
+											"parameters": {},
+											"datasetParameters": {
+												"source": {},
+												"sink": {}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 32,
+											"computeType": "MemoryOptimized"
+										},
+										"traceLevel": "Fine"
+									}
+								},
+								{
+									"name": "copy_transaction_data",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "transaction_data",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFileName": "trans",
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzurePostgreSqlSink",
+											"writeBatchSize": 1000000,
+											"writeBatchTimeout": "00:30:00",
+											"writeMethod": "CopyCommand"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "transaction_date",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "transaction_date",
+														"type": "DateTime",
+														"physicalType": "timestamp without time zone"
+													}
+												},
+												{
+													"source": {
+														"name": "Transaction_amount",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "transaction_amount",
+														"type": "Decimal",
+														"physicalType": "numeric"
+													}
+												},
+												{
+													"source": {
+														"name": "DESCRIPTION",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "description",
+														"type": "String",
+														"physicalType": "character varying"
+													}
+												},
+												{
+													"source": {
+														"name": "SOURCECODE",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "payment_method",
+														"type": "String",
+														"physicalType": "character varying"
+													}
+												},
+												{
+													"source": {
+														"name": "transaction_code",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "transaction_type_code_id",
+														"type": "Int32",
+														"physicalType": "integer"
+													}
+												},
+												{
+													"source": {
+														"name": "PWC_Key",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "share_id",
+														"type": "Int64",
+														"physicalType": "bigint"
+													}
+												},
+												{
+													"source": {
+														"name": "NEWBALANCE",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "balance",
+														"type": "Decimal",
+														"physicalType": "numeric"
+													}
+												}
+											],
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "transactioncsv_admin",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "transaction_sink",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								},
+								{
+									"name": "trans_comments",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [
+										{
+											"activity": "copy_transaction_data",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "DF_COMMENTS",
+											"type": "DataFlowReference",
+											"parameters": {},
+											"datasetParameters": {
+												"sourcecomments": {},
+												"sinkfile": {}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								},
+								{
+									"name": "comment_data",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "trans_comments",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFileName": "comments_csv",
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzurePostgreSqlSink",
+											"writeBatchSize": 1000000,
+											"writeBatchTimeout": "00:30:00",
+											"writeMethod": "CopyCommand"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "comment_id",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "comment_id",
+														"type": "Int64",
+														"physicalType": "bigint"
+													}
+												},
+												{
+													"source": {
+														"name": "transction_date",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "post_date",
+														"type": "DateTime",
+														"physicalType": "timestamp without time zone"
+													}
+												},
+												{
+													"source": {
+														"name": "Comment",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "comment_value",
+														"type": "String",
+														"physicalType": "character varying"
+													}
+												},
+												{
+													"source": {
+														"name": "TranId",
+														"type": "String",
+														"physicalType": "String"
+													},
+													"sink": {
+														"name": "transaction_id",
+														"type": "Int32",
+														"physicalType": "integer"
+													}
+												}
+											],
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "comments_csv",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "comments_sink",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_date": {
+						"type": "String"
+					},
+					"end_date": {
+						"type": "Integer"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-08T19:05:37Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/multiple_transaction')]",
+				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION')]",
+				"[concat(variables('factoryId'), '/datasets/transactioncsv_admin')]",
+				"[concat(variables('factoryId'), '/datasets/transaction_sink')]",
+				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]",
+				"[concat(variables('factoryId'), '/datasets/comments_csv')]",
+				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
 			]
 		},
 		{
@@ -1997,7 +3322,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "data_flow_pipelines"
+					"name": "FSS_DATALOAD_PL"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-19T21:46:21Z"
@@ -2047,7 +3372,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "data_flow_pipelines"
+					"name": "FSS_DATALOAD_PL"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-19T21:46:21Z"
@@ -2746,388 +4071,6 @@
 				},
 				"folder": {
 					"name": "pwc_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-20T05:27:08Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/account_group_fin_stat_table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "transaction_daily",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "transaction_table_",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  s.scoring_group_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nJOIN ch_fss.share_account sa ON t.share_id = sa.share_id\nJOIN ch_fss.scoring_group s ON sa.account_id = s.account_id\nWHERE t.transaction_date >= ''',\npipeline().parameters.start_date,\n'''\nAND t.transaction_date < ''',\npipeline().parameters.end_date,\n'''\nGROUP BY s.scoring_group_id, date, financial_stat_type_code_id;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "transaction_daily",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat(scoring_group_id, date, value, financial_stat_type_code_id, created_date, created_by)\nSELECT\n    sg.scoring_group_id,\n    agg.date,\n    agg.total_value,\n    4,\n    NOW() AS created_date,\n    ''system'' AS created_by\nFROM\n(\n    SELECT sa.account_id, sfs.date, SUM(sfs.value) AS total_value\n    FROM ch_fss.share_financial_stat sfs\n    JOIN ch_fss.share_account sa ON sa.share_id = sfs.share_id\n    WHERE sfs.\"date\" >= ''',\n    pipeline().parameters.start_date,\n    '''\n    AND sfs.\"date\" < ''',\n    pipeline().parameters.end_date,\n    '''\n    AND sfs.financial_stat_type_code_id = 4\n    GROUP BY sa.account_id, sfs.date\n) agg\nJOIN ch_fss.scoring_group sg ON sg.account_id = agg.account_id;'\n)\n ",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "avg_multiple_dates",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'INSERT INTO ch_fss.account_group_financial_stat\n(\n   scoring_group_id,\n   financial_stat_type_code_id,\n   date,\n   value\n)\nWITH date_series AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series(''',\npipeline().parameters.start_date,\n'''::date, ''',\npipeline().parameters.end_date,\n'''::date - interval ''1 day'', interval ''1 day'')\n),\navg_values AS (\n    SELECT\n        sfs.scoring_group_id,\n        sfs.financial_stat_type_code_id,\n        ds.dt AS date,\n        SUM(sfs.value)/30 AS avg_value\n    FROM ch_fss.account_group_financial_stat sfs \n    CROSS JOIN date_series ds\n    WHERE sfs.financial_stat_type_code_id IN (1, 2, 3, 4)\n      AND sfs.date BETWEEN ds.dt - INTERVAL ''29 days'' AND ds.dt  -- last 30 days including the day\n    GROUP BY sfs.scoring_group_id, sfs.financial_stat_type_code_id, ds.dt\n),\nmapped_avg AS (\n    SELECT\n        scoring_group_id,\n        CASE financial_stat_type_code_id\n            WHEN 1 THEN 5\n            WHEN 2 THEN 6\n            WHEN 3 THEN 7\n            WHEN 4 THEN 8\n        END AS financial_stat_type_code_id,\n        date,\n        avg_value\n    FROM avg_values\n)\nSELECT\n    scoring_group_id,\n    financial_stat_type_code_id,\n    date,\n    avg_value AS value\nFROM mapped_avg\nWHERE avg_value IS NOT NULL;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "slack_score_with_fee",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "avg_multiple_dates",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n pipeline().parameters.start_date,\n  ''' \n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat (\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  9,\n  date,\n  ratio\nFROM vals;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "slack score without fee",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "slack_score_with_fee",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(\n      CASE \n        WHEN financial_stat_type_code_id = 7 THEN abs(value)\n        WHEN financial_stat_type_code_id = 8 THEN value\n        ELSE 0 -- in case other codes appear\n      END\n    )::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (7, 8)\n  GROUP BY scoring_group_id, date\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  10,\n  date,\n  ratio\nFROM vals;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "spot slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "slack score without fee",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH denominators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(abs(value)) AS denom_sum\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nnumerators AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS numerator\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 4\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    n.numerator,\n    d.denom_sum,\n    CASE \n      WHEN d.denom_sum = 0 THEN NULL\n      ELSE n.numerator / d.denom_sum\n    END AS ratio\n  FROM numerators n\n  JOIN denominators d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  11,\n  date,\n  ratio\nFROM vals;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "flow slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "spot slack",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\ndeposits AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS income\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\n  pipeline().parameters.start_date,\n  '''\n    AND sfs.\"date\" < ''',\n  pipeline().parameters.end_date,\n  '''\n    AND financial_stat_type_code_id = 5\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.income - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN deposits d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  12,\n  date,\n  diff*30\nFROM vals;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "stock slack",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "flow slack",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) * 30 AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nbalances AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.balance - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  13,\n  date,\n  diff\nFROM vals;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "transaction_table_",
-						"type": "Script",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "truncate_account_group",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "truncate_account_group",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\r\n'DELETE FROM ch_fss.account_group_financial_stat\r\nWHERE date >= ''',\r\npipeline().parameters.start_date,\r\n''' \r\nAND date < ''',\r\npipeline().parameters.end_date,\r\n''';'\r\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"start_date": {
-						"type": "string",
-						"defaultValue": "@item().start_date"
-					},
-					"end_date": {
-						"type": "string",
-						"defaultValue": "@item().end_date"
-					}
-				},
-				"folder": {
-					"name": "batch_wise_cal"
 				},
 				"annotations": [],
 				"lastPublishTime": "2025-11-20T05:27:08Z"
@@ -3883,242 +4826,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
 				"[concat(variables('factoryId'), '/pipelines/account_group_fin_stat_copy1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/share_financial_stat_table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "transaction_daily",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Truncate_table_financial_stat",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat('\nINSERT INTO fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= ''',\n pipeline().parameters.start_date,\n '''::date\n  AND t.transaction_date::date <= ''',\n pipeline().parameters.end_date,\n '''::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n')",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "ending_bal_cal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "transaction_daily",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  sub.share_id,\n  4 AS financial_stat_type_code_id,\n  sub.transaction_date::date AS date,\n  sub.balance AS value\nFROM (\n  SELECT DISTINCT ON (t.share_id, t.transaction_date::date)\n    t.share_id,\n    t.transaction_date,\n    t.balance,\n    t.transaction_id\n  FROM ch_fss.\"transaction\" t\n  WHERE t.transaction_date >= ''',\n  pipeline().parameters.start_date,\n  ''' \n  and t.transaction_date  < ''',\n  pipeline().parameters.end_date,\n  '''\n  ORDER BY t.share_id, t.transaction_date::date, t.transaction_id DESC\n) sub;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "stg_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "truncate_stg_table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'WITH date_range AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series(''',\n  pipeline().parameters.start_date,\n  '''::date, ''',\n  pipeline().parameters.end_date,\n  '''::date - interval ''1 day'', interval ''1 day'')\n),\ngroups AS (\n  SELECT DISTINCT share_id\n  FROM ch_fss.share_account sa\n  WHERE sa.close_date IS NULL\n),\nall_combinations AS (\n  SELECT g.share_id, d.dt AS date\n  FROM groups g CROSS JOIN date_range d\n)\nINSERT INTO fss_stg.stg_missing_share_ending_bal(\n  share_id, \n  date\n) \nSELECT ac.share_id, ac.date\nFROM all_combinations ac\nLEFT JOIN ch_fss.share_financial_stat agfs\n  ON agfs.share_id = ac.share_id\n  AND agfs.date = ac.date\n  AND agfs.financial_stat_type_code_id = 4\nWHERE agfs.financial_stat_id IS NULL;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Insert_missing_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "stg_ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'INSERT INTO ch_fss.share_financial_stat (\n  value,\n  date,\n  financial_stat_type_code_id,\n  share_id,\n  created_date,\n  created_by\n)\nSELECT\n  prev.value,\n  tm.date,\n  4,\n  tm.share_id,\n  NOW() AS created_date,\n  ''system'' AS created_by\nFROM fss_stg.stg_missing_share_ending_bal tm\nLEFT JOIN LATERAL (\n  SELECT value\n  FROM  ch_fss.share_financial_stat agfs\n  WHERE agfs.share_id = tm.share_id\n    AND agfs.financial_stat_type_code_id = 4\n    AND agfs.date < tm.date\n  ORDER BY date DESC\n  LIMIT 1\n) prev ON true\nAND prev.value IS NOT null;'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "truncate_stg_table",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "ending_bal_cal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "TRUNCATE TABLE fss_stg.stg_missing_share_ending_bal CASCADE;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Truncate_table_financial_stat",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "@concat(\n'DELETE FROM ch_fss.share_financial_stat\nWHERE date >= ''',\npipeline().parameters.start_date,\n''' \nAND date < ''',\npipeline().parameters.end_date,\n''';'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"start_date": {
-						"type": "string",
-						"defaultValue": "@item.start_date"
-					},
-					"end_date": {
-						"type": "string",
-						"defaultValue": "@item.end_date"
-					}
-				},
-				"folder": {
-					"name": "batch_wise_cal"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-20T05:27:08Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
 			]
 		},
 		{
@@ -5624,7 +6331,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Trans_comments')]",
+			"name": "[concat(parameters('factoryName'), '/comments_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -5640,52 +6347,14 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Trans_comment_2025_10_31.csv",
-						"container": "incomingfiles"
+						"container": "archive"
 					},
-					"columnDelimiter": "|",
+					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "TranId",
-						"type": "String"
-					},
-					{
-						"name": "CommentID",
-						"type": "String"
-					},
-					{
-						"name": "PARENTID",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "Comment",
-						"type": "String"
-					},
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
@@ -5762,274 +6431,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/incomingfilesfolder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_PWC"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "transaction.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGCOUNT",
-						"type": "String"
-					},
-					{
-						"name": "COMMENTCODE",
-						"type": "String"
-					},
-					{
-						"name": "TRANSFERCODE",
-						"type": "String"
-					},
-					{
-						"name": "ADJUSTMENTCODE",
-						"type": "String"
-					},
-					{
-						"name": "REGECODE",
-						"type": "String"
-					},
-					{
-						"name": "REGDCHECKCODE",
-						"type": "String"
-					},
-					{
-						"name": "REGDTRANSFERCODE",
-						"type": "String"
-					},
-					{
-						"name": "VOIDCODE",
-						"type": "String"
-					},
-					{
-						"name": "SUBACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "USERNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "USEROVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SECURITYLEVELS",
-						"type": "String"
-					},
-					{
-						"name": "DESCRIPTION",
-						"type": "String"
-					},
-					{
-						"name": "ACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SOURCECODE",
-						"type": "String"
-					},
-					{
-						"name": "BALANCECHANGE",
-						"type": "String"
-					},
-					{
-						"name": "INTEREST",
-						"type": "String"
-					},
-					{
-						"name": "NEWBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "FEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "LASTTRANDATE",
-						"type": "String"
-					},
-					{
-						"name": "MATURITYLOANDUEDATE",
-						"type": "String"
-					},
-					{
-						"name": "COMMENT",
-						"type": "String"
-					},
-					{
-						"name": "BRANCH",
-						"type": "String"
-					},
-					{
-						"name": "CONSOLENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "BATCHSEQUENCE",
-						"type": "String"
-					},
-					{
-						"name": "SALESTAXAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "ACTIVITYDATE",
-						"type": "String"
-					},
-					{
-						"name": "BILLEDFEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "PROCESSORUSER",
-						"type": "String"
-					},
-					{
-						"name": "MEMBERBRANCH",
-						"type": "String"
-					},
-					{
-						"name": "PREVAVAILBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "SUBSOURCE",
-						"type": "String"
-					},
-					{
-						"name": "CONFIRMATIONSEQ",
-						"type": "String"
-					},
-					{
-						"name": "RECURRINGTRAN",
-						"type": "String"
-					},
-					{
-						"name": "FEEEXMTCRTSYAMT",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWUNPAIDBALCHG",
-						"type": "String"
-					},
-					{
-						"name": "ESCROWAPPLIEDBALCHG",
-						"type": "String"
-					},
-					{
-						"name": "UNAPPLIEDPARTIALPMTCHG",
-						"type": "String"
-					},
-					{
-						"name": "FEECOUNTBY",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGWAIVEDAMT",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGUNPAIDCHGAMT",
-						"type": "String"
-					},
-					{
-						"name": "PREVLATECHGDATE",
-						"type": "String"
-					},
-					{
-						"name": "PREVLATECHGACCRUED",
-						"type": "String"
-					},
-					{
-						"name": "LATECHGFIELDSVALID",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGID1",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGPMTCHANGEDATE1",
-						"type": "String"
-					},
-					{
-						"name": "INTEFFECTDATE",
-						"type": "String"
-					},
-					{
-						"name": "BALSEGPREVFIRSTPMTDATE1",
-						"type": "String"
-					},
-					{
-						"name": "DRAFTNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "TRACERNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DISPOSITIONFEE",
-						"type": "String"
-					},
-					{
-						"name": "TERMINATIONFEE",
-						"type": "String"
-					},
-					{
-						"name": "MISCEXPENSEAMOUNT",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{
@@ -7440,6 +7841,101 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/multiple_transaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trans_comments_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DS_COMMENTS"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "PWC_Trans_comment_2025_10_31.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "TranId",
+						"type": "String"
+					},
+					{
+						"name": "CommentID",
+						"type": "String"
+					},
+					{
+						"name": "PARENTID",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/transaction_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7645,6 +8141,274 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/transactioncsv_admin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DS_TRANSACTION"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "transaction.csv",
+						"container": "incomingfiles"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PWC_Key",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "COMMENTCODE",
+						"type": "String"
+					},
+					{
+						"name": "TRANSFERCODE",
+						"type": "String"
+					},
+					{
+						"name": "ADJUSTMENTCODE",
+						"type": "String"
+					},
+					{
+						"name": "REGECODE",
+						"type": "String"
+					},
+					{
+						"name": "REGDCHECKCODE",
+						"type": "String"
+					},
+					{
+						"name": "REGDTRANSFERCODE",
+						"type": "String"
+					},
+					{
+						"name": "VOIDCODE",
+						"type": "String"
+					},
+					{
+						"name": "SUBACTIONCODE",
+						"type": "String"
+					},
+					{
+						"name": "SEQUENCENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "EFFECTIVEDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTDATE",
+						"type": "String"
+					},
+					{
+						"name": "POSTTIME",
+						"type": "String"
+					},
+					{
+						"name": "USERNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "USEROVERRIDE",
+						"type": "String"
+					},
+					{
+						"name": "SECURITYLEVELS",
+						"type": "String"
+					},
+					{
+						"name": "DESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "ACTIONCODE",
+						"type": "String"
+					},
+					{
+						"name": "SOURCECODE",
+						"type": "String"
+					},
+					{
+						"name": "BALANCECHANGE",
+						"type": "String"
+					},
+					{
+						"name": "INTEREST",
+						"type": "String"
+					},
+					{
+						"name": "NEWBALANCE",
+						"type": "String"
+					},
+					{
+						"name": "FEEAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "LASTTRANDATE",
+						"type": "String"
+					},
+					{
+						"name": "MATURITYLOANDUEDATE",
+						"type": "String"
+					},
+					{
+						"name": "COMMENT",
+						"type": "String"
+					},
+					{
+						"name": "BRANCH",
+						"type": "String"
+					},
+					{
+						"name": "CONSOLENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "BATCHSEQUENCE",
+						"type": "String"
+					},
+					{
+						"name": "SALESTAXAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "ACTIVITYDATE",
+						"type": "String"
+					},
+					{
+						"name": "BILLEDFEEAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "PROCESSORUSER",
+						"type": "String"
+					},
+					{
+						"name": "MEMBERBRANCH",
+						"type": "String"
+					},
+					{
+						"name": "PREVAVAILBALANCE",
+						"type": "String"
+					},
+					{
+						"name": "SUBSOURCE",
+						"type": "String"
+					},
+					{
+						"name": "CONFIRMATIONSEQ",
+						"type": "String"
+					},
+					{
+						"name": "RECURRINGTRAN",
+						"type": "String"
+					},
+					{
+						"name": "FEEEXMTCRTSYAMT",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWUNPAIDBALCHG",
+						"type": "String"
+					},
+					{
+						"name": "ESCROWAPPLIEDBALCHG",
+						"type": "String"
+					},
+					{
+						"name": "UNAPPLIEDPARTIALPMTCHG",
+						"type": "String"
+					},
+					{
+						"name": "FEECOUNTBY",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGWAIVEDAMT",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGUNPAIDCHGAMT",
+						"type": "String"
+					},
+					{
+						"name": "PREVLATECHGDATE",
+						"type": "String"
+					},
+					{
+						"name": "PREVLATECHGACCRUED",
+						"type": "String"
+					},
+					{
+						"name": "LATECHGFIELDSVALID",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGID1",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGPMTCHANGEDATE1",
+						"type": "String"
+					},
+					{
+						"name": "INTEFFECTDATE",
+						"type": "String"
+					},
+					{
+						"name": "BALSEGPREVFIRSTPMTDATE1",
+						"type": "String"
+					},
+					{
+						"name": "DRAFTNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "TRACERNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DISPOSITIONFEE",
+						"type": "String"
+					},
+					{
+						"name": "TERMINATIONFEE",
+						"type": "String"
+					},
+					{
+						"name": "MISCEXPENSEAMOUNT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/transactiondataflow')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7654,15 +8418,15 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "DS_PWC"
+					"name": "DS_TRANSACTION"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Extract_SavingsTransaction_2025_10_24.csv",
-						"container": "incomingfiles"
+						"fileName": "transaction.csv",
+						"container": "archive"
 					},
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
@@ -8008,359 +8772,76 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "DATA FLOWS OF DATA"
+					"name": "FSS_DATAFLOW"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "Trans_comments",
+								"referenceName": "trans_comments_csv",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "sourcecomments"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "comments_sink",
+								"referenceName": "comments_csv",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "sinkfile"
 						}
 					],
 					"transformations": [
 						{
 							"name": "derivedColumn1"
-						},
-						{
-							"name": "surrogateKey"
 						}
 					],
 					"scriptLines": [
 						"source(output(",
 						"          TranId as string,",
 						"          CommentID as string,",
-						"          PARENTID as integer,",
+						"          PARENTID as string,",
 						"          SEQUENCENUMBER as string,",
 						"          EFFECTIVEDATE as string,",
-						"          POSTDATE as date,",
+						"          POSTDATE as string,",
 						"          POSTTIME as string,",
 						"          Comment as string,",
-						"          PWC_Key as integer",
+						"          PWC_Key as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(comment_id = concat(TranId, CommentID),",
-						"          transaction_id = PARENTID) ~> derivedColumn1",
-						"derivedColumn1 keyGenerate(output(transaction_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L,",
-						"     partitionBy('hash', 1)) ~> surrogateKey",
-						"surrogateKey sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          comment_id as long,",
-						"          post_date as timestamp,",
-						"          comment_value as string,",
-						"          created_date as timestamp,",
-						"          created_by as string,",
-						"          updated_date as timestamp,",
-						"          updated_by as string,",
-						"          transaction_id as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          comment_id,",
-						"          post_date = POSTDATE,",
-						"          comment_value = Comment,",
-						"          transaction_id",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Trans_comments')]",
-				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "member_details_csv",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "member_details_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          add_date as string,",
-						"          PWC_Key as integer,",
-						"          ORDINAL as string,",
-						"          TYPE as string,",
-						"          SUBTYPE as string,",
-						"          MAILOVERRIDE as string,",
-						"          SSNOVERRIDE as string,",
-						"          SSNCERTIFICATION as string,",
-						"          SSNTYPE as string,",
-						"          EFFECTIVEDATE as string,",
-						"          EXPIRATIONDATE as string,",
-						"          FirstName as string,",
-						"          MiddleName as string,",
-						"          LastName as string,",
-						"          SUFFIX as string,",
-						"          EXTRAADDRESS as string,",
-						"          STREET as string,",
-						"          CITY as string,",
-						"          STATE as string,",
-						"          ZIPCODE as string,",
-						"          LASTFMDATE as string,",
-						"          CARRIERROUTE as string,",
-						"          ADDRESSTYPE as string,",
-						"          DEATHDATE as string,",
-						"          ECOACODE as string,",
-						"          COUNTRY as string,",
-						"          COUNTRYCODE as string,",
-						"          RECORDCHANGEDATE as string,",
-						"          MBRSTATUS as string,",
-						"          MBRSTATUSFMDATE as string,",
-						"          MBRCREATEDATE as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(name = replace(FirstName, char(0), ''),",
-						"          {e-mail} = LastName,",
-						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
+						"     ignoreNoFilesFound: false) ~> sourcecomments",
+						"sourcecomments derive(comment_id = concat(TranId, CommentID),",
+						"          transction_date = toTimestamp(\r",
+						"    toString(POSTDATE) + ' ' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 0, 2) + ':' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 3, 4),\r",
+						"    'yyyy-MM-dd HH:mm'\r",
+						")) ~> derivedColumn1",
 						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          member_id as integer,",
-						"          name as string,",
-						"          last_name as string,",
-						"          date_of_birth as date,",
-						"          ssn as string,",
-						"          address as string,",
-						"          city as string,",
-						"          state as string,",
-						"          zip_code as string,",
-						"          phone as string,",
-						"          email as string,",
-						"          branch as string,",
-						"          status as string,",
-						"          start_date as date",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
+						"     partitionFileNames:['comments_csv'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          member_id = PWC_Key,",
-						"          name,",
-						"          last_name = LastName,",
-						"          address = STREET,",
-						"          city = CITY,",
-						"          state = derivedColumn1@state,",
-						"          zip_code = ZIPCODE,",
-						"          start_date = MBRCREATEDATE,",
-						"          email = {e-mail}",
-						"     )) ~> sink"
+						"     partitionBy('hash', 1)) ~> sinkfile"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/member_details_csv')]",
-				"[concat(variables('factoryId'), '/datasets/member_details_sink')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/datasets/trans_comments_csv')]",
+				"[concat(variables('factoryId'), '/datasets/comments_csv')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERACCOUNT')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "DATA FLOWS OF DATA"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "member_stories",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "member_stories_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn2"
-						},
-						{
-							"name": "flatten1"
-						},
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "derivedColumn3"
-						},
-						{
-							"name": "surrogateKey1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Comments as string,",
-						"          DetailEntryValue as string,",
-						"          Value as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(fsh_name = substring(\r",
-						"    Comments,\r",
-						"    locate('Added by: ', Comments) + length('Added by: '),\r",
-						"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
-						"),",
-						"          id = substring(\r",
-						"    Comments,\r",
-						"    locate(' - ', Comments) + length(' - '),\r",
-						"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
-						"),",
-						"          branch_id = substring(\r",
-						"    Comments,\r",
-						"    locate(' -- ', Comments) + length(' -- '),\r",
-						"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
-						"),",
-						"          story_date = substring(\r",
-						"    Comments,\r",
-						"    locate('On: ', Comments) + length('On: '),\r",
-						"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
-						"),",
-						"          comments_array = split(Comments, '***')) ~> derivedColumn2",
-						"derivedColumn2 foldDown(unroll(comments_array),",
-						"     mapColumn(",
-						"          Comments,",
-						"          DetailEntryValue,",
-						"          Value,",
-						"          fsh_name,",
-						"          id,",
-						"          branch_id,",
-						"          story_date,",
-						"          comments_array",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> flatten1",
-						"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
-						"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
-						"flatten1 derive(story_id = id,",
-						"          story_reason = comments_array,",
-						"          story_date = toString(toTimestamp(story_date, 'MM/dd/yyyy hh:mm:ss a'), 'yyyy-MM-dd HH:mm:ss.SSS')) ~> derivedColumn3",
-						"filter1 keyGenerate(output(story_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          story_id as long,",
-						"          story_date as timestamp,",
-						"          story_reason as string,",
-						"          story_details as string,",
-						"          fhs_name as string,",
-						"          fhs_id as string,",
-						"          branch_id as string,",
-						"          account_id as integer,",
-						"          story_source_type_code_id as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     saveOrder: 1,",
-						"     mapColumn(",
-						"          story_id,",
-						"          story_date,",
-						"          story_details = Value,",
-						"          fhs_name = fsh_name,",
-						"          fhs_id = id,",
-						"          branch_id,",
-						"          story_reason",
-						"     )) ~> sink"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/member_stories')]",
-				"[concat(variables('factoryId'), '/datasets/member_stories_sink')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Member_account')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
+					"name": "FSS_DATAFLOW"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -8597,12 +9078,273 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_share_account')]",
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "DATA FLOWS OF DATA"
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_details_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_details_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          add_date as string,",
+						"          PWC_Key as integer,",
+						"          ORDINAL as string,",
+						"          TYPE as string,",
+						"          SUBTYPE as string,",
+						"          MAILOVERRIDE as string,",
+						"          SSNOVERRIDE as string,",
+						"          SSNCERTIFICATION as string,",
+						"          SSNTYPE as string,",
+						"          EFFECTIVEDATE as string,",
+						"          EXPIRATIONDATE as string,",
+						"          FirstName as string,",
+						"          MiddleName as string,",
+						"          LastName as string,",
+						"          SUFFIX as string,",
+						"          EXTRAADDRESS as string,",
+						"          STREET as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          ZIPCODE as string,",
+						"          LASTFMDATE as string,",
+						"          CARRIERROUTE as string,",
+						"          ADDRESSTYPE as string,",
+						"          DEATHDATE as string,",
+						"          ECOACODE as string,",
+						"          COUNTRY as string,",
+						"          COUNTRYCODE as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          MBRSTATUS as string,",
+						"          MBRSTATUSFMDATE as string,",
+						"          MBRCREATEDATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(name = replace(FirstName, char(0), ''),",
+						"          {e-mail} = LastName,",
+						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          member_id as integer,",
+						"          name as string,",
+						"          last_name as string,",
+						"          date_of_birth as date,",
+						"          ssn as string,",
+						"          address as string,",
+						"          city as string,",
+						"          state as string,",
+						"          zip_code as string,",
+						"          phone as string,",
+						"          email as string,",
+						"          branch as string,",
+						"          status as string,",
+						"          start_date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          member_id = PWC_Key,",
+						"          name,",
+						"          last_name = LastName,",
+						"          address = STREET,",
+						"          city = CITY,",
+						"          state = derivedColumn1@state,",
+						"          zip_code = ZIPCODE,",
+						"          start_date = MBRCREATEDATE,",
+						"          email = {e-mail}",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/member_details_csv')]",
+				"[concat(variables('factoryId'), '/datasets/member_details_sink')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_stories",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_stories_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Comments as string,",
+						"          DetailEntryValue as string,",
+						"          Value as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(fsh_name = substring(\r",
+						"    Comments,\r",
+						"    locate('Added by: ', Comments) + length('Added by: '),\r",
+						"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
+						"),",
+						"          id = substring(\r",
+						"    Comments,\r",
+						"    locate(' - ', Comments) + length(' - '),\r",
+						"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
+						"),",
+						"          branch_id = substring(\r",
+						"    Comments,\r",
+						"    locate(' -- ', Comments) + length(' -- '),\r",
+						"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
+						"),",
+						"          story_date = substring(\r",
+						"    Comments,\r",
+						"    locate('On: ', Comments) + length('On: '),\r",
+						"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
+						"),",
+						"          comments_array = split(Comments, '***')) ~> derivedColumn2",
+						"derivedColumn2 foldDown(unroll(comments_array),",
+						"     mapColumn(",
+						"          Comments,",
+						"          DetailEntryValue,",
+						"          Value,",
+						"          fsh_name,",
+						"          id,",
+						"          branch_id,",
+						"          story_date,",
+						"          comments_array",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> flatten1",
+						"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
+						"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
+						"flatten1 derive(story_id = id,",
+						"          story_reason = comments_array,",
+						"          story_date = toString(toTimestamp(story_date, 'MM/dd/yyyy hh:mm:ss a'), 'yyyy-MM-dd HH:mm:ss.SSS')) ~> derivedColumn3",
+						"filter1 keyGenerate(output(story_id as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          story_id as long,",
+						"          story_date as timestamp,",
+						"          story_reason as string,",
+						"          story_details as string,",
+						"          fhs_name as string,",
+						"          fhs_id as string,",
+						"          branch_id as string,",
+						"          account_id as integer,",
+						"          story_source_type_code_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          story_id,",
+						"          story_date,",
+						"          story_details = Value,",
+						"          fhs_name = fsh_name,",
+						"          fhs_id = id,",
+						"          branch_id,",
+						"          story_reason",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/member_stories')]",
+				"[concat(variables('factoryId'), '/datasets/member_stories_sink')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_SHAREACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -8958,12 +9700,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_transaction_data')]",
+			"name": "[concat(parameters('factoryName'), '/DF_TRANSACTION')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "DATA FLOWS OF DATA"
+					"name": "FSS_DATAFLOW"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -9067,8 +9809,10 @@
 						"     ignoreNoFilesFound: false,",
 						"     partitionBy('hash', 1)) ~> source",
 						"source derive(transaction_date = toTimestamp(\r",
-						"  concat(toString(POSTDATE, 'yyyy-MM-dd'), ' ', toString(POSTTIME, 'HH:mm')),\r",
-						"  'yyyy-MM-dd HH:mm:ss.SSS'\r",
+						"    toString(POSTDATE) + ' ' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 0, 2) + ':' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 3, 4),\r",
+						"    'yyyy-MM-dd HH:mm'\r",
 						"),",
 						"          transaction_code = case(\r",
 						"  toString(ACTIONCODE) == 'D', 1,\r",
