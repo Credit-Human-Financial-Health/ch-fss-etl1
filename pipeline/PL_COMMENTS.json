@@ -22,10 +22,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "DF_COMMENTS",
-						"type": "DataFlowReference"
-					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -155,73 +151,54 @@
 							{
 								"sink": {
 									"name": "comment_id",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"sink": {
 									"name": "post_date",
-									"type": "DateTime",
-									"physicalType": "timestamp without time zone"
+									"type": "DateTime"
 								}
 							},
 							{
 								"sink": {
 									"name": "comment_value",
-									"type": "String",
-									"physicalType": "character varying"
+									"type": "String"
 								}
 							},
 							{
 								"sink": {
 									"name": "created_date",
-									"type": "DateTime",
-									"physicalType": "timestamp without time zone"
+									"type": "DateTime"
 								}
 							},
 							{
 								"sink": {
 									"name": "created_by",
-									"type": "String",
-									"physicalType": "character varying"
+									"type": "String"
 								}
 							},
 							{
 								"sink": {
 									"name": "updated_date",
-									"type": "DateTime",
-									"physicalType": "timestamp without time zone"
+									"type": "DateTime"
 								}
 							},
 							{
 								"sink": {
 									"name": "updated_by",
-									"type": "String",
-									"physicalType": "character varying"
+									"type": "String"
 								}
 							},
 							{
 								"sink": {
 									"name": "transaction_id",
-									"type": "Int32",
-									"physicalType": "integer"
+									"type": "Int32"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
-				"inputs": [
-					{
-						"referenceName": "comments_csv",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
 						"referenceName": "comments_sink",

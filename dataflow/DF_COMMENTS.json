@@ -12,7 +12,7 @@
 						"referenceName": "trans_comments_csv",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "sourcecomments"
 				}
 			],
 			"sinks": [
@@ -21,11 +21,7 @@
 						"referenceName": "comments_csv",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureBlobStorage1",
-						"type": "LinkedServiceReference"
-					}
+					"name": "sinkfile"
 				}
 			],
 			"transformations": [
@@ -37,25 +33,24 @@
 				"source(output(",
 				"          TranId as string,",
 				"          CommentID as string,",
-				"          PARENTID as integer,",
+				"          PARENTID as string,",
 				"          SEQUENCENUMBER as string,",
 				"          EFFECTIVEDATE as string,",
-				"          POSTDATE as date,",
+				"          POSTDATE as string,",
 				"          POSTTIME as string,",
 				"          Comment as string,",
-				"          PWC_Key as integer",
+				"          PWC_Key as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(comment_id = concat(TranId, CommentID)) ~> derivedColumn1",
+				"     ignoreNoFilesFound: false) ~> sourcecomments",
+				"sourcecomments derive(comment_id = concat(TranId, CommentID)) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['comments_csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1),",
-				"     format: 'table') ~> sink1"
+				"     partitionBy('hash', 1)) ~> sinkfile"
 			]
 		}
 	}
