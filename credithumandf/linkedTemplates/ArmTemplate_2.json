@@ -13,6 +13,140 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DATA FLOWS OF DATA"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_stories",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_stories_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Comments as string,",
+						"          DetailEntryValue as string,",
+						"          Value as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(fsh_name = substring(\r",
+						"    Comments,\r",
+						"    locate('Added by: ', Comments) + length('Added by: '),\r",
+						"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
+						"),",
+						"          id = substring(\r",
+						"    Comments,\r",
+						"    locate(' - ', Comments) + length(' - '),\r",
+						"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
+						"),",
+						"          branch_id = substring(\r",
+						"    Comments,\r",
+						"    locate(' -- ', Comments) + length(' -- '),\r",
+						"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
+						"),",
+						"          story_date = substring(\r",
+						"    Comments,\r",
+						"    locate('On: ', Comments) + length('On: '),\r",
+						"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
+						"),",
+						"          comments_array = split(Comments, '***')) ~> derivedColumn2",
+						"derivedColumn2 foldDown(unroll(comments_array),",
+						"     mapColumn(",
+						"          Comments,",
+						"          DetailEntryValue,",
+						"          Value,",
+						"          fsh_name,",
+						"          id,",
+						"          branch_id,",
+						"          story_date,",
+						"          comments_array",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> flatten1",
+						"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
+						"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
+						"flatten1 derive(story_id = id,",
+						"          story_reason = comments_array,",
+						"          story_date = toString(toTimestamp(story_date, 'MM/dd/yyyy hh:mm:ss a'), 'yyyy-MM-dd HH:mm:ss.SSS')) ~> derivedColumn3",
+						"filter1 keyGenerate(output(story_id as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          story_id as long,",
+						"          story_date as timestamp,",
+						"          story_reason as string,",
+						"          story_details as string,",
+						"          fhs_name as string,",
+						"          fhs_id as string,",
+						"          branch_id as string,",
+						"          account_id as integer,",
+						"          story_source_type_code_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          story_id,",
+						"          story_date,",
+						"          story_details = Value,",
+						"          fhs_name = fsh_name,",
+						"          fhs_id = id,",
+						"          branch_id,",
+						"          story_reason",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF_Member_account')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1512,342 +1646,49 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
+				"activities": [
+					{
+						"name": "comments",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_COMMENTS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Trans_comments",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "comments_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "surrogateKey"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          TranId as string,",
-						"          CommentID as string,",
-						"          PARENTID as integer,",
-						"          SEQUENCENUMBER as string,",
-						"          EFFECTIVEDATE as string,",
-						"          POSTDATE as date,",
-						"          POSTTIME as string,",
-						"          Comment as string,",
-						"          PWC_Key as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(comment_id = concat(TranId, CommentID),",
-						"          transaction_id = PARENTID) ~> derivedColumn1",
-						"derivedColumn1 keyGenerate(output(transaction_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L,",
-						"     partitionBy('hash', 1)) ~> surrogateKey",
-						"surrogateKey sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          comment_id as long,",
-						"          post_date as timestamp,",
-						"          comment_value as string,",
-						"          created_date as timestamp,",
-						"          created_by as string,",
-						"          updated_date as timestamp,",
-						"          updated_by as string,",
-						"          transaction_id as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          comment_id,",
-						"          post_date = POSTDATE,",
-						"          comment_value = Comment,",
-						"          transaction_id",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
 				"folder": {
-					"name": "DATA FLOWS OF DATA"
+					"name": "data_flow_pipelines"
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "member_details_csv",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "member_details_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          add_date as string,",
-						"          PWC_Key as integer,",
-						"          ORDINAL as string,",
-						"          TYPE as string,",
-						"          SUBTYPE as string,",
-						"          MAILOVERRIDE as string,",
-						"          SSNOVERRIDE as string,",
-						"          SSNCERTIFICATION as string,",
-						"          SSNTYPE as string,",
-						"          EFFECTIVEDATE as string,",
-						"          EXPIRATIONDATE as string,",
-						"          FirstName as string,",
-						"          MiddleName as string,",
-						"          LastName as string,",
-						"          SUFFIX as string,",
-						"          EXTRAADDRESS as string,",
-						"          STREET as string,",
-						"          CITY as string,",
-						"          STATE as string,",
-						"          ZIPCODE as string,",
-						"          LASTFMDATE as string,",
-						"          CARRIERROUTE as string,",
-						"          ADDRESSTYPE as string,",
-						"          DEATHDATE as string,",
-						"          ECOACODE as string,",
-						"          COUNTRY as string,",
-						"          COUNTRYCODE as string,",
-						"          RECORDCHANGEDATE as string,",
-						"          MBRSTATUS as string,",
-						"          MBRSTATUSFMDATE as string,",
-						"          MBRCREATEDATE as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(name = replace(FirstName, char(0), ''),",
-						"          {e-mail} = LastName,",
-						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          member_id as integer,",
-						"          name as string,",
-						"          last_name as string,",
-						"          date_of_birth as date,",
-						"          ssn as string,",
-						"          address as string,",
-						"          city as string,",
-						"          state as string,",
-						"          zip_code as string,",
-						"          phone as string,",
-						"          email as string,",
-						"          branch as string,",
-						"          status as string,",
-						"          start_date as date",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          member_id = PWC_Key,",
-						"          name,",
-						"          last_name = LastName,",
-						"          address = STREET,",
-						"          city = CITY,",
-						"          state = derivedColumn1@state,",
-						"          zip_code = ZIPCODE,",
-						"          start_date = MBRCREATEDATE,",
-						"          email = {e-mail}",
-						"     )) ~> sink"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DATA FLOWS OF DATA"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "member_stories",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "member_stories_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn2"
-						},
-						{
-							"name": "flatten1"
-						},
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "derivedColumn3"
-						},
-						{
-							"name": "surrogateKey1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Comments as string,",
-						"          DetailEntryValue as string,",
-						"          Value as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(fsh_name = substring(\r",
-						"    Comments,\r",
-						"    locate('Added by: ', Comments) + length('Added by: '),\r",
-						"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
-						"),",
-						"          id = substring(\r",
-						"    Comments,\r",
-						"    locate(' - ', Comments) + length(' - '),\r",
-						"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
-						"),",
-						"          branch_id = substring(\r",
-						"    Comments,\r",
-						"    locate(' -- ', Comments) + length(' -- '),\r",
-						"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
-						"),",
-						"          story_date = substring(\r",
-						"    Comments,\r",
-						"    locate('On: ', Comments) + length('On: '),\r",
-						"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
-						"),",
-						"          comments_array = split(Comments, '***')) ~> derivedColumn2",
-						"derivedColumn2 foldDown(unroll(comments_array),",
-						"     mapColumn(",
-						"          Comments,",
-						"          DetailEntryValue,",
-						"          Value,",
-						"          fsh_name,",
-						"          id,",
-						"          branch_id,",
-						"          story_date,",
-						"          comments_array",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> flatten1",
-						"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
-						"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
-						"flatten1 derive(story_id = id,",
-						"          story_reason = comments_array,",
-						"          story_date = toString(toTimestamp(story_date, 'MM/dd/yyyy hh:mm:ss a'), 'yyyy-MM-dd HH:mm:ss.SSS')) ~> derivedColumn3",
-						"filter1 keyGenerate(output(story_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          story_id as long,",
-						"          story_date as timestamp,",
-						"          story_reason as string,",
-						"          story_details as string,",
-						"          fhs_name as string,",
-						"          fhs_id as string,",
-						"          branch_id as string,",
-						"          account_id as integer,",
-						"          story_source_type_code_id as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     saveOrder: 1,",
-						"     mapColumn(",
-						"          story_id,",
-						"          story_date,",
-						"          story_details = Value,",
-						"          fhs_name = fsh_name,",
-						"          fhs_id = id,",
-						"          branch_id,",
-						"          story_reason",
-						"     )) ~> sink"
-					]
-				}
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
 			},
 			"dependsOn": []
 		},
@@ -1899,6 +1740,208 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_Member_account')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERDETAILS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "data_flow_pipelines"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "member_stories",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERSTORIES",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "End_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Failed",
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "End_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "pipelinerunstatus",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "End_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').error.message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Start_time": {
+						"type": "String"
+					},
+					"End_time": {
+						"type": "String"
+					},
+					"Status": {
+						"type": "String"
+					},
+					"Error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "data_flow_pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]"
 			]
 		},
 		{
@@ -2367,55 +2410,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_MEMBERDETAILS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SHAREACCOUNT_DATA_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2513,211 +2507,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/Transformation_transaction_data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "comments",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_COMMENTS",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "member_stories",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Start_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_MEMBERSTORIES",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Start_time",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Start_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "End_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "member_stories",
-								"dependencyConditions": [
-									"Failed",
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "End_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "pipelinerunstatus",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "End_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "member_stories",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": {
-										"value": "insert into fss.pipelinerunstatus\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').error.message, null)}'\n)",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"Start_time": {
-						"type": "String"
-					},
-					"End_time": {
-						"type": "String"
-					},
-					"Status": {
-						"type": "String"
-					},
-					"Error_message": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "data_flow_pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]"
 			]
 		}
 	]

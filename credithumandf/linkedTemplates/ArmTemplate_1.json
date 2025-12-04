@@ -13,72 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Trans_comments')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_COMMENTS"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Trans_comment_2025_10_31.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "TranId",
-						"type": "String"
-					},
-					{
-						"name": "CommentID",
-						"type": "String"
-					},
-					{
-						"name": "PARENTID",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "Comment",
-						"type": "String"
-					},
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/comments_sink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -2302,158 +2236,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_calculation_month_initial')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LookupMonthsArray",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Start_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzurePostgreSqlSource",
-								"query": "WITH bounds AS (\n  SELECT \n    date_trunc('month', MIN(transaction_date)) AS min_month,\n    date_trunc('month', MAX(transaction_date)) AS max_month\n  FROM ch_fss.\"transaction\"\n),\nmonths AS (\n  SELECT \n    generate_series(min_month, max_month, interval '1 month') AS month_start\n  FROM bounds\n)\nSELECT \n  to_char(month_start, 'YYYY-MM-DD') AS month_start,\n  to_char(month_start + INTERVAL '1 month' - INTERVAL '0.001 second', 'YYYY-MM-DD') AS month_end\nFROM months\nORDER BY month_start;",
-								"partitionOption": "None",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "transaction_sink",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "LookupMonthsArray",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('LookupMonthsArray').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Execute Pipeline1",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"policy": {
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "CALCULATION_INITIAL_LOAD_copy1",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"month_start": {
-												"value": "@item().month_start",
-												"type": "Expression"
-											},
-											"month_end": {
-												"value": "@item().month_end",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Start_time",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Start_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "End_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach1",
-								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "End_time",
-							"value": {
-								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"Start_time": {
-						"type": "String"
-					},
-					"End_time": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "batch_wise_cal"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:19Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/transaction_sink')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_calculation_monthly')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2566,7 +2348,16 @@
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
-										"parameters": {}
+										"parameters": {
+											"start_date": {
+												"value": "@item().start_date",
+												"type": "Expression"
+											},
+											"end_date": {
+												"value": "@item().end_date",
+												"type": "Expression"
+											}
+										}
 									}
 								},
 								{
@@ -2597,7 +2388,7 @@
 											{
 												"type": "Query",
 												"text": {
-													"value": "INSERT INTO ch_fss.watermark_table (process_name, last_processed_date, updated_date, updated_by)\nVALUES (\n    'TransactionProcessing',\n    TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    NOW(),\n    'Admin'\n);",
+													"value": "INSERT INTO ch_fss.watermark_table (process_name, last_processed_date,created_by,created_date, updated_date, updated_by)\nVALUES (\n    'TransactionProcessing',\n    TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);",
 													"type": "Expression"
 												}
 											}
@@ -2659,7 +2450,7 @@
 								"queryTimeout": "02:00:00"
 							},
 							"dataset": {
-								"referenceName": "AzurePostgreSqlTable1",
+								"referenceName": "Lookupmonthsarray",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -3152,6 +2943,218 @@
 				"lastPublishTime": "2025-11-20T05:27:08Z"
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DATA FLOWS OF DATA"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Trans_comments",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "comments_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "surrogateKey"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          TranId as string,",
+						"          CommentID as string,",
+						"          PARENTID as integer,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as date,",
+						"          POSTTIME as string,",
+						"          Comment as string,",
+						"          PWC_Key as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(comment_id = concat(TranId, CommentID),",
+						"          transaction_id = PARENTID) ~> derivedColumn1",
+						"derivedColumn1 keyGenerate(output(transaction_id as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L,",
+						"     partitionBy('hash', 1)) ~> surrogateKey",
+						"surrogateKey sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          comment_id as long,",
+						"          post_date as timestamp,",
+						"          comment_value as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          transaction_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          comment_id,",
+						"          post_date = POSTDATE,",
+						"          comment_value = Comment,",
+						"          transaction_id",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DATA FLOWS OF DATA"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_details_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_details_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          add_date as string,",
+						"          PWC_Key as integer,",
+						"          ORDINAL as string,",
+						"          TYPE as string,",
+						"          SUBTYPE as string,",
+						"          MAILOVERRIDE as string,",
+						"          SSNOVERRIDE as string,",
+						"          SSNCERTIFICATION as string,",
+						"          SSNTYPE as string,",
+						"          EFFECTIVEDATE as string,",
+						"          EXPIRATIONDATE as string,",
+						"          FirstName as string,",
+						"          MiddleName as string,",
+						"          LastName as string,",
+						"          SUFFIX as string,",
+						"          EXTRAADDRESS as string,",
+						"          STREET as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          ZIPCODE as string,",
+						"          LASTFMDATE as string,",
+						"          CARRIERROUTE as string,",
+						"          ADDRESSTYPE as string,",
+						"          DEATHDATE as string,",
+						"          ECOACODE as string,",
+						"          COUNTRY as string,",
+						"          COUNTRYCODE as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          MBRSTATUS as string,",
+						"          MBRSTATUSFMDATE as string,",
+						"          MBRCREATEDATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(name = replace(FirstName, char(0), ''),",
+						"          {e-mail} = LastName,",
+						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          member_id as integer,",
+						"          name as string,",
+						"          last_name as string,",
+						"          date_of_birth as date,",
+						"          ssn as string,",
+						"          address as string,",
+						"          city as string,",
+						"          state as string,",
+						"          zip_code as string,",
+						"          phone as string,",
+						"          email as string,",
+						"          branch as string,",
+						"          status as string,",
+						"          start_date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          member_id = PWC_Key,",
+						"          name,",
+						"          last_name = LastName,",
+						"          address = STREET,",
+						"          city = CITY,",
+						"          state = derivedColumn1@state,",
+						"          zip_code = ZIPCODE,",
+						"          start_date = MBRCREATEDATE,",
+						"          email = {e-mail}",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/member_details_csv')]",
+				"[concat(variables('factoryId'), '/datasets/member_details_sink')]"
+			]
 		}
 	]
 }
