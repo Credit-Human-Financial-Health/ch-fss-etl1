@@ -90,7 +90,8 @@
 					{
 						"activity": "transaction_table",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
