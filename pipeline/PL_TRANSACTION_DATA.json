@@ -124,12 +124,6 @@
 						"dependencyConditions": [
 							"Completed"
 						]
-					},
-					{
-						"activity": "DF_TRANSACTION_DATA",
-						"dependencyConditions": [
-							"Completed"
-						]
 					}
 				],
 				"policy": {

@@ -129,7 +129,7 @@
 			"status": {
 				"type": "String"
 			},
-			"ERROR": {
+			"Error": {
 				"type": "String"
 			}
 		},
