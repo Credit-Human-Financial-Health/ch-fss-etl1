@@ -117,6 +117,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -162,50 +163,52 @@
 								},
 								"cases": [
 									{
-										"value": ""
-									}
-								],
-								"defaultActivities": [
-									{
-										"name": "Execute_Transaction_Pipeline",
-										"type": "ExecutePipeline",
-										"dependsOn": [],
-										"policy": {
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "PL_TRANSACTION_DATA",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": false
-										}
+										"value": "trans",
+										"activities": [
+											{
+												"name": "Execute_Transaction_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "PL_TRANSACTION_DATA",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true
+												}
+											}
+										]
 									},
 									{
-										"name": "Execute_Comments_Pipeline",
-										"type": "ExecutePipeline",
-										"dependsOn": [
+										"value": "trans_comment",
+										"activities": [
 											{
-												"activity": "Execute_Transaction_Pipeline",
-												"dependencyConditions": [
-													"Succeeded"
-												]
+												"name": "Execute_Comments_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "PL_TRANSCOMMENTS",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true
+												}
 											}
-										],
-										"policy": {
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "PL_TRANSCOMMENTS",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true
-										}
+										]
 									}
-								]
+								],
+								"value": {
+									"value": "@variables('fileType')",
+									"type": "Expression"
+								}
 							}
 						},
 						{
@@ -219,7 +222,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "fileType",
-								"value": "@if(\n  contains(toLower(item().name), 'trans_comment'), \n  'trans_comment', \n  if(contains(toLower(item().name), 'trans'), 'trans', 'other')\n)"
+								"value": {
+									"value": "@if(\n  contains(toLower(item().name), 'trans_comment'), \n  'trans_comment', \n  if(contains(toLower(item().name), 'trans'), 'trans', 'other')\n)",
+									"type": "Expression"
+								}
 							}
 						}
 					]
