@@ -160,7 +160,11 @@
 									"value": "@variables('fileType')",
 									"type": "Expression"
 								},
-								"cases": [],
+								"cases": [
+									{
+										"value": ""
+									}
+								],
 								"defaultActivities": [
 									{
 										"name": "Execute_Transaction_Pipeline",

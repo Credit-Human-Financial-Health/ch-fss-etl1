@@ -1,5 +1,5 @@
 {
-	"name": "PL_TRANSACTION_MULTIFILE",
+	"name": "PL_TRANSACTION_multifil",
 	"properties": {
 		"activities": [
 			{
@@ -144,22 +144,6 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Execute Pipeline1",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "PL_TRANSACTION_DATA",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true
-							}
-						},
-						{
 							"name": "Execute Pipeline2",
 							"type": "ExecutePipeline",
 							"dependsOn": [
@@ -177,6 +161,22 @@
 							"typeProperties": {
 								"pipeline": {
 									"referenceName": "PL_TRANSCOMMENTS",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						},
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_TRANSACTION_DATA",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true
