@@ -13,1654 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/comments_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzurePostgreSql1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_COMMENTS"
-				},
-				"annotations": [],
-				"type": "AzurePostgreSqlTable",
-				"schema": [
-					{
-						"name": "comment_id",
-						"type": "bigint",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "post_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "comment_value",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "created_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "created_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "updated_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "updated_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "transaction_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "ch_fss",
-					"table": "transaction_comment"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/latestfile')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"file": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "DS_PWC"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "dataset().file",
-							"type": "Expression"
-						},
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/latestinputfiles')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_PWC"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "PWC_Key|TYPE|LASTFMDATE|OPENDATE|CLOSEDATE|BRANCH|RESTRICTACCESS|REFERENCE|WARNINGCODE1|WARNINGCODE2|WARNINGCODE3|WARNINGCODE4|WARNINGCODE5|WARNINGCODE6|WARNINGCODE7|WARNINGCODE8|WARNINGCODE9|WARNINGCODE10|WARNINGCODE11|WARNINGCODE12|WARNINGCODE13|WARNINGCODE14|WARNINGCODE15|WARNINGCODE16|WARNINGCODE17|WARNINGCODE18|WARNINGCODE19|WARNINGCODE20|PAYMENTHISTORY1|PAYMENTHISTORY2|PAYMENTHISTORY3|PAYMENTHISTORY4|PAYMENTHISTORY5|PAYMENTHISTORY6|MEMBERSTATUS|CORRESPONDDATE|PROXYDATE|HEADOFHOUSEHOLD|WARNINGEXPIRATION1|WARNINGEXPIRATION2|WARNINGEXPIRATION3|WARNINGEXPIRATION4|WARNINGEXPIRATION5|WARNINGEXPIRATION6|WARNINGEXPIRATION7|WARNINGEXPIRATION8|WARNINGEXPIRATION9|WARNINGEXPIRATION10|WARNINGEXPIRATION11|WARNINGEXPIRATION12|WARNINGEXPIRATION13|WARNINGEXPIRATION14|WARNINGEXPIRATION15|WARNINGEXPIRATION16|WARNINGEXPIRATION17|WARNINGEXPIRATION18|WARNINGEXPIRATION19|WARNINGEXPIRATION20|NSFMONTHLYCOUNT1|NSFMONTHLYCOUNT2|NSFMONTHLYCOUNT3|NSFMONTHLYCOUNT4|NSFMONTHLYCOUNT5|NSFMONTHLYCOUNT6|NSFMONTHLYCOUNT7|NSFMONTHLYCOUNT8|NSFMONTHLYCOUNT9|NSFMONTHLYCOUNT10|NSFMONTHLYCOUNT11|NSFMONTHLYCOUNT12|NSFMONTHLYCOUNT13|NSFMONTHLYCOUNT14|NSFMONTHLYCOUNT15|NSFMONTHLYCOUNT16|NSFMONTHLYCOUNT17|NSFMONTHLYCOUNT18|NSFMONTHLYCOUNT19|NSFMONTHLYCOUNT20|NSFMONTHLYCOUNT21|NSFMONTHLYCOUNT22|NSFMONTHLYCOUNT23|NSFMONTHLYCOUNT24|NSFTODAY|MEMBERGROUP|COMMERCIALCODE|FMLASTPURGEDATE|STATEREPORTING|HOUSEHOLDACCOUNT|HOUSEHOLDSTATEMENT|FROZENMODE|INVALIDATTEMPTCOUNT|INVALIDATTEMPTDATE|INVALIDATTEMPTTIME|STATEMENTMAILCODE|RELATIONSHIPCODE|RELATIONSHIPOVERRIDE|RELATIONSHIPOVERRIDEEFFDATE|RELATIONSHIPOVERRIDEEXPDATE|KRHOLDBASEAMOUNT|KRTOTALAMOUNT|KRTOTALDATE|ESTMTNOTIFY|ESTMTENABLE|CRTOTALAMOUNT|CDTOTALAMOUNT|FRCRTOTALAMOUNT|FRCDTOTALAMOUNT|USERCHAR1|USERCHAR2|USERCHAR3|USERCHAR4|USERAMOUNT1|USERAMOUNT2|USERDATE1|USERDATE2|ENABLEFLOAT|FRCRUNITS|FRCDUNITS|PRGDRECACTIVITYDT|RECORDCHANGEDATE|CAPPEDFEESCOUNTCAP|CAPPEDFEESAMOUNTCAP|CREATEDBYUSER|CREATEDATBRANCH|WRTOTALAMOUNT|WDTOTALAMOUNT|NONREGCCCHECKHOLDBASEAMT|NONREGCCCHECKTOTALAMT|LIMITUSAGEDATE|COUNTLIMIT1|COUNTLIMIT2|COUNTLIMIT3|COUNTLIMIT4|COUNTLIMIT5|COUNTLIMIT6|LIMITCOUNT1|LIMITCOUNT2|LIMITCOUNT3|LIMITCOUNT4|LIMITCOUNT5|LIMITCOUNT6|LIMIT1|LIMIT2|LIMIT3|LIMIT4|LIMIT5|LIMIT6|LIMITAMOUNT1|LIMITAMOUNT2|LIMITAMOUNT3|LIMITAMOUNT4|LIMITAMOUNT5|LIMITAMOUNT6|PERITEMLIMIT1|PERITEMLIMIT2|PERITEMLIMIT3|PERITEMLIMIT4|PERITEMLIMIT5|PERITEMLIMIT6|VERSIONID|UUID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_account')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzurePostgreSql1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERACCOUNT"
-				},
-				"annotations": [],
-				"type": "AzurePostgreSqlTable",
-				"schema": [
-					{
-						"name": "account_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "min_balance",
-						"type": "numeric",
-						"precision": 10,
-						"scale": 2
-					},
-					{
-						"name": "open_date",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "close_date",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "branch",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "status",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "household_account_number",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "member_group_name",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "product_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "created_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "created_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "updated_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "updated_by",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "account_type_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "anonymized_member_id",
-						"type": "bigint",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "ch_fss",
-					"table": "member_account"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_accountcsv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERACCOUNT"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Extract_Account_2025_10_24.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					},
-					{
-						"name": "TYPE",
-						"type": "String"
-					},
-					{
-						"name": "LASTFMDATE",
-						"type": "String"
-					},
-					{
-						"name": "OPENDATE",
-						"type": "String"
-					},
-					{
-						"name": "CLOSEDATE",
-						"type": "String"
-					},
-					{
-						"name": "BRANCH",
-						"type": "String"
-					},
-					{
-						"name": "RESTRICTACCESS",
-						"type": "String"
-					},
-					{
-						"name": "REFERENCE",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE1",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE2",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE3",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE4",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE5",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE6",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE7",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE8",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE9",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE10",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE11",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE12",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE13",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE14",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE15",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE16",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE17",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE18",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE19",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGCODE20",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY1",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY2",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY3",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY4",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY5",
-						"type": "String"
-					},
-					{
-						"name": "PAYMENTHISTORY6",
-						"type": "String"
-					},
-					{
-						"name": "MEMBERSTATUS",
-						"type": "String"
-					},
-					{
-						"name": "CORRESPONDDATE",
-						"type": "String"
-					},
-					{
-						"name": "PROXYDATE",
-						"type": "String"
-					},
-					{
-						"name": "HEADOFHOUSEHOLD",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION1",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION2",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION3",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION4",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION5",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION6",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION7",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION8",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION9",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION10",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION11",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION12",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION13",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION14",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION15",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION16",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION17",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION18",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION19",
-						"type": "String"
-					},
-					{
-						"name": "WARNINGEXPIRATION20",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT1",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT2",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT3",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT4",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT5",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT6",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT7",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT8",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT9",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT10",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT11",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT12",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT13",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT14",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT15",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT16",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT17",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT18",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT19",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT20",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT21",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT22",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT23",
-						"type": "String"
-					},
-					{
-						"name": "NSFMONTHLYCOUNT24",
-						"type": "String"
-					},
-					{
-						"name": "NSFTODAY",
-						"type": "String"
-					},
-					{
-						"name": "MEMBERGROUP",
-						"type": "String"
-					},
-					{
-						"name": "COMMERCIALCODE",
-						"type": "String"
-					},
-					{
-						"name": "FMLASTPURGEDATE",
-						"type": "String"
-					},
-					{
-						"name": "STATEREPORTING",
-						"type": "String"
-					},
-					{
-						"name": "HOUSEHOLDACCOUNT",
-						"type": "String"
-					},
-					{
-						"name": "HOUSEHOLDSTATEMENT",
-						"type": "String"
-					},
-					{
-						"name": "FROZENMODE",
-						"type": "String"
-					},
-					{
-						"name": "INVALIDATTEMPTCOUNT",
-						"type": "String"
-					},
-					{
-						"name": "INVALIDATTEMPTDATE",
-						"type": "String"
-					},
-					{
-						"name": "INVALIDATTEMPTTIME",
-						"type": "String"
-					},
-					{
-						"name": "STATEMENTMAILCODE",
-						"type": "String"
-					},
-					{
-						"name": "RELATIONSHIPCODE",
-						"type": "String"
-					},
-					{
-						"name": "RELATIONSHIPOVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "RELATIONSHIPOVERRIDEEFFDATE",
-						"type": "String"
-					},
-					{
-						"name": "RELATIONSHIPOVERRIDEEXPDATE",
-						"type": "String"
-					},
-					{
-						"name": "KRHOLDBASEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "KRTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "KRTOTALDATE",
-						"type": "String"
-					},
-					{
-						"name": "ESTMTNOTIFY",
-						"type": "String"
-					},
-					{
-						"name": "ESTMTENABLE",
-						"type": "String"
-					},
-					{
-						"name": "CRTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "CDTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "FRCRTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "FRCDTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "USERCHAR1",
-						"type": "String"
-					},
-					{
-						"name": "USERCHAR2",
-						"type": "String"
-					},
-					{
-						"name": "USERCHAR3",
-						"type": "String"
-					},
-					{
-						"name": "USERCHAR4",
-						"type": "String"
-					},
-					{
-						"name": "USERAMOUNT1",
-						"type": "String"
-					},
-					{
-						"name": "USERAMOUNT2",
-						"type": "String"
-					},
-					{
-						"name": "USERDATE1",
-						"type": "String"
-					},
-					{
-						"name": "USERDATE2",
-						"type": "String"
-					},
-					{
-						"name": "ENABLEFLOAT",
-						"type": "String"
-					},
-					{
-						"name": "FRCRUNITS",
-						"type": "String"
-					},
-					{
-						"name": "FRCDUNITS",
-						"type": "String"
-					},
-					{
-						"name": "PRGDRECACTIVITYDT",
-						"type": "String"
-					},
-					{
-						"name": "RECORDCHANGEDATE",
-						"type": "String"
-					},
-					{
-						"name": "CAPPEDFEESCOUNTCAP",
-						"type": "String"
-					},
-					{
-						"name": "CAPPEDFEESAMOUNTCAP",
-						"type": "String"
-					},
-					{
-						"name": "CREATEDBYUSER",
-						"type": "String"
-					},
-					{
-						"name": "CREATEDATBRANCH",
-						"type": "String"
-					},
-					{
-						"name": "WRTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "WDTOTALAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "NONREGCCCHECKHOLDBASEAMT",
-						"type": "String"
-					},
-					{
-						"name": "NONREGCCCHECKTOTALAMT",
-						"type": "String"
-					},
-					{
-						"name": "LIMITUSAGEDATE",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT1",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT2",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT3",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT4",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT5",
-						"type": "String"
-					},
-					{
-						"name": "COUNTLIMIT6",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT1",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT2",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT3",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT4",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT5",
-						"type": "String"
-					},
-					{
-						"name": "LIMITCOUNT6",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT1",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT2",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT3",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT4",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT5",
-						"type": "String"
-					},
-					{
-						"name": "LIMIT6",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT1",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT2",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT3",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT4",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT5",
-						"type": "String"
-					},
-					{
-						"name": "LIMITAMOUNT6",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT1",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT2",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT3",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT4",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT5",
-						"type": "String"
-					},
-					{
-						"name": "PERITEMLIMIT6",
-						"type": "String"
-					},
-					{
-						"name": "VERSIONID",
-						"type": "String"
-					},
-					{
-						"name": "UUID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_details_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERDETAILS"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Extract_Name_2025_11_5 (1).csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "add_date",
-						"type": "String"
-					},
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					},
-					{
-						"name": "ORDINAL",
-						"type": "String"
-					},
-					{
-						"name": "TYPE",
-						"type": "String"
-					},
-					{
-						"name": "SUBTYPE",
-						"type": "String"
-					},
-					{
-						"name": "MAILOVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SSNOVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SSNCERTIFICATION",
-						"type": "String"
-					},
-					{
-						"name": "SSNTYPE",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "EXPIRATIONDATE",
-						"type": "String"
-					},
-					{
-						"name": "FirstName",
-						"type": "String"
-					},
-					{
-						"name": "MiddleName",
-						"type": "String"
-					},
-					{
-						"name": "LastName",
-						"type": "String"
-					},
-					{
-						"name": "SUFFIX",
-						"type": "String"
-					},
-					{
-						"name": "EXTRAADDRESS",
-						"type": "String"
-					},
-					{
-						"name": "STREET",
-						"type": "String"
-					},
-					{
-						"name": "CITY",
-						"type": "String"
-					},
-					{
-						"name": "STATE",
-						"type": "String"
-					},
-					{
-						"name": "ZIPCODE",
-						"type": "String"
-					},
-					{
-						"name": "LASTFMDATE",
-						"type": "String"
-					},
-					{
-						"name": "CARRIERROUTE",
-						"type": "String"
-					},
-					{
-						"name": "ADDRESSTYPE",
-						"type": "String"
-					},
-					{
-						"name": "DEATHDATE",
-						"type": "String"
-					},
-					{
-						"name": "ECOACODE",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRY",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRYCODE",
-						"type": "String"
-					},
-					{
-						"name": "RECORDCHANGEDATE",
-						"type": "String"
-					},
-					{
-						"name": "MBRSTATUS",
-						"type": "String"
-					},
-					{
-						"name": "MBRSTATUSFMDATE",
-						"type": "String"
-					},
-					{
-						"name": "MBRCREATEDATE",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_details_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzurePostgreSql1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERDETAILS"
-				},
-				"annotations": [],
-				"type": "AzurePostgreSqlTable",
-				"schema": [
-					{
-						"name": "member_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "name",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "last_name",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "date_of_birth",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "ssn",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "address",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "city",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "state",
-						"type": "character",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "zip_code",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "phone",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "email",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "branch",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "status",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "start_date",
-						"type": "date",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "ch_fss",
-					"table": "member"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_detailscsv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERDETAILS"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Extract_Name_2025_11_5 (1).csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "add_date",
-						"type": "String"
-					},
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					},
-					{
-						"name": "ORDINAL",
-						"type": "String"
-					},
-					{
-						"name": "TYPE",
-						"type": "String"
-					},
-					{
-						"name": "SUBTYPE",
-						"type": "String"
-					},
-					{
-						"name": "MAILOVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SSNOVERRIDE",
-						"type": "String"
-					},
-					{
-						"name": "SSNCERTIFICATION",
-						"type": "String"
-					},
-					{
-						"name": "SSNTYPE",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "EXPIRATIONDATE",
-						"type": "String"
-					},
-					{
-						"name": "FirstName",
-						"type": "String"
-					},
-					{
-						"name": "MiddleName",
-						"type": "String"
-					},
-					{
-						"name": "LastName",
-						"type": "String"
-					},
-					{
-						"name": "SUFFIX",
-						"type": "String"
-					},
-					{
-						"name": "EXTRAADDRESS",
-						"type": "String"
-					},
-					{
-						"name": "STREET",
-						"type": "String"
-					},
-					{
-						"name": "CITY",
-						"type": "String"
-					},
-					{
-						"name": "STATE",
-						"type": "String"
-					},
-					{
-						"name": "ZIPCODE",
-						"type": "String"
-					},
-					{
-						"name": "LASTFMDATE",
-						"type": "String"
-					},
-					{
-						"name": "CARRIERROUTE",
-						"type": "String"
-					},
-					{
-						"name": "ADDRESSTYPE",
-						"type": "String"
-					},
-					{
-						"name": "DEATHDATE",
-						"type": "String"
-					},
-					{
-						"name": "ECOACODE",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRY",
-						"type": "String"
-					},
-					{
-						"name": "COUNTRYCODE",
-						"type": "String"
-					},
-					{
-						"name": "RECORDCHANGEDATE",
-						"type": "String"
-					},
-					{
-						"name": "MBRSTATUS",
-						"type": "String"
-					},
-					{
-						"name": "MBRSTATUSFMDATE",
-						"type": "String"
-					},
-					{
-						"name": "MBRCREATEDATE",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_stories')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERSTORIES"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Sheet1",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "synapsys_sample (002).xlsx",
-						"container": "incomingfiles"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Comments",
-						"type": "String"
-					},
-					{
-						"name": "DetailEntryValue",
-						"type": "String"
-					},
-					{
-						"name": "Value",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/member_stories_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzurePostgreSql1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_MEMBERSTORIES"
-				},
-				"annotations": [],
-				"type": "AzurePostgreSqlTable",
-				"schema": [
-					{
-						"name": "story_id",
-						"type": "bigint",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "story_date",
-						"type": "timestamp without time zone",
-						"precision": 6,
-						"scale": 0
-					},
-					{
-						"name": "story_reason",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "story_details",
-						"type": "text",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "fhs_name",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "fhs_id",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "branch_id",
-						"type": "character varying",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "account_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "story_source_type_code_id",
-						"type": "integer",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "fss1",
-					"table": "member_stories"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/multiple_transaction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_TRANSACTION"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trans_comments_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_COMMENTS"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Trans_comment_2025_10_31.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "TranId",
-						"type": "String"
-					},
-					{
-						"name": "CommentID",
-						"type": "String"
-					},
-					{
-						"name": "PARENTID",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "Comment",
-						"type": "String"
-					},
-					{
-						"name": "PWC_Key",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/transaction_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_TRANSACTION"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "PWC_Trans_2025_10_31.csv",
-						"container": "incomingfiles"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "TranId",
-						"type": "String"
-					},
-					{
-						"name": "PARENTID",
-						"type": "String"
-					},
-					{
-						"name": "SEQUENCENUMBER",
-						"type": "String"
-					},
-					{
-						"name": "EFFECTIVEDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTDATE",
-						"type": "String"
-					},
-					{
-						"name": "POSTTIME",
-						"type": "String"
-					},
-					{
-						"name": "DESCRIPTION",
-						"type": "String"
-					},
-					{
-						"name": "ACTIONCODE",
-						"type": "String"
-					},
-					{
-						"name": "SOURCECODE",
-						"type": "String"
-					},
-					{
-						"name": "BALANCECHANGE",
-						"type": "String"
-					},
-					{
-						"name": "INTEREST",
-						"type": "String"
-					},
-					{
-						"name": "NEWBALANCE",
-						"type": "String"
-					},
-					{
-						"name": "FEEAMOUNT",
-						"type": "String"
-					},
-					{
-						"name": "COMMENT",
-						"type": "String"
-					},
-					{
-						"name": "BRANCH",
-						"type": "String"
-					},
-					{
-						"name": "PWC_key",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/transaction_sink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -2308,28 +660,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/watremark_table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "PostgreSql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DS_PWC"
-				},
-				"annotations": [],
-				"type": "PostgreSqlV2Table",
-				"schema": [],
-				"typeProperties": {
-					"schema": "ch_fss",
-					"table": "watermark_table"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_FSS_CALCULATION')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2573,250 +903,1857 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/share_financial_stat')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DF_COMMENTS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "transaction_daily",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Truncate_table_financial_stat",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "ending_bal_cal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "transaction_daily",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\r\n  share_id,\r\n  financial_stat_type_code_id,\r\n  date,\r\n  value\r\n)\r\nSELECT\r\n  sub.share_id,\r\n  4 AS financial_stat_type_code_id,\r\n  sub.transaction_date::date AS date,\r\n  sub.balance AS value\r\nFROM (\r\n  SELECT DISTINCT ON (t.share_id, t.transaction_date::date)\r\n    t.share_id,\r\n    t.transaction_date,\r\n    t.balance,\r\n    t.transaction_id\r\n  FROM ch_fss.\"transaction\" t\r\n  ORDER BY t.share_id, t.transaction_date::date, t.transaction_id DESC\r\n) sub;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "stg_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "truncate_stg_table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH date_range AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series('2020-01-01'::date, '2025-10-31'::date, interval '1 day')\n),\ngroups AS (\n  SELECT DISTINCT share_id\n  FROM ch_fss.share_financial_stat\n),\nall_combinations AS (\n  SELECT g.share_id, d.dt AS date\n  FROM groups g CROSS JOIN date_range d\n)\ninsert into fss_stg.stg_missing_share_ending_bal(\nshare_id, \ndate) \nSELECT ac.share_id, ac.date\nFROM all_combinations ac\nLEFT JOIN ch_fss.share_financial_stat agfs\n  ON agfs.share_id = ac.share_id\n  AND agfs.date = ac.date\n  AND agfs.financial_stat_type_code_id = 4\nWHERE agfs.financial_stat_id IS NULL;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Insert_missing_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "stg_ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\n  value,\n  date,\n  financial_stat_type_code_id,\n  share_id,\n  created_date,\n  created_by\n)\nSELECT\n  prev.value,\n  tm.date,\n  4,\n  tm.share_id,\n  NOW() AS created_date,\n  'system' AS created_by\nFROM fss_stg.stg_missing_share_ending_bal tm\nLEFT JOIN LATERAL (\n  SELECT value\n  FROM  ch_fss.share_financial_stat agfs\n  WHERE agfs.share_id = tm.share_id\n    AND agfs.financial_stat_type_code_id = 4\n    AND agfs.date < tm.date\n  ORDER BY date DESC\n  LIMIT 1\n) prev ON true\nand prev.value IS NOT null"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "account_group_fin_stat",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Insert_missing_ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "account_group_fin_stat",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "truncate_stg_table",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "ending_bal_cal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "TRUNCATE TABLE fss_stg.stg_missing_share_ending_bal CASCADE;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Truncate_table_financial_stat",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "TRUNCATE TABLE ch_fss.share_financial_stat CASCADE;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
 				"folder": {
-					"name": "pwc_pipelines"
+					"name": "FSS_DATAFLOW"
 				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-20T05:27:08Z"
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "trans_comments_csv",
+								"type": "DatasetReference"
+							},
+							"name": "sourcecomments"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "comments_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sinkfile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          TranId as string,",
+						"          CommentID as string,",
+						"          PARENTID as string,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as string,",
+						"          POSTTIME as string,",
+						"          Comment as string,",
+						"          PWC_Key as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcecomments",
+						"sourcecomments derive(comment_id = concat(TranId, CommentID),",
+						"          transction_date = toTimestamp(\r",
+						"    toString(POSTDATE) + ' ' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 0, 2) + ':' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 3, 4),\r",
+						"    'yyyy-MM-dd HH:mm'\r",
+						")) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          comment_id as long,",
+						"          post_date as timestamp,",
+						"          comment_value as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          transaction_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          comment_id,",
+						"          post_date = transction_date,",
+						"          comment_value = Comment,",
+						"          transaction_id = TranId",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sinkfile"
+					]
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/share_financial_stat_copy1')]",
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_accountcsv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_account",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PWC_Key as string,",
+						"          TYPE as string,",
+						"          LASTFMDATE as string,",
+						"          OPENDATE as string,",
+						"          CLOSEDATE as string,",
+						"          BRANCH as string,",
+						"          RESTRICTACCESS as string,",
+						"          REFERENCE as string,",
+						"          WARNINGCODE1 as string,",
+						"          WARNINGCODE2 as string,",
+						"          WARNINGCODE3 as string,",
+						"          WARNINGCODE4 as string,",
+						"          WARNINGCODE5 as string,",
+						"          WARNINGCODE6 as string,",
+						"          WARNINGCODE7 as string,",
+						"          WARNINGCODE8 as string,",
+						"          WARNINGCODE9 as string,",
+						"          WARNINGCODE10 as string,",
+						"          WARNINGCODE11 as string,",
+						"          WARNINGCODE12 as string,",
+						"          WARNINGCODE13 as string,",
+						"          WARNINGCODE14 as string,",
+						"          WARNINGCODE15 as string,",
+						"          WARNINGCODE16 as string,",
+						"          WARNINGCODE17 as string,",
+						"          WARNINGCODE18 as string,",
+						"          WARNINGCODE19 as string,",
+						"          WARNINGCODE20 as string,",
+						"          PAYMENTHISTORY1 as string,",
+						"          PAYMENTHISTORY2 as string,",
+						"          PAYMENTHISTORY3 as string,",
+						"          PAYMENTHISTORY4 as string,",
+						"          PAYMENTHISTORY5 as string,",
+						"          PAYMENTHISTORY6 as string,",
+						"          MEMBERSTATUS as string,",
+						"          CORRESPONDDATE as string,",
+						"          PROXYDATE as string,",
+						"          HEADOFHOUSEHOLD as string,",
+						"          WARNINGEXPIRATION1 as string,",
+						"          WARNINGEXPIRATION2 as string,",
+						"          WARNINGEXPIRATION3 as string,",
+						"          WARNINGEXPIRATION4 as string,",
+						"          WARNINGEXPIRATION5 as string,",
+						"          WARNINGEXPIRATION6 as string,",
+						"          WARNINGEXPIRATION7 as string,",
+						"          WARNINGEXPIRATION8 as string,",
+						"          WARNINGEXPIRATION9 as string,",
+						"          WARNINGEXPIRATION10 as string,",
+						"          WARNINGEXPIRATION11 as string,",
+						"          WARNINGEXPIRATION12 as string,",
+						"          WARNINGEXPIRATION13 as string,",
+						"          WARNINGEXPIRATION14 as string,",
+						"          WARNINGEXPIRATION15 as string,",
+						"          WARNINGEXPIRATION16 as string,",
+						"          WARNINGEXPIRATION17 as string,",
+						"          WARNINGEXPIRATION18 as string,",
+						"          WARNINGEXPIRATION19 as string,",
+						"          WARNINGEXPIRATION20 as string,",
+						"          NSFMONTHLYCOUNT1 as string,",
+						"          NSFMONTHLYCOUNT2 as string,",
+						"          NSFMONTHLYCOUNT3 as string,",
+						"          NSFMONTHLYCOUNT4 as string,",
+						"          NSFMONTHLYCOUNT5 as string,",
+						"          NSFMONTHLYCOUNT6 as string,",
+						"          NSFMONTHLYCOUNT7 as string,",
+						"          NSFMONTHLYCOUNT8 as string,",
+						"          NSFMONTHLYCOUNT9 as string,",
+						"          NSFMONTHLYCOUNT10 as string,",
+						"          NSFMONTHLYCOUNT11 as string,",
+						"          NSFMONTHLYCOUNT12 as string,",
+						"          NSFMONTHLYCOUNT13 as string,",
+						"          NSFMONTHLYCOUNT14 as string,",
+						"          NSFMONTHLYCOUNT15 as string,",
+						"          NSFMONTHLYCOUNT16 as string,",
+						"          NSFMONTHLYCOUNT17 as string,",
+						"          NSFMONTHLYCOUNT18 as string,",
+						"          NSFMONTHLYCOUNT19 as string,",
+						"          NSFMONTHLYCOUNT20 as string,",
+						"          NSFMONTHLYCOUNT21 as string,",
+						"          NSFMONTHLYCOUNT22 as string,",
+						"          NSFMONTHLYCOUNT23 as string,",
+						"          NSFMONTHLYCOUNT24 as string,",
+						"          NSFTODAY as string,",
+						"          MEMBERGROUP as string,",
+						"          COMMERCIALCODE as string,",
+						"          FMLASTPURGEDATE as string,",
+						"          STATEREPORTING as string,",
+						"          HOUSEHOLDACCOUNT as string,",
+						"          HOUSEHOLDSTATEMENT as string,",
+						"          FROZENMODE as string,",
+						"          INVALIDATTEMPTCOUNT as string,",
+						"          INVALIDATTEMPTDATE as string,",
+						"          INVALIDATTEMPTTIME as string,",
+						"          STATEMENTMAILCODE as string,",
+						"          RELATIONSHIPCODE as string,",
+						"          RELATIONSHIPOVERRIDE as string,",
+						"          RELATIONSHIPOVERRIDEEFFDATE as string,",
+						"          RELATIONSHIPOVERRIDEEXPDATE as string,",
+						"          KRHOLDBASEAMOUNT as string,",
+						"          KRTOTALAMOUNT as string,",
+						"          KRTOTALDATE as string,",
+						"          ESTMTNOTIFY as string,",
+						"          ESTMTENABLE as string,",
+						"          CRTOTALAMOUNT as string,",
+						"          CDTOTALAMOUNT as string,",
+						"          FRCRTOTALAMOUNT as string,",
+						"          FRCDTOTALAMOUNT as string,",
+						"          USERCHAR1 as string,",
+						"          USERCHAR2 as string,",
+						"          USERCHAR3 as string,",
+						"          USERCHAR4 as string,",
+						"          USERAMOUNT1 as string,",
+						"          USERAMOUNT2 as string,",
+						"          USERDATE1 as string,",
+						"          USERDATE2 as string,",
+						"          ENABLEFLOAT as string,",
+						"          FRCRUNITS as string,",
+						"          FRCDUNITS as string,",
+						"          PRGDRECACTIVITYDT as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          CAPPEDFEESCOUNTCAP as string,",
+						"          CAPPEDFEESAMOUNTCAP as string,",
+						"          CREATEDBYUSER as string,",
+						"          CREATEDATBRANCH as string,",
+						"          WRTOTALAMOUNT as string,",
+						"          WDTOTALAMOUNT as string,",
+						"          NONREGCCCHECKHOLDBASEAMT as string,",
+						"          NONREGCCCHECKTOTALAMT as string,",
+						"          LIMITUSAGEDATE as string,",
+						"          COUNTLIMIT1 as string,",
+						"          COUNTLIMIT2 as string,",
+						"          COUNTLIMIT3 as string,",
+						"          COUNTLIMIT4 as string,",
+						"          COUNTLIMIT5 as string,",
+						"          COUNTLIMIT6 as string,",
+						"          LIMITCOUNT1 as string,",
+						"          LIMITCOUNT2 as string,",
+						"          LIMITCOUNT3 as string,",
+						"          LIMITCOUNT4 as string,",
+						"          LIMITCOUNT5 as string,",
+						"          LIMITCOUNT6 as string,",
+						"          LIMIT1 as string,",
+						"          LIMIT2 as string,",
+						"          LIMIT3 as string,",
+						"          LIMIT4 as string,",
+						"          LIMIT5 as string,",
+						"          LIMIT6 as string,",
+						"          LIMITAMOUNT1 as string,",
+						"          LIMITAMOUNT2 as string,",
+						"          LIMITAMOUNT3 as string,",
+						"          LIMITAMOUNT4 as string,",
+						"          LIMITAMOUNT5 as string,",
+						"          LIMITAMOUNT6 as string,",
+						"          PERITEMLIMIT1 as string,",
+						"          PERITEMLIMIT2 as string,",
+						"          PERITEMLIMIT3 as string,",
+						"          PERITEMLIMIT4 as string,",
+						"          PERITEMLIMIT5 as string,",
+						"          PERITEMLIMIT6 as string,",
+						"          VERSIONID as string,",
+						"          UUID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(product_id = iifNull(TYPE,'p')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          account_id as integer,",
+						"          min_balance as decimal(10,2),",
+						"          open_date as date,",
+						"          close_date as date,",
+						"          branch as string,",
+						"          status as string,",
+						"          household_account_number as string,",
+						"          member_group_name as string,",
+						"          product_id as integer,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          account_type_id as integer,",
+						"          anonymized_member_id as long",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          account_id = PWC_Key,",
+						"          open_date = OPENDATE,",
+						"          close_date = CLOSEDATE,",
+						"          account_type_id = TYPE,",
+						"          branch = BRANCH,",
+						"          product_id",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERDETAILS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_details_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_details_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          add_date as string,",
+						"          PWC_Key as integer,",
+						"          ORDINAL as string,",
+						"          TYPE as string,",
+						"          SUBTYPE as string,",
+						"          MAILOVERRIDE as string,",
+						"          SSNOVERRIDE as string,",
+						"          SSNCERTIFICATION as string,",
+						"          SSNTYPE as string,",
+						"          EFFECTIVEDATE as string,",
+						"          EXPIRATIONDATE as string,",
+						"          FirstName as string,",
+						"          MiddleName as string,",
+						"          LastName as string,",
+						"          SUFFIX as string,",
+						"          EXTRAADDRESS as string,",
+						"          STREET as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          ZIPCODE as string,",
+						"          LASTFMDATE as string,",
+						"          CARRIERROUTE as string,",
+						"          ADDRESSTYPE as string,",
+						"          DEATHDATE as string,",
+						"          ECOACODE as string,",
+						"          COUNTRY as string,",
+						"          COUNTRYCODE as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          MBRSTATUS as string,",
+						"          MBRSTATUSFMDATE as string,",
+						"          MBRCREATEDATE as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(name = replace(FirstName, char(0), ''),",
+						"          {e-mail} = LastName,",
+						"          state = substring(rtrim(STATE), 1, 2)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          member_id as integer,",
+						"          name as string,",
+						"          last_name as string,",
+						"          date_of_birth as date,",
+						"          ssn as string,",
+						"          address as string,",
+						"          city as string,",
+						"          state as string,",
+						"          zip_code as string,",
+						"          phone as string,",
+						"          email as string,",
+						"          branch as string,",
+						"          status as string,",
+						"          start_date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          member_id = PWC_Key,",
+						"          name,",
+						"          last_name = LastName,",
+						"          address = STREET,",
+						"          city = CITY,",
+						"          state = derivedColumn1@state,",
+						"          zip_code = ZIPCODE,",
+						"          start_date = MBRCREATEDATE,",
+						"          email = {e-mail}",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_stories",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_stories_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Comments as string,",
+						"          DetailEntryValue as string,",
+						"          Value as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(fsh_name = substring(\r",
+						"    Comments,\r",
+						"    locate('Added by: ', Comments) + length('Added by: '),\r",
+						"    locate(' - ', Comments) - (locate('Added by: ', Comments) + length('Added by: '))\r",
+						"),",
+						"          id = substring(\r",
+						"    Comments,\r",
+						"    locate(' - ', Comments) + length(' - '),\r",
+						"    locate(' -- ', Comments) - (locate(' - ', Comments) + length(' - '))\r",
+						"),",
+						"          branch_id = substring(\r",
+						"    Comments,\r",
+						"    locate(' -- ', Comments) + length(' -- '),\r",
+						"    locate(' On: ', Comments) - (locate(' -- ', Comments) + length(' -- '))\r",
+						"),",
+						"          story_date = substring(\r",
+						"    Comments,\r",
+						"    locate('On: ', Comments) + length('On: '),\r",
+						"    locate('***', Comments, locate('***', Comments) + 1) - (locate('On: ', Comments) + length('On: '))\r",
+						"),",
+						"          comments_array = split(Comments, '***')) ~> derivedColumn2",
+						"derivedColumn2 foldDown(unroll(comments_array),",
+						"     mapColumn(",
+						"          Comments,",
+						"          DetailEntryValue,",
+						"          Value,",
+						"          fsh_name,",
+						"          id,",
+						"          branch_id,",
+						"          story_date,",
+						"          comments_array",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> flatten1",
+						"derivedColumn3 filter(length(replace(toString(comments_array), ' ', '')) > 0",
+						"&& !startsWith(toString(comments_array), 'Added by:')) ~> filter1",
+						"flatten1 derive(story_id = id,",
+						"          story_reason = comments_array,",
+						"          story_date = toString(toTimestamp(story_date, 'MM/dd/yyyy hh:mm:ss a'), 'yyyy-MM-dd HH:mm:ss.SSS')) ~> derivedColumn3",
+						"filter1 keyGenerate(output(story_id as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          story_id as long,",
+						"          story_date as timestamp,",
+						"          story_reason as string,",
+						"          story_details as string,",
+						"          fhs_name as string,",
+						"          fhs_id as string,",
+						"          branch_id as string,",
+						"          account_id as integer,",
+						"          story_source_type_code_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          story_id,",
+						"          story_date,",
+						"          story_details = Value,",
+						"          fhs_name = fsh_name,",
+						"          fhs_id = id,",
+						"          branch_id,",
+						"          story_reason",
+						"     )) ~> sink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_SHAREACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Share_accountcsv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Share_account",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PWC_Key as string,",
+						"          ID as string,",
+						"          CHECKDIGITS as string,",
+						"          TYPE as string,",
+						"          LASTFMDATE as string,",
+						"          LASTTRANDATE as string,",
+						"          OPENDATE as string,",
+						"          CLOSEDATE as string,",
+						"          REFERENCE as string,",
+						"          WARNINGCODE1 as string,",
+						"          WARNINGCODE2 as string,",
+						"          WARNINGCODE3 as string,",
+						"          WARNINGCODE4 as string,",
+						"          WARNINGCODE5 as string,",
+						"          WARNINGCODE6 as string,",
+						"          WARNINGCODE7 as string,",
+						"          WARNINGCODE8 as string,",
+						"          WARNINGCODE9 as string,",
+						"          WARNINGCODE10 as string,",
+						"          WARNINGCODE11 as string,",
+						"          WARNINGCODE12 as string,",
+						"          WARNINGCODE13 as string,",
+						"          WARNINGCODE14 as string,",
+						"          WARNINGCODE15 as string,",
+						"          WARNINGCODE16 as string,",
+						"          WARNINGCODE17 as string,",
+						"          WARNINGCODE18 as string,",
+						"          WARNINGCODE19 as string,",
+						"          WARNINGCODE20 as string,",
+						"          SERVICE1 as string,",
+						"          SERVICE2 as string,",
+						"          SERVICE3 as string,",
+						"          SERVICE4 as string,",
+						"          SERVICE5 as string,",
+						"          SERVICE6 as string,",
+						"          SERVICE7 as string,",
+						"          SERVICE8 as string,",
+						"          SHARECODE as string,",
+						"          IRSCODE as string,",
+						"          DIVPOSTCODE as string,",
+						"          LASTDIVDATE as string,",
+						"          LASTDIVAMOUNT as string,",
+						"          DIVYTD as string,",
+						"          DIVLASTYEAR as string,",
+						"          DIVFROMOPEN as string,",
+						"          DIVTYPE as string,",
+						"          DIVRATE as string,",
+						"          DIVACCRUALDATE as string,",
+						"          DIVACCRUAL as string,",
+						"          WITHHOLDINGCODE as string,",
+						"          WITHHOLDINGYTD as string,",
+						"          WITHHOLDINGLASTYEAR as string,",
+						"          PENALTYTYPE as string,",
+						"          PENALTYYTD as string,",
+						"          PENALTYLASTYEAR as string,",
+						"          BALANCE as string,",
+						"          ORIGINALBALANCE as string,",
+						"          MINIMUMBALANCE as string,",
+						"          INSURANCETYPE as string,",
+						"          INSURANCEMAXIMUM as string,",
+						"          INSURANCEBALANCEAGE1 as string,",
+						"          INSURANCEBALANCEAGE2 as string,",
+						"          INSURANCEBALANCEAGE3 as string,",
+						"          INSURANCEBALANCEAGE4 as string,",
+						"          MINIMUMDEPOSIT as string,",
+						"          MINIMUMWITHDRAWAL as string,",
+						"          WITHDRAWALLIMIT as string,",
+						"          WITHDRAWALCOUNT as string,",
+						"          WITHDRAWNFROMOPEN as string,",
+						"          WITHDRAWALFEETYPE as string,",
+						"          WITHDRAWALFEECOUNT as string,",
+						"          LASTPURGEDATE as string,",
+						"          STATEMENTGROUP as string,",
+						"          STATEMENTDATE as string,",
+						"          STATEMENTMAILCODE as string,",
+						"          REGECOUNT as string,",
+						"          REGDCHECKCOUNT as string,",
+						"          REGDTRANSFERCOUNT as string,",
+						"          MATURITYPOSTCODE as string,",
+						"          MATURITYDATE as string,",
+						"          TERMFREQUENCY as string,",
+						"          TERMPERIOD as string,",
+						"          CERTIFICATENUMBER as string,",
+						"          DESCRIPTION as string,",
+						"          LOANPAYMENTHOLD as string,",
+						"          STATEMENTPREVDATE as string,",
+						"          BONDINTYTD as string,",
+						"          BONDINTLASTYEAR as string,",
+						"          NSFMONTHTODATE as string,",
+						"          NSFYTD as string,",
+						"          NSFLASTYEAR as string,",
+						"          XFRMONTHTODATE as string,",
+						"          XFRYTD as string,",
+						"          XFRLASTYEAR as string,",
+						"          WARNINGEXPIRATION1 as string,",
+						"          WARNINGEXPIRATION2 as string,",
+						"          WARNINGEXPIRATION3 as string,",
+						"          WARNINGEXPIRATION4 as string,",
+						"          WARNINGEXPIRATION5 as string,",
+						"          WARNINGEXPIRATION6 as string,",
+						"          WARNINGEXPIRATION7 as string,",
+						"          WARNINGEXPIRATION8 as string,",
+						"          WARNINGEXPIRATION9 as string,",
+						"          WARNINGEXPIRATION10 as string,",
+						"          WARNINGEXPIRATION11 as string,",
+						"          WARNINGEXPIRATION12 as string,",
+						"          WARNINGEXPIRATION13 as string,",
+						"          WARNINGEXPIRATION14 as string,",
+						"          WARNINGEXPIRATION15 as string,",
+						"          WARNINGEXPIRATION16 as string,",
+						"          WARNINGEXPIRATION17 as string,",
+						"          WARNINGEXPIRATION18 as string,",
+						"          WARNINGEXPIRATION19 as string,",
+						"          WARNINGEXPIRATION20 as string,",
+						"          FEECOUNT1 as string,",
+						"          FEECOUNT2 as string,",
+						"          FEECOUNT3 as string,",
+						"          FEECOUNT4 as string,",
+						"          STATEWITHHOLDINGCODE as string,",
+						"          STATEWITHHOLDINGYTD as string,",
+						"          STATEWITHHOLDINGLASTYEAR as string,",
+						"          CUTOTALSUSECODE as string,",
+						"          DIVPERIODSTART as string,",
+						"          DIVPERIODBALDAYS as string,",
+						"          CHARGEOFFAMOUNT as string,",
+						"          CHARGEOFFDATE as string,",
+						"          CHARGEOFFTYPE as string,",
+						"          CREDITREPORTINGCODE as string,",
+						"          CREDITREPORTNUMBER as string,",
+						"          BRANCH as string,",
+						"          CREDITREPORTOCCURDATE as string,",
+						"          CREDITREPORTLASTSTATUS as string,",
+						"          CREDITREPORTCOMMENT as string,",
+						"          BUMPRATE as string,",
+						"          BUMPEFFECTIVEDATE as string,",
+						"          BUMPEXPIRATIONDATE as string,",
+						"          IRSPLAN as string,",
+						"          ORIGINALDEPOSITDATE as string,",
+						"          ORIGINALDEPOSIT as string,",
+						"          CREDITREPORTCONSUMERINFO as string,",
+						"          CREDITREPORTCOMPLIANCE as string,",
+						"          ACTIVITYDATE as string,",
+						"          COURTESYPAYMONTHTODATE as string,",
+						"          COURTESYPAYYTD as string,",
+						"          COURTESYPAYLASTYEAR as string,",
+						"          OVERDRAFTTOLERANCE as string,",
+						"          CDDIVACCRYTD as string,",
+						"          CDDIVACCRLASTYR as string,",
+						"          AMORTIZATIONSCHD as string,",
+						"          AMORTIZATIONSCHDTYPE as string,",
+						"          DIVIDENDRATEMARGINSIGN as string,",
+						"          DIVIDENDRATEPERIODDATE as string,",
+						"          DIVIDENDRATEPERIODFREQ as string,",
+						"          DIVIDENDRATEMARGIN as string,",
+						"          DIVIDENDRATEMAX as string,",
+						"          DIVIDENDRATEMIN as string,",
+						"          PERIODICCAP as string,",
+						"          PERIODICSTARTRATE as string,",
+						"          CALLITEMSCHD as string,",
+						"          CALLITEMSCHDTYPE as string,",
+						"          MEMBERUSERTRANSFERCODE as string,",
+						"          CORPORATEUSERTRANSFERCODE as string,",
+						"          MEMBERBRANCHSUPPORT as string,",
+						"          MCDIVYTD as string,",
+						"          MCDIVLASTYEAR as string,",
+						"          USERCHAR1 as string,",
+						"          USERCHAR2 as string,",
+						"          USERCHAR3 as string,",
+						"          USERCHAR4 as string,",
+						"          USERAMOUNT1 as string,",
+						"          USERAMOUNT2 as string,",
+						"          USERDATE1 as string,",
+						"          USERDATE2 as string,",
+						"          PUTITEMSCHD as string,",
+						"          PUTITEMSCHDTYPE as string,",
+						"          LEDGERACCRUAL as string,",
+						"          LEDGERACCRUALDATE as string,",
+						"          CURRDIVPAYABLE as string,",
+						"          CURRMONTHPAIDDIV as string,",
+						"          MTDPAIDDIVS as string,",
+						"          MTDACCRUEDDIVS as string,",
+						"          MTDEARNEDDIVS as string,",
+						"          PREMTHDIVPAID1 as string,",
+						"          PREMTHDIVPAID2 as string,",
+						"          PREMTHDIVPAID3 as string,",
+						"          PREMTHDIVACCRUED1 as string,",
+						"          PREMTHDIVACCRUED2 as string,",
+						"          PREMTHDIVACCRUED3 as string,",
+						"          PREMTHDIVEARNED1 as string,",
+						"          PREMTHDIVEARNED2 as string,",
+						"          PREMTHDIVEARNED3 as string,",
+						"          PREMTHDIVEARNED4 as string,",
+						"          PREMTHDIVEARNED5 as string,",
+						"          PREMTHDIVEARNED6 as string,",
+						"          PREMTHDIVEARNED7 as string,",
+						"          PREMTHDIVEARNED8 as string,",
+						"          PREMTHDIVEARNED9 as string,",
+						"          PREMTHDIVEARNED10 as string,",
+						"          PREMTHDIVEARNED11 as string,",
+						"          PREMTHDIVEARNED12 as string,",
+						"          MTDPRIORRATEACCRUAL as string,",
+						"          LASTACCRUALUPDATEDATE as string,",
+						"          UNPAIDFEEYTD as string,",
+						"          UNPAIDFEELASTYEAR as string,",
+						"          OVERDRAFTFEEYTD as string,",
+						"          OVERDRAFTFEELASTYR as string,",
+						"          LASTCRREPORTDATE as string,",
+						"          CREDITREPORTCONSUMERINFODATE as string,",
+						"          EXTACHXFRDAILYLIMITIN as string,",
+						"          EXTACHXFRDAILYLIMITOUT as string,",
+						"          STATEWITHHOLDINGQTD as string,",
+						"          STATEWITHHOLDINGLASTQTR as string,",
+						"          ANALYSISGROUPPRIMARYACCT as string,",
+						"          ANALYSISGROUPPRIMARYID as string,",
+						"          ANALYSISPMTACCT as string,",
+						"          ANALYSISPMTSLID as string,",
+						"          ANALYSISPMTIDTYPE as string,",
+						"          NICKNAME as string,",
+						"          RENEWSHARETYPE as string,",
+						"          RENEWTERMFREQ as string,",
+						"          RENEWTERMPERIOD as string,",
+						"          DIVDISBUPDTACTVTYD as string,",
+						"          SWEEPBALANCETYPE as string,",
+						"          SWEEPTARGETMINIMUM as string,",
+						"          SWEEPTARGETMAXIMUM as string,",
+						"          SWEEPPRIORITY as string,",
+						"          LASTDIRECTDEPDATE as string,",
+						"          LASTDIRECTDEPAMT as string,",
+						"          REGDCTRSTARTDAY as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          CAPPEDFEESAMTPERIOD as string,",
+						"          CAPPEDFEESAMOUNTCAP as string,",
+						"          CAPPEDFEESCNTPERIOD as string,",
+						"          CAPPEDFEESCOUNTCAP as string,",
+						"          CREATEDBYUSER as string,",
+						"          CREATEDATBRANCH as string,",
+						"          ESCROWEDLOANID as string,",
+						"          AUTHFEEOPTION1 as string,",
+						"          AUTHFEEOPTION2 as string,",
+						"          AUTHFEEOPTION3 as string,",
+						"          AUTHFEEOPTION4 as string,",
+						"          AUTHFEEOPTION5 as string,",
+						"          ODTAUTHFEESRCCODELIST1 as string,",
+						"          ODTAUTHFEESRCCODELIST2 as string,",
+						"          ODTAUTHFEESRCCODELIST3 as string,",
+						"          ODTAUTHFEESRCCODELIST4 as string,",
+						"          FEEEXEMPTCRTSYBAL as string,",
+						"          NSFFEEMTD as string,",
+						"          NSFFEEYTD as string,",
+						"          NSFFEELY as string,",
+						"          COURTESYFEEMTD as string,",
+						"          COURTESYFEEYTD as string,",
+						"          COURTESYFEELY as string,",
+						"          NEGATIVEBALANCEDATE as string,",
+						"          CREDITREPORTORIGINALAMOUNTRPTD as string,",
+						"          NEGATIVEBALANCENOTICETYPE as string,",
+						"          NEGATIVEBALANCENOTICENUMBER as string,",
+						"          NEGATIVEBALANCENOTICEDATE as string,",
+						"          ESCROWYTD as string,",
+						"          ESCROWLASTYEAR as string,",
+						"          CHAPTER4WITHHOLDINGCODE as string,",
+						"          CHAPTER4WITHHELDYTD as string,",
+						"          CHAPTER4WITHHELDLSTYR as string,",
+						"          YEARENDBALANCE as string,",
+						"          IRS1042SUFID as string,",
+						"          POSITIVEPAYDRAFT as string,",
+						"          VERSIONID as string,",
+						"          UUID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(share_id = concat(PWC_Key, ID),",
+						"     partitionBy('hash', 1)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          share_id as long,",
+						"          min_balance as decimal(10,2),",
+						"          open_date as date,",
+						"          close_date as date,",
+						"          original_balance as decimal(10,0),",
+						"          available_balance as decimal(10,0),",
+						"          curr_balance as decimal(10,0),",
+						"          status as string,",
+						"          branch as string,",
+						"          account_type as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          share_type_code_id as integer,",
+						"          product_id as integer,",
+						"          account_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          share_id,",
+						"          account_id = PWC_Key,",
+						"          min_balance = MINIMUMBALANCE,",
+						"          open_date = OPENDATE,",
+						"          close_date = CLOSEDATE,",
+						"          share_type_code_id = TYPE,",
+						"          original_balance = ORIGINALBALANCE,",
+						"          available_balance = BALANCE,",
+						"          product_id = TYPE",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_TRANSACTION')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "transactiondataflow",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "transactiondataflow",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"description": "Export data to ",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "CombineDateTime"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PWC_Key as string,",
+						"          BALSEGCOUNT as string,",
+						"          COMMENTCODE as string,",
+						"          TRANSFERCODE as string,",
+						"          ADJUSTMENTCODE as string,",
+						"          REGECODE as string,",
+						"          REGDCHECKCODE as string,",
+						"          REGDTRANSFERCODE as string,",
+						"          VOIDCODE as string,",
+						"          SUBACTIONCODE as string,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as string,",
+						"          POSTTIME as string,",
+						"          USERNUMBER as string,",
+						"          USEROVERRIDE as string,",
+						"          SECURITYLEVELS as string,",
+						"          DESCRIPTION as string,",
+						"          ACTIONCODE as string,",
+						"          SOURCECODE as string,",
+						"          BALANCECHANGE as string,",
+						"          INTEREST as string,",
+						"          NEWBALANCE as string,",
+						"          FEEAMOUNT as string,",
+						"          ESCROWAMOUNT as string,",
+						"          LASTTRANDATE as string,",
+						"          MATURITYLOANDUEDATE as string,",
+						"          COMMENT as string,",
+						"          BRANCH as string,",
+						"          CONSOLENUMBER as string,",
+						"          BATCHSEQUENCE as string,",
+						"          SALESTAXAMOUNT as string,",
+						"          ACTIVITYDATE as string,",
+						"          BILLEDFEEAMOUNT as string,",
+						"          PROCESSORUSER as string,",
+						"          MEMBERBRANCH as string,",
+						"          PREVAVAILBALANCE as string,",
+						"          SUBSOURCE as string,",
+						"          CONFIRMATIONSEQ as string,",
+						"          MICRACCTNUM as string,",
+						"          MICRRT as string,",
+						"          RECURRINGTRAN as string,",
+						"          FEEEXMTCRTSYAMT as string,",
+						"          ESCROWUNPAIDBALCHG as string,",
+						"          ESCROWAPPLIEDBALCHG as string,",
+						"          UNAPPLIEDPARTIALPMTCHG as string,",
+						"          FEECOUNTBY as string,",
+						"          LATECHGWAIVEDAMT as string,",
+						"          LATECHGUNPAIDCHGAMT as string,",
+						"          PREVLATECHGDATE as string,",
+						"          PREVLATECHGACCRUED as string,",
+						"          LATECHGFIELDSVALID as string,",
+						"          BALSEGID1 as string,",
+						"          BALSEGPMTCHANGEDATE1 as string,",
+						"          INTEFFECTDATE as string,",
+						"          BALSEGPREVFIRSTPMTDATE1 as string,",
+						"          DRAFTNUMBER as string,",
+						"          TRACERNUMBER as string,",
+						"          DISPOSITIONFEE as string,",
+						"          TERMINATIONFEE as string,",
+						"          MISCEXPENSEAMOUNT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(transaction_date = toTimestamp(\r",
+						"    toString(POSTDATE) + ' ' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 0, 2) + ':' + \r",
+						"    substring(lpad(toString(POSTTIME), 4, '0'), 3, 4),\r",
+						"    'yyyy-MM-dd HH:mm'\r",
+						"),",
+						"          transaction_code = case(\r",
+						"  toString(ACTIONCODE) == 'D', 1,\r",
+						"  toString(SOURCECODE) == 'F', 3,\r",
+						"  toString(ACTIONCODE) == 'W', 2\r",
+						"),",
+						"          Transaction_amount = toInteger(BALANCECHANGE),",
+						"     partitionBy('hash', 1)) ~> CombineDateTime",
+						"CombineDateTime filter(Transaction_amount != 0) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PWC_Key as string,",
+						"          BALSEGCOUNT as string,",
+						"          COMMENTCODE as string,",
+						"          TRANSFERCODE as string,",
+						"          ADJUSTMENTCODE as string,",
+						"          REGECODE as string,",
+						"          REGDCHECKCODE as string,",
+						"          REGDTRANSFERCODE as string,",
+						"          VOIDCODE as string,",
+						"          SUBACTIONCODE as string,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as string,",
+						"          POSTTIME as string,",
+						"          USERNUMBER as string,",
+						"          USEROVERRIDE as string,",
+						"          SECURITYLEVELS as string,",
+						"          DESCRIPTION as string,",
+						"          ACTIONCODE as string,",
+						"          SOURCECODE as string,",
+						"          BALANCECHANGE as string,",
+						"          INTEREST as string,",
+						"          NEWBALANCE as string,",
+						"          FEEAMOUNT as string,",
+						"          ESCROWAMOUNT as string,",
+						"          LASTTRANDATE as string,",
+						"          MATURITYLOANDUEDATE as string,",
+						"          COMMENT as string,",
+						"          BRANCH as string,",
+						"          CONSOLENUMBER as string,",
+						"          BATCHSEQUENCE as string,",
+						"          SALESTAXAMOUNT as string,",
+						"          ACTIVITYDATE as string,",
+						"          BILLEDFEEAMOUNT as string,",
+						"          PROCESSORUSER as string,",
+						"          MEMBERBRANCH as string,",
+						"          PREVAVAILBALANCE as string,",
+						"          SUBSOURCE as string,",
+						"          CONFIRMATIONSEQ as string,",
+						"          MICRACCTNUM as string,",
+						"          MICRRT as string,",
+						"          RECURRINGTRAN as string,",
+						"          FEEEXMTCRTSYAMT as string,",
+						"          ESCROWUNPAIDBALCHG as string,",
+						"          ESCROWAPPLIEDBALCHG as string,",
+						"          UNAPPLIEDPARTIALPMTCHG as string,",
+						"          FEECOUNTBY as string,",
+						"          LATECHGWAIVEDAMT as string,",
+						"          LATECHGUNPAIDCHGAMT as string,",
+						"          PREVLATECHGDATE as string,",
+						"          PREVLATECHGACCRUED as string,",
+						"          LATECHGFIELDSVALID as string,",
+						"          BALSEGID1 as string,",
+						"          BALSEGPMTCHANGEDATE1 as string,",
+						"          INTEFFECTDATE as string,",
+						"          BALSEGPREVFIRSTPMTDATE1 as string,",
+						"          DRAFTNUMBER as string,",
+						"          TRACERNUMBER as string,",
+						"          DISPOSITIONFEE as string,",
+						"          TERMINATIONFEE as string,",
+						"          MISCEXPENSEAMOUNT as string",
+						"     ),",
+						"     partitionFileNames:['transaction.csv'],",
+						"     partitionBy('hash', 1)) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/transactiondataflow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_TRANSACTION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "transaction_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "transaction_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"description": "Export data to ",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "CombineDateTime"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          TranId as integer,",
+						"          PARENTID as string,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as date,",
+						"          POSTTIME as string,",
+						"          DESCRIPTION as string,",
+						"          ACTIONCODE as string,",
+						"          SOURCECODE as string,",
+						"          BALANCECHANGE as float,",
+						"          INTEREST as string,",
+						"          NEWBALANCE as float,",
+						"          FEEAMOUNT as string,",
+						"          COMMENT as string,",
+						"          BRANCH as string,",
+						"          PWC_key as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(transaction_code = case(\r",
+						"  toString(ACTIONCODE) == 'D', 1,\r",
+						"  toString(SOURCECODE) == 'F', 3,\r",
+						"  toString(ACTIONCODE) == 'W', 2\r",
+						"),",
+						"          SHARE_ID = concat(PWC_key,PARENTID),",
+						"          transaction_date = toTimestamp(toString(POSTDATE) + ' ' +     substring(lpad(toString(POSTTIME), 4, '0'), 0, 2) + ':' +     substring(lpad(toString(POSTTIME), 4, '0'), 3, 4),    'yyyy-MM-dd HH:mm'),",
+						"     partitionBy('hash', 1)) ~> CombineDateTime",
+						"CombineDateTime sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          transaction_id as integer,",
+						"          transaction_status as string,",
+						"          transaction_date as timestamp,",
+						"          transaction_amount as decimal(10,2),",
+						"          balance as decimal(10,2),",
+						"          description as string,",
+						"          merchant as string,",
+						"          payment_method as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          transaction_type_code_id as integer,",
+						"          share_id as long",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          transaction_id = TranId,",
+						"          transaction_date,",
+						"          transaction_amount = BALANCECHANGE,",
+						"          balance = NEWBALANCE,",
+						"          description = DESCRIPTION,",
+						"          payment_method = SOURCECODE,",
+						"          transaction_type_code_id = transaction_code,",
+						"          share_id = SHARE_ID",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/transaction_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Transformation_Member_account')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "INTIAL LOAD"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "member_accountcsv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "member_account",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedproductid"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PWC_Key as string,",
+						"          TYPE as string,",
+						"          LASTFMDATE as string,",
+						"          OPENDATE as string,",
+						"          CLOSEDATE as string,",
+						"          BRANCH as string,",
+						"          RESTRICTACCESS as string,",
+						"          REFERENCE as string,",
+						"          WARNINGCODE1 as string,",
+						"          WARNINGCODE2 as string,",
+						"          WARNINGCODE3 as string,",
+						"          WARNINGCODE4 as string,",
+						"          WARNINGCODE5 as string,",
+						"          WARNINGCODE6 as string,",
+						"          WARNINGCODE7 as string,",
+						"          WARNINGCODE8 as string,",
+						"          WARNINGCODE9 as string,",
+						"          WARNINGCODE10 as string,",
+						"          WARNINGCODE11 as string,",
+						"          WARNINGCODE12 as string,",
+						"          WARNINGCODE13 as string,",
+						"          WARNINGCODE14 as string,",
+						"          WARNINGCODE15 as string,",
+						"          WARNINGCODE16 as string,",
+						"          WARNINGCODE17 as string,",
+						"          WARNINGCODE18 as string,",
+						"          WARNINGCODE19 as string,",
+						"          WARNINGCODE20 as string,",
+						"          PAYMENTHISTORY1 as string,",
+						"          PAYMENTHISTORY2 as string,",
+						"          PAYMENTHISTORY3 as string,",
+						"          PAYMENTHISTORY4 as string,",
+						"          PAYMENTHISTORY5 as string,",
+						"          PAYMENTHISTORY6 as string,",
+						"          MEMBERSTATUS as string,",
+						"          CORRESPONDDATE as string,",
+						"          PROXYDATE as string,",
+						"          HEADOFHOUSEHOLD as string,",
+						"          WARNINGEXPIRATION1 as string,",
+						"          WARNINGEXPIRATION2 as string,",
+						"          WARNINGEXPIRATION3 as string,",
+						"          WARNINGEXPIRATION4 as string,",
+						"          WARNINGEXPIRATION5 as string,",
+						"          WARNINGEXPIRATION6 as string,",
+						"          WARNINGEXPIRATION7 as string,",
+						"          WARNINGEXPIRATION8 as string,",
+						"          WARNINGEXPIRATION9 as string,",
+						"          WARNINGEXPIRATION10 as string,",
+						"          WARNINGEXPIRATION11 as string,",
+						"          WARNINGEXPIRATION12 as string,",
+						"          WARNINGEXPIRATION13 as string,",
+						"          WARNINGEXPIRATION14 as string,",
+						"          WARNINGEXPIRATION15 as string,",
+						"          WARNINGEXPIRATION16 as string,",
+						"          WARNINGEXPIRATION17 as string,",
+						"          WARNINGEXPIRATION18 as string,",
+						"          WARNINGEXPIRATION19 as string,",
+						"          WARNINGEXPIRATION20 as string,",
+						"          NSFMONTHLYCOUNT1 as string,",
+						"          NSFMONTHLYCOUNT2 as string,",
+						"          NSFMONTHLYCOUNT3 as string,",
+						"          NSFMONTHLYCOUNT4 as string,",
+						"          NSFMONTHLYCOUNT5 as string,",
+						"          NSFMONTHLYCOUNT6 as string,",
+						"          NSFMONTHLYCOUNT7 as string,",
+						"          NSFMONTHLYCOUNT8 as string,",
+						"          NSFMONTHLYCOUNT9 as string,",
+						"          NSFMONTHLYCOUNT10 as string,",
+						"          NSFMONTHLYCOUNT11 as string,",
+						"          NSFMONTHLYCOUNT12 as string,",
+						"          NSFMONTHLYCOUNT13 as string,",
+						"          NSFMONTHLYCOUNT14 as string,",
+						"          NSFMONTHLYCOUNT15 as string,",
+						"          NSFMONTHLYCOUNT16 as string,",
+						"          NSFMONTHLYCOUNT17 as string,",
+						"          NSFMONTHLYCOUNT18 as string,",
+						"          NSFMONTHLYCOUNT19 as string,",
+						"          NSFMONTHLYCOUNT20 as string,",
+						"          NSFMONTHLYCOUNT21 as string,",
+						"          NSFMONTHLYCOUNT22 as string,",
+						"          NSFMONTHLYCOUNT23 as string,",
+						"          NSFMONTHLYCOUNT24 as string,",
+						"          NSFTODAY as string,",
+						"          MEMBERGROUP as string,",
+						"          COMMERCIALCODE as string,",
+						"          FMLASTPURGEDATE as string,",
+						"          STATEREPORTING as string,",
+						"          HOUSEHOLDACCOUNT as string,",
+						"          HOUSEHOLDSTATEMENT as string,",
+						"          FROZENMODE as string,",
+						"          INVALIDATTEMPTCOUNT as string,",
+						"          INVALIDATTEMPTDATE as string,",
+						"          INVALIDATTEMPTTIME as string,",
+						"          STATEMENTMAILCODE as string,",
+						"          RELATIONSHIPCODE as string,",
+						"          RELATIONSHIPOVERRIDE as string,",
+						"          RELATIONSHIPOVERRIDEEFFDATE as string,",
+						"          RELATIONSHIPOVERRIDEEXPDATE as string,",
+						"          KRHOLDBASEAMOUNT as string,",
+						"          KRTOTALAMOUNT as string,",
+						"          KRTOTALDATE as string,",
+						"          ESTMTNOTIFY as string,",
+						"          ESTMTENABLE as string,",
+						"          CRTOTALAMOUNT as string,",
+						"          CDTOTALAMOUNT as string,",
+						"          FRCRTOTALAMOUNT as string,",
+						"          FRCDTOTALAMOUNT as string,",
+						"          USERCHAR1 as string,",
+						"          USERCHAR2 as string,",
+						"          USERCHAR3 as string,",
+						"          USERCHAR4 as string,",
+						"          USERAMOUNT1 as string,",
+						"          USERAMOUNT2 as string,",
+						"          USERDATE1 as string,",
+						"          USERDATE2 as string,",
+						"          ENABLEFLOAT as string,",
+						"          FRCRUNITS as string,",
+						"          FRCDUNITS as string,",
+						"          PRGDRECACTIVITYDT as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          CAPPEDFEESCOUNTCAP as string,",
+						"          CAPPEDFEESAMOUNTCAP as string,",
+						"          CREATEDBYUSER as string,",
+						"          CREATEDATBRANCH as string,",
+						"          WRTOTALAMOUNT as string,",
+						"          WDTOTALAMOUNT as string,",
+						"          NONREGCCCHECKHOLDBASEAMT as string,",
+						"          NONREGCCCHECKTOTALAMT as string,",
+						"          LIMITUSAGEDATE as string,",
+						"          COUNTLIMIT1 as string,",
+						"          COUNTLIMIT2 as string,",
+						"          COUNTLIMIT3 as string,",
+						"          COUNTLIMIT4 as string,",
+						"          COUNTLIMIT5 as string,",
+						"          COUNTLIMIT6 as string,",
+						"          LIMITCOUNT1 as string,",
+						"          LIMITCOUNT2 as string,",
+						"          LIMITCOUNT3 as string,",
+						"          LIMITCOUNT4 as string,",
+						"          LIMITCOUNT5 as string,",
+						"          LIMITCOUNT6 as string,",
+						"          LIMIT1 as string,",
+						"          LIMIT2 as string,",
+						"          LIMIT3 as string,",
+						"          LIMIT4 as string,",
+						"          LIMIT5 as string,",
+						"          LIMIT6 as string,",
+						"          LIMITAMOUNT1 as string,",
+						"          LIMITAMOUNT2 as string,",
+						"          LIMITAMOUNT3 as string,",
+						"          LIMITAMOUNT4 as string,",
+						"          LIMITAMOUNT5 as string,",
+						"          LIMITAMOUNT6 as string,",
+						"          PERITEMLIMIT1 as string,",
+						"          PERITEMLIMIT2 as string,",
+						"          PERITEMLIMIT3 as string,",
+						"          PERITEMLIMIT4 as string,",
+						"          PERITEMLIMIT5 as string,",
+						"          PERITEMLIMIT6 as string,",
+						"          VERSIONID as string,",
+						"          UUID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source1",
+						"source1 derive(product_id = iifNull(TYPE,'p')) ~> derivedproductid",
+						"derivedproductid sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          account_id as integer,",
+						"          min_balance as decimal(10,2),",
+						"          open_date as date,",
+						"          close_date as date,",
+						"          branch as string,",
+						"          status as string,",
+						"          household_account_number as string,",
+						"          member_group_name as string,",
+						"          product_id as integer,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          account_type_id as integer,",
+						"          anonymized_member_id as long",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          account_id = PWC_Key,",
+						"          open_date = OPENDATE,",
+						"          close_date = CLOSEDATE,",
+						"          account_type_id = TYPE,",
+						"          branch = BRANCH,",
+						"          product_id",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Transformation_share_account')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "INTIAL LOAD"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Share_accountcsv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Share_account",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          PWC_Key as string,",
+						"          ID as string,",
+						"          CHECKDIGITS as string,",
+						"          TYPE as string,",
+						"          LASTFMDATE as string,",
+						"          LASTTRANDATE as string,",
+						"          OPENDATE as string,",
+						"          CLOSEDATE as string,",
+						"          REFERENCE as string,",
+						"          WARNINGCODE1 as string,",
+						"          WARNINGCODE2 as string,",
+						"          WARNINGCODE3 as string,",
+						"          WARNINGCODE4 as string,",
+						"          WARNINGCODE5 as string,",
+						"          WARNINGCODE6 as string,",
+						"          WARNINGCODE7 as string,",
+						"          WARNINGCODE8 as string,",
+						"          WARNINGCODE9 as string,",
+						"          WARNINGCODE10 as string,",
+						"          WARNINGCODE11 as string,",
+						"          WARNINGCODE12 as string,",
+						"          WARNINGCODE13 as string,",
+						"          WARNINGCODE14 as string,",
+						"          WARNINGCODE15 as string,",
+						"          WARNINGCODE16 as string,",
+						"          WARNINGCODE17 as string,",
+						"          WARNINGCODE18 as string,",
+						"          WARNINGCODE19 as string,",
+						"          WARNINGCODE20 as string,",
+						"          SERVICE1 as string,",
+						"          SERVICE2 as string,",
+						"          SERVICE3 as string,",
+						"          SERVICE4 as string,",
+						"          SERVICE5 as string,",
+						"          SERVICE6 as string,",
+						"          SERVICE7 as string,",
+						"          SERVICE8 as string,",
+						"          SHARECODE as string,",
+						"          IRSCODE as string,",
+						"          DIVPOSTCODE as string,",
+						"          LASTDIVDATE as string,",
+						"          LASTDIVAMOUNT as string,",
+						"          DIVYTD as string,",
+						"          DIVLASTYEAR as string,",
+						"          DIVFROMOPEN as string,",
+						"          DIVTYPE as string,",
+						"          DIVRATE as string,",
+						"          DIVACCRUALDATE as string,",
+						"          DIVACCRUAL as string,",
+						"          WITHHOLDINGCODE as string,",
+						"          WITHHOLDINGYTD as string,",
+						"          WITHHOLDINGLASTYEAR as string,",
+						"          PENALTYTYPE as string,",
+						"          PENALTYYTD as string,",
+						"          PENALTYLASTYEAR as string,",
+						"          BALANCE as string,",
+						"          ORIGINALBALANCE as string,",
+						"          MINIMUMBALANCE as string,",
+						"          INSURANCETYPE as string,",
+						"          INSURANCEMAXIMUM as string,",
+						"          INSURANCEBALANCEAGE1 as string,",
+						"          INSURANCEBALANCEAGE2 as string,",
+						"          INSURANCEBALANCEAGE3 as string,",
+						"          INSURANCEBALANCEAGE4 as string,",
+						"          MINIMUMDEPOSIT as string,",
+						"          MINIMUMWITHDRAWAL as string,",
+						"          WITHDRAWALLIMIT as string,",
+						"          WITHDRAWALCOUNT as string,",
+						"          WITHDRAWNFROMOPEN as string,",
+						"          WITHDRAWALFEETYPE as string,",
+						"          WITHDRAWALFEECOUNT as string,",
+						"          LASTPURGEDATE as string,",
+						"          STATEMENTGROUP as string,",
+						"          STATEMENTDATE as string,",
+						"          STATEMENTMAILCODE as string,",
+						"          REGECOUNT as string,",
+						"          REGDCHECKCOUNT as string,",
+						"          REGDTRANSFERCOUNT as string,",
+						"          MATURITYPOSTCODE as string,",
+						"          MATURITYDATE as string,",
+						"          TERMFREQUENCY as string,",
+						"          TERMPERIOD as string,",
+						"          CERTIFICATENUMBER as string,",
+						"          DESCRIPTION as string,",
+						"          LOANPAYMENTHOLD as string,",
+						"          STATEMENTPREVDATE as string,",
+						"          BONDINTYTD as string,",
+						"          BONDINTLASTYEAR as string,",
+						"          NSFMONTHTODATE as string,",
+						"          NSFYTD as string,",
+						"          NSFLASTYEAR as string,",
+						"          XFRMONTHTODATE as string,",
+						"          XFRYTD as string,",
+						"          XFRLASTYEAR as string,",
+						"          WARNINGEXPIRATION1 as string,",
+						"          WARNINGEXPIRATION2 as string,",
+						"          WARNINGEXPIRATION3 as string,",
+						"          WARNINGEXPIRATION4 as string,",
+						"          WARNINGEXPIRATION5 as string,",
+						"          WARNINGEXPIRATION6 as string,",
+						"          WARNINGEXPIRATION7 as string,",
+						"          WARNINGEXPIRATION8 as string,",
+						"          WARNINGEXPIRATION9 as string,",
+						"          WARNINGEXPIRATION10 as string,",
+						"          WARNINGEXPIRATION11 as string,",
+						"          WARNINGEXPIRATION12 as string,",
+						"          WARNINGEXPIRATION13 as string,",
+						"          WARNINGEXPIRATION14 as string,",
+						"          WARNINGEXPIRATION15 as string,",
+						"          WARNINGEXPIRATION16 as string,",
+						"          WARNINGEXPIRATION17 as string,",
+						"          WARNINGEXPIRATION18 as string,",
+						"          WARNINGEXPIRATION19 as string,",
+						"          WARNINGEXPIRATION20 as string,",
+						"          FEECOUNT1 as string,",
+						"          FEECOUNT2 as string,",
+						"          FEECOUNT3 as string,",
+						"          FEECOUNT4 as string,",
+						"          STATEWITHHOLDINGCODE as string,",
+						"          STATEWITHHOLDINGYTD as string,",
+						"          STATEWITHHOLDINGLASTYEAR as string,",
+						"          CUTOTALSUSECODE as string,",
+						"          DIVPERIODSTART as string,",
+						"          DIVPERIODBALDAYS as string,",
+						"          CHARGEOFFAMOUNT as string,",
+						"          CHARGEOFFDATE as string,",
+						"          CHARGEOFFTYPE as string,",
+						"          CREDITREPORTINGCODE as string,",
+						"          CREDITREPORTNUMBER as string,",
+						"          BRANCH as string,",
+						"          CREDITREPORTOCCURDATE as string,",
+						"          CREDITREPORTLASTSTATUS as string,",
+						"          CREDITREPORTCOMMENT as string,",
+						"          BUMPRATE as string,",
+						"          BUMPEFFECTIVEDATE as string,",
+						"          BUMPEXPIRATIONDATE as string,",
+						"          IRSPLAN as string,",
+						"          ORIGINALDEPOSITDATE as string,",
+						"          ORIGINALDEPOSIT as string,",
+						"          CREDITREPORTCONSUMERINFO as string,",
+						"          CREDITREPORTCOMPLIANCE as string,",
+						"          ACTIVITYDATE as string,",
+						"          COURTESYPAYMONTHTODATE as string,",
+						"          COURTESYPAYYTD as string,",
+						"          COURTESYPAYLASTYEAR as string,",
+						"          OVERDRAFTTOLERANCE as string,",
+						"          CDDIVACCRYTD as string,",
+						"          CDDIVACCRLASTYR as string,",
+						"          AMORTIZATIONSCHD as string,",
+						"          AMORTIZATIONSCHDTYPE as string,",
+						"          DIVIDENDRATEMARGINSIGN as string,",
+						"          DIVIDENDRATEPERIODDATE as string,",
+						"          DIVIDENDRATEPERIODFREQ as string,",
+						"          DIVIDENDRATEMARGIN as string,",
+						"          DIVIDENDRATEMAX as string,",
+						"          DIVIDENDRATEMIN as string,",
+						"          PERIODICCAP as string,",
+						"          PERIODICSTARTRATE as string,",
+						"          CALLITEMSCHD as string,",
+						"          CALLITEMSCHDTYPE as string,",
+						"          MEMBERUSERTRANSFERCODE as string,",
+						"          CORPORATEUSERTRANSFERCODE as string,",
+						"          MEMBERBRANCHSUPPORT as string,",
+						"          MCDIVYTD as string,",
+						"          MCDIVLASTYEAR as string,",
+						"          USERCHAR1 as string,",
+						"          USERCHAR2 as string,",
+						"          USERCHAR3 as string,",
+						"          USERCHAR4 as string,",
+						"          USERAMOUNT1 as string,",
+						"          USERAMOUNT2 as string,",
+						"          USERDATE1 as string,",
+						"          USERDATE2 as string,",
+						"          PUTITEMSCHD as string,",
+						"          PUTITEMSCHDTYPE as string,",
+						"          LEDGERACCRUAL as string,",
+						"          LEDGERACCRUALDATE as string,",
+						"          CURRDIVPAYABLE as string,",
+						"          CURRMONTHPAIDDIV as string,",
+						"          MTDPAIDDIVS as string,",
+						"          MTDACCRUEDDIVS as string,",
+						"          MTDEARNEDDIVS as string,",
+						"          PREMTHDIVPAID1 as string,",
+						"          PREMTHDIVPAID2 as string,",
+						"          PREMTHDIVPAID3 as string,",
+						"          PREMTHDIVACCRUED1 as string,",
+						"          PREMTHDIVACCRUED2 as string,",
+						"          PREMTHDIVACCRUED3 as string,",
+						"          PREMTHDIVEARNED1 as string,",
+						"          PREMTHDIVEARNED2 as string,",
+						"          PREMTHDIVEARNED3 as string,",
+						"          PREMTHDIVEARNED4 as string,",
+						"          PREMTHDIVEARNED5 as string,",
+						"          PREMTHDIVEARNED6 as string,",
+						"          PREMTHDIVEARNED7 as string,",
+						"          PREMTHDIVEARNED8 as string,",
+						"          PREMTHDIVEARNED9 as string,",
+						"          PREMTHDIVEARNED10 as string,",
+						"          PREMTHDIVEARNED11 as string,",
+						"          PREMTHDIVEARNED12 as string,",
+						"          MTDPRIORRATEACCRUAL as string,",
+						"          LASTACCRUALUPDATEDATE as string,",
+						"          UNPAIDFEEYTD as string,",
+						"          UNPAIDFEELASTYEAR as string,",
+						"          OVERDRAFTFEEYTD as string,",
+						"          OVERDRAFTFEELASTYR as string,",
+						"          LASTCRREPORTDATE as string,",
+						"          CREDITREPORTCONSUMERINFODATE as string,",
+						"          EXTACHXFRDAILYLIMITIN as string,",
+						"          EXTACHXFRDAILYLIMITOUT as string,",
+						"          STATEWITHHOLDINGQTD as string,",
+						"          STATEWITHHOLDINGLASTQTR as string,",
+						"          ANALYSISGROUPPRIMARYACCT as string,",
+						"          ANALYSISGROUPPRIMARYID as string,",
+						"          ANALYSISPMTACCT as string,",
+						"          ANALYSISPMTSLID as string,",
+						"          ANALYSISPMTIDTYPE as string,",
+						"          NICKNAME as string,",
+						"          RENEWSHARETYPE as string,",
+						"          RENEWTERMFREQ as string,",
+						"          RENEWTERMPERIOD as string,",
+						"          DIVDISBUPDTACTVTYD as string,",
+						"          SWEEPBALANCETYPE as string,",
+						"          SWEEPTARGETMINIMUM as string,",
+						"          SWEEPTARGETMAXIMUM as string,",
+						"          SWEEPPRIORITY as string,",
+						"          LASTDIRECTDEPDATE as string,",
+						"          LASTDIRECTDEPAMT as string,",
+						"          REGDCTRSTARTDAY as string,",
+						"          RECORDCHANGEDATE as string,",
+						"          CAPPEDFEESAMTPERIOD as string,",
+						"          CAPPEDFEESAMOUNTCAP as string,",
+						"          CAPPEDFEESCNTPERIOD as string,",
+						"          CAPPEDFEESCOUNTCAP as string,",
+						"          CREATEDBYUSER as string,",
+						"          CREATEDATBRANCH as string,",
+						"          ESCROWEDLOANID as string,",
+						"          AUTHFEEOPTION1 as string,",
+						"          AUTHFEEOPTION2 as string,",
+						"          AUTHFEEOPTION3 as string,",
+						"          AUTHFEEOPTION4 as string,",
+						"          AUTHFEEOPTION5 as string,",
+						"          ODTAUTHFEESRCCODELIST1 as string,",
+						"          ODTAUTHFEESRCCODELIST2 as string,",
+						"          ODTAUTHFEESRCCODELIST3 as string,",
+						"          ODTAUTHFEESRCCODELIST4 as string,",
+						"          FEEEXEMPTCRTSYBAL as string,",
+						"          NSFFEEMTD as string,",
+						"          NSFFEEYTD as string,",
+						"          NSFFEELY as string,",
+						"          COURTESYFEEMTD as string,",
+						"          COURTESYFEEYTD as string,",
+						"          COURTESYFEELY as string,",
+						"          NEGATIVEBALANCEDATE as string,",
+						"          CREDITREPORTORIGINALAMOUNTRPTD as string,",
+						"          NEGATIVEBALANCENOTICETYPE as string,",
+						"          NEGATIVEBALANCENOTICENUMBER as string,",
+						"          NEGATIVEBALANCENOTICEDATE as string,",
+						"          ESCROWYTD as string,",
+						"          ESCROWLASTYEAR as string,",
+						"          CHAPTER4WITHHOLDINGCODE as string,",
+						"          CHAPTER4WITHHELDYTD as string,",
+						"          CHAPTER4WITHHELDLSTYR as string,",
+						"          YEARENDBALANCE as string,",
+						"          IRS1042SUFID as string,",
+						"          POSITIVEPAYDRAFT as string,",
+						"          VERSIONID as string,",
+						"          UUID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(share_id = concat(PWC_Key, ID),",
+						"     partitionBy('hash', 1)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          share_id as long,",
+						"          min_balance as decimal(10,2),",
+						"          open_date as date,",
+						"          close_date as date,",
+						"          original_balance as decimal(10,0),",
+						"          available_balance as decimal(10,0),",
+						"          curr_balance as decimal(10,0),",
+						"          status as string,",
+						"          branch as string,",
+						"          account_type as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          share_type_code_id as integer,",
+						"          product_id as integer,",
+						"          account_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          share_id,",
+						"          account_id = PWC_Key,",
+						"          min_balance = MINIMUMBALANCE,",
+						"          open_date = OPENDATE,",
+						"          close_date = CLOSEDATE,",
+						"          share_type_code_id = TYPE,",
+						"          original_balance = ORIGINALBALANCE,",
+						"          available_balance = BALANCE,",
+						"          product_id = TYPE",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MEMBERACCOUNT_DATA_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "transaction_daily",
-						"type": "Script",
+						"name": "member_account_data",
+						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Truncate_table_financial_stat",
+								"activity": "start_time",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2830,151 +2767,39 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
 						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nwhere share_id = '2110070001' and t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n"
+							"dataflow": {
+								"referenceName": "Transformation_Member_account",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
 								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "ending_bal_cal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "transaction_daily",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\r\n  share_id,\r\n  financial_stat_type_code_id,\r\n  date,\r\n  value\r\n)\r\nSELECT\r\n  sub.share_id,\r\n  4 AS financial_stat_type_code_id,\r\n  sub.transaction_date::date AS date,\r\n  sub.balance AS value\r\nFROM (\r\n  SELECT DISTINCT ON (t.share_id, t.transaction_date::date)\r\n    t.share_id,\r\n    t.transaction_date,\r\n    t.balance,\r\n    t.transaction_id\r\n  FROM ch_fss.\"transaction\" t\r\n  where share_id = 2110070001\r\n  ORDER BY t.share_id, t.transaction_date::date, t.transaction_id DESC\r\n) sub;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "stg_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "truncate_stg_table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "WITH date_range AS (\n  SELECT generate_series::date AS dt\n  FROM generate_series('2025-09-20'::date, '2025-11-26'::date, interval '1 day')\n),\ngroups AS (\n  SELECT DISTINCT share_id\n  FROM ch_fss.share_financial_stat\n  where share_id = 2110070001\n),\nall_combinations AS (\n  SELECT g.share_id, d.dt AS date\n  FROM groups g CROSS JOIN date_range d\n)\ninsert into fss_stg.stg_missing_share_ending_bal(\nshare_id, \ndate) \nSELECT ac.share_id, ac.date\nFROM all_combinations ac\nLEFT JOIN ch_fss.share_financial_stat agfs\n  ON agfs.share_id = ac.share_id\n  AND agfs.date = ac.date\n  AND agfs.financial_stat_type_code_id = 4\nWHERE agfs.financial_stat_id IS NULL;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Insert_missing_ending_bal",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "stg_ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO ch_fss.share_financial_stat (\n  value,\n  date,\n  financial_stat_type_code_id,\n  share_id,\n  created_date,\n  created_by\n)\nSELECT\n  prev.value,\n  tm.date,\n  4,\n  tm.share_id,\n  NOW() AS created_date,\n  'system' AS created_by\nFROM fss_stg.stg_missing_share_ending_bal tm\nLEFT JOIN LATERAL (\n  SELECT value\n  FROM  ch_fss.share_financial_stat agfs\n  WHERE agfs.share_id = 2110070001\n    AND agfs.share_id = tm.share_id\n    AND agfs.financial_stat_type_code_id = 4\n    AND agfs.date < tm.date\n  ORDER BY date DESC\n  LIMIT 1\n) prev ON true\nand prev.value IS NOT null"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "account_group_fin_stat",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Insert_missing_ending_bal",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "account_group_fin_stat_copy1",
-								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
 						}
 					},
 					{
-						"name": "truncate_stg_table",
+						"name": "job_run_status",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "ending_bal_cal",
+								"activity": "end_time",
 								"dependencyConditions": [
-									"Succeeded"
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Completed"
 								]
 							}
 						],
@@ -2993,18 +2818,190 @@
 						"typeProperties": {
 							"scripts": [
 								{
-									"type": "Query",
-									"text": "TRUNCATE TABLE fss_stg.stg_missing_share_ending_bal CASCADE;"
+									"type": "NonQuery",
+									"text": {
+										"value": "insert into ch-fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{variables('status')}',\n  '@{variables('error_message')}'\n)",
+										"type": "Expression"
+									}
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "Truncate_table_financial_stat",
-						"type": "Script",
+						"name": "start_time",
+						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"end_time": {
+						"type": "String"
+					},
+					"start_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Transformation_Member_account')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "member_account_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERACCOUNT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "member_account_data",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
@@ -3020,7 +3017,10 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "delete from ch_fss.share_financial_stat where share_id=2110070001\n"
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_account_data').status}',\n  '@{if(equals(activity('member_account_data').status, 'Failed'), activity('member_account_data').Error, null)}'\n)",
+										"type": "Expression"
+									}
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -3030,13 +3030,841 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
 				"folder": {
-					"name": "pwc_pipelines"
+					"name": "FSS_DATALOAD_PL"
 				},
 				"annotations": [],
-				"lastPublishTime": "2025-11-20T05:27:08Z"
+				"lastPublishTime": "2025-11-08T19:05:37Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERACCOUNT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERDETAILS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MEMBERDETAILS",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERDETAILS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "MEMBERDETAILS",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status_copy1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "MEMBERDETAILS",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('MEMBERDETAILS').status}',\n  '@{if(equals(activity('MEMBERDETAILS').status, 'Failed'), activity('MEMBERDETAILS').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MEMBERSTORIES')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "member_stories",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_MEMBERSTORIES",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Failed",
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "member_stories",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"Status": {
+						"type": "String"
+					},
+					"Error": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SHAREACCOUNT')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SHAREACCOUNT",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_SHAREACCOUNT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "SHAREACCOUNT",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "SHAREACCOUNT",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('SHAREACCOUNT').status}',\n  '@{if(equals(activity('SHAREACCOUNT').status, 'Failed'), activity('SHAREACCOUNT').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"Error": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-08T19:05:36Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_SHAREACCOUNT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_TRANSACTION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_TRANSACTION_DATA",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_TRANSACTION_DATA",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 32,
+								"computeType": "MemoryOptimized"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "transaction_table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "DF_TRANSACTION_DATA",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "transaction_table",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "transaction_table",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('transaction_table').status}',\n  '@{if(equals(activity('transaction_table').status, 'Failed'), activity('transaction_table').error_message, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error_message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL/PL_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION_DATA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_TRANSCOMMENTS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "comments",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_COMMENTS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcecomments": {},
+									"sinkfile": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "comments",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "comments",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('comments').status}',\n  '@{if(equals(activity('comments').status, 'Failed'), activity('comments').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"Error": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL/PL_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]"
+			]
 		}
 	]
 }
