@@ -3,85 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "loop data",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "get files data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('get files data').output.childItems",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "If Condition1",
-							"type": "IfCondition",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@equals(substring(item().name, 5, length('PWC_Trans_comment')), 'PWC_Trans_comment')",
-									"type": "Expression"
-								},
-								"ifFalseActivities": [
-									{
-										"name": "Execute Pipeline1",
-										"type": "ExecutePipeline",
-										"dependsOn": [],
-										"policy": {
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "PL_TRANSACTION_DATA",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true
-										}
-									}
-								],
-								"ifTrueActivities": [
-									{
-										"name": "Execute Pipeline2",
-										"type": "ExecutePipeline",
-										"dependsOn": [],
-										"policy": {
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "PL_COMMENTS",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true
-										}
-									}
-								]
-							}
-						}
-					]
-				}
-			},
-			{
 				"name": "job_run_status",
 				"type": "Script",
 				"dependsOn": [
-					{
-						"activity": "loop data",
-						"dependencyConditions": [
-							"Completed"
-						]
-					},
 					{
 						"activity": "end_time",
 						"dependencyConditions": [
@@ -118,15 +42,7 @@
 			{
 				"name": "end_time",
 				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "loop data",
-						"dependencyConditions": [
-							"Succeeded",
-							"Failed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureOutput": false,
 					"secureInput": false
@@ -158,8 +74,31 @@
 				}
 			},
 			{
-				"name": "get files data",
-				"type": "GetMetadata",
+				"name": "Execute Pipeline2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_TRANSCOMMENTS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
 						"activity": "start_time",
@@ -169,30 +108,15 @@
 					}
 				],
 				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
 					"secureInput": false
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "multiple_transaction",
-						"type": "DatasetReference"
+					"pipeline": {
+						"referenceName": "PL_TRANSACTION_DATA",
+						"type": "PipelineReference"
 					},
-					"fieldList": [
-						"childItems",
-						"itemName"
-					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true,
-						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
-					}
+					"waitOnCompletion": true
 				}
 			}
 		],
@@ -211,7 +135,7 @@
 			}
 		},
 		"folder": {
-			"name": "FSS_DATALOAD_PL"
+			"name": "FSS_DATALOAD_PL/PL_TRANSACTION"
 		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-08T19:05:37Z"

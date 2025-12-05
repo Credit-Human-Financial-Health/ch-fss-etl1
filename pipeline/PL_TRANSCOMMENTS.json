@@ -1,5 +1,5 @@
 {
-	"name": "PL_COMMENTS",
+	"name": "PL_TRANSCOMMENTS",
 	"properties": {
 		"activities": [
 			{
@@ -134,7 +134,7 @@
 			}
 		},
 		"folder": {
-			"name": "FSS_DATALOAD_PL"
+			"name": "FSS_DATALOAD_PL/PL_TRANSACTION"
 		},
 		"annotations": [],
 		"lastPublishTime": "2025-11-19T21:46:21Z"
