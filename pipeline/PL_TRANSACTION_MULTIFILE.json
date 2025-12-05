@@ -5,7 +5,14 @@
 			{
 				"name": "get files data",
 				"type": "GetMetadata",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "start_time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -108,8 +115,8 @@
 							}
 						},
 						{
-							"name": "comment_data",
-							"type": "Copy",
+							"name": "transaction_table",
+							"type": "Script",
 							"dependsOn": [
 								{
 									"activity": "trans_comments",
@@ -126,113 +133,120 @@
 								"secureInput": false
 							},
 							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFileName": "comments_csv",
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "AzurePostgreSqlSink",
-									"writeBatchSize": 1000000,
-									"writeBatchTimeout": "00:30:00",
-									"writeMethod": "CopyCommand"
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"name": "comment_id",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "comment_id",
-												"type": "Int64",
-												"physicalType": "bigint"
-											}
-										},
-										{
-											"source": {
-												"name": "transction_date",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "post_date",
-												"type": "DateTime",
-												"physicalType": "timestamp without time zone"
-											}
-										},
-										{
-											"source": {
-												"name": "Comment",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "comment_value",
-												"type": "String",
-												"physicalType": "character varying"
-											}
-										},
-										{
-											"source": {
-												"name": "TranId",
-												"type": "String",
-												"physicalType": "String"
-											},
-											"sink": {
-												"name": "transaction_id",
-												"type": "Int32",
-												"physicalType": "integer"
-											}
-										}
-									],
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+							"linkedServiceName": {
+								"referenceName": "AzurePostgreSql1",
+								"type": "LinkedServiceReference"
 							},
-							"inputs": [
-								{
-									"referenceName": "comments_csv",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "comments_sink",
-									"type": "DatasetReference"
-								}
-							]
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
 						}
 					]
+				}
+			},
+			{
+				"name": "job_run_status",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "loop data",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "end_time",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('trans_comments').status}',\n  '@{activity('transaction_data').status}',\n  '@{if(equals(activity('transaction_data').status, 'Failed'), activity('transaction_data').Error, null)}'\n  '@{if(equals(activity('trans_comments').status, 'Failed'), activity('trans_comments').Error, null)}'\n)",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "end_time",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "loop data",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "end_time",
+					"value": {
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "start_time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "start_time",
+					"value": {
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
 		"variables": {
-			"start_date": {
+			"start_time": {
 				"type": "String"
 			},
-			"end_date": {
-				"type": "Integer"
+			"end_time": {
+				"type": "String"
 			},
 			"status": {
 				"type": "String"
 			},
-			"error_message": {
+			"error": {
 				"type": "String"
 			}
 		},
