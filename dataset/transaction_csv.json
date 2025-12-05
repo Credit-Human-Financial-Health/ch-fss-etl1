@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "PWC_Trans_2025_10_31.csv",
-				"container": "incomingfiles"
+				"container": "transactionfiles"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
