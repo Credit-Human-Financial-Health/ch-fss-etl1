@@ -1004,7 +1004,7 @@
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "transaction_table_",
+								"activity": "truncate_account_group",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1282,41 +1282,6 @@
 										"value": "@concat(\n'WITH expenses AS (\n  SELECT\n    scoring_group_id,\n    date,\n    SUM(ABS(value)) * 30 AS total_expense\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id IN (6, 7)\n  GROUP BY scoring_group_id, date\n),\nbalances AS (\n  SELECT\n    scoring_group_id,\n    date,\n    value::numeric AS balance\n  FROM ch_fss.account_group_financial_stat sfs\n  WHERE sfs.\"date\" >= ''',\npipeline().parameters.start_date,\n'''\n    AND sfs.\"date\" < ''',\npipeline().parameters.end_date,\n'''\n    AND financial_stat_type_code_id = 8\n),\nvals AS (\n  SELECT\n    n.scoring_group_id,\n    n.date,\n    d.balance - n.total_expense AS diff\n  FROM expenses n\n  LEFT JOIN balances d\n    ON n.scoring_group_id = d.scoring_group_id\n    AND n.date = d.date\n)\nINSERT INTO ch_fss.account_group_financial_stat(\n  scoring_group_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT \n  scoring_group_id,\n  13,\n  date,\n  diff\nFROM vals;'\n)",
 										"type": "Expression"
 									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "transaction_table_",
-						"type": "Script",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "truncate_account_group",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"

@@ -1103,7 +1103,7 @@
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "transaction_table_",
+								"activity": "truncate_account_group",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1387,41 +1387,6 @@
 						}
 					},
 					{
-						"name": "transaction_table_",
-						"type": "Script",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "truncate_account_group",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
 						"name": "truncate_account_group",
 						"type": "Script",
 						"dependsOn": [],
@@ -1539,7 +1504,7 @@
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "comment_data",
+								"activity": "comments",
 								"dependencyConditions": [
 									"Succeeded",
 									"Failed"
@@ -1571,7 +1536,7 @@
 								]
 							},
 							{
-								"activity": "comment_data",
+								"activity": "comments",
 								"dependencyConditions": [
 									"Completed"
 								]
@@ -1594,126 +1559,13 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('comment_data').status}',\n  '@{if(equals(activity('comment_data').status, 'Failed'), activity('comment_data').Message, null)}'\n)",
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('comments').status}',\n  '@{if(equals(activity('comments').status, 'Failed'), activity('comments').Error, null)}'\n)",
 										"type": "Expression"
 									}
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
-					},
-					{
-						"name": "comment_data",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "comments",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "comments_csv",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzurePostgreSqlSink",
-								"writeBatchSize": 1000000,
-								"writeBatchTimeout": "00:30:00",
-								"writeMethod": "CopyCommand"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "comment_id",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "comment_id",
-											"type": "Int64",
-											"physicalType": "bigint"
-										}
-									},
-									{
-										"source": {
-											"name": "transction_date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "post_date",
-											"type": "DateTime",
-											"physicalType": "timestamp without time zone"
-										}
-									},
-									{
-										"source": {
-											"name": "Comment",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "comment_value",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "TranId",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "transaction_id",
-											"type": "Int32",
-											"physicalType": "integer"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "comments_csv",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "comments_sink",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
 					}
 				],
 				"policy": {
@@ -1729,7 +1581,7 @@
 					"status": {
 						"type": "String"
 					},
-					"error_message": {
+					"ERROR": {
 						"type": "String"
 					}
 				},
@@ -1741,9 +1593,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
-				"[concat(variables('factoryId'), '/datasets/comments_csv')]",
-				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
 			]
 		},
 		{
@@ -2114,7 +1964,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_account_data').status}',\n  '@{if(equals(activity('member_account_data').status, 'Failed'), activity('member_account_data').error.message, null)}'\n)",
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_account_data').status}',\n  '@{if(equals(activity('member_account_data').status, 'Failed'), activity('member_account_data').Error, null)}'\n)",
 										"type": "Expression"
 									}
 								}
@@ -2158,9 +2008,16 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Data flow1",
+						"name": "MEMBERDETAILS",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2186,10 +2043,109 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "MEMBERDETAILS",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status_copy1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							},
+							{
+								"activity": "MEMBERDETAILS",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('MEMBERDETAILS').status}',\n  '@{if(equals(activity('MEMBERDETAILS').status, 'Failed'), activity('MEMBERDETAILS').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"error": {
+						"type": "String"
+					}
 				},
 				"folder": {
 					"name": "FSS_DATALOAD_PL"
@@ -2197,7 +2153,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERDETAILS')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
 			]
 		},
 		{
@@ -2303,7 +2260,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('End_time')}',\n  '@{variables('Start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').error.message, null)}'\n)",
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('member_stories').status}',\n  '@{if(equals(activity('member_stories').status, 'Failed'), activity('member_stories').Error, null)}'\n)",
 										"type": "Expression"
 									}
 								}
@@ -2342,7 +2299,7 @@
 					"Status": {
 						"type": "String"
 					},
-					"Error_message": {
+					"Error": {
 						"type": "String"
 					}
 				},
@@ -2364,9 +2321,16 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "DF_SHARE_ACCOUNT",
+						"name": "SHAREACCOUNT",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2392,10 +2356,109 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "SHAREACCOUNT",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "SHAREACCOUNT",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('SHAREACCOUNT').status}',\n  '@{if(equals(activity('SHAREACCOUNT').status, 'Failed'), activity('SHAREACCOUNT').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"Error": {
+						"type": "String"
+					}
 				},
 				"folder": {
 					"name": "FSS_DATALOAD_PL"
@@ -2404,7 +2467,8 @@
 				"lastPublishTime": "2025-11-08T19:05:36Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_SHAREACCOUNT')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_SHAREACCOUNT')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
 			]
 		},
 		{
@@ -2859,6 +2923,90 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_TRANSACTION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_TRANSACTION_DATA",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_TRANSACTION_DATA",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 32,
+								"computeType": "MemoryOptimized"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "transaction_table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "DF_TRANSACTION_DATA",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FSS_DATALOAD_PL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-11-19T21:46:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION_DATA')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_TRANSACTION_MULTIFILE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2867,7 +3015,14 @@
 					{
 						"name": "get files data",
 						"type": "GetMetadata",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2910,7 +3065,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('get files data').output.itemName",
+								"value": "@activity('get files data').output.childItems",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -2929,7 +3084,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataflow": {
-											"referenceName": "DF_TRANSACTION",
+											"referenceName": "DF_TRANSACTION_DATA",
 											"type": "DataFlowReference",
 											"parameters": {},
 											"datasetParameters": {
@@ -2946,160 +3101,11 @@
 									}
 								},
 								{
-									"name": "copy_transaction_data",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "transaction_data",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"wildcardFileName": "trans",
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzurePostgreSqlSink",
-											"writeBatchSize": 1000000,
-											"writeBatchTimeout": "00:30:00",
-											"writeMethod": "CopyCommand"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"name": "transaction_date",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_date",
-														"type": "DateTime",
-														"physicalType": "timestamp without time zone"
-													}
-												},
-												{
-													"source": {
-														"name": "Transaction_amount",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_amount",
-														"type": "Decimal",
-														"physicalType": "numeric"
-													}
-												},
-												{
-													"source": {
-														"name": "DESCRIPTION",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "description",
-														"type": "String",
-														"physicalType": "character varying"
-													}
-												},
-												{
-													"source": {
-														"name": "SOURCECODE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "payment_method",
-														"type": "String",
-														"physicalType": "character varying"
-													}
-												},
-												{
-													"source": {
-														"name": "transaction_code",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_type_code_id",
-														"type": "Int32",
-														"physicalType": "integer"
-													}
-												},
-												{
-													"source": {
-														"name": "PWC_Key",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "share_id",
-														"type": "Int64",
-														"physicalType": "bigint"
-													}
-												},
-												{
-													"source": {
-														"name": "NEWBALANCE",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "balance",
-														"type": "Decimal",
-														"physicalType": "numeric"
-													}
-												}
-											],
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "transactioncsv_admin",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "transaction_sink",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
 									"name": "trans_comments",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [
 										{
-											"activity": "copy_transaction_data",
+											"activity": "transaction_data",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -3125,15 +3131,15 @@
 										},
 										"staging": {},
 										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
+											"coreCount": 32,
+											"computeType": "MemoryOptimized"
 										},
 										"traceLevel": "Fine"
 									}
 								},
 								{
-									"name": "comment_data",
-									"type": "Copy",
+									"name": "transaction_table",
+									"type": "Script",
 									"dependsOn": [
 										{
 											"activity": "trans_comments",
@@ -3150,101 +3156,106 @@
 										"secureInput": false
 									},
 									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"wildcardFileName": "comments_csv",
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzurePostgreSqlSink",
-											"writeBatchSize": 1000000,
-											"writeBatchTimeout": "00:30:00",
-											"writeMethod": "CopyCommand"
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"name": "comment_id",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "comment_id",
-														"type": "Int64",
-														"physicalType": "bigint"
-													}
-												},
-												{
-													"source": {
-														"name": "transction_date",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "post_date",
-														"type": "DateTime",
-														"physicalType": "timestamp without time zone"
-													}
-												},
-												{
-													"source": {
-														"name": "Comment",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "comment_value",
-														"type": "String",
-														"physicalType": "character varying"
-													}
-												},
-												{
-													"source": {
-														"name": "TranId",
-														"type": "String",
-														"physicalType": "String"
-													},
-													"sink": {
-														"name": "transaction_id",
-														"type": "Int32",
-														"physicalType": "integer"
-													}
-												}
-											],
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
+									"linkedServiceName": {
+										"referenceName": "AzurePostgreSql1",
+										"type": "LinkedServiceReference"
 									},
-									"inputs": [
-										{
-											"referenceName": "comments_csv",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "comments_sink",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
 								}
 							]
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "loop data",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('trans_comments').status}',\n  '@{activity('transaction_data').status}',\n  '@{if(equals(activity('transaction_data').status, 'Failed'), activity('transaction_data').Error, null)}'\n  '@{if(equals(activity('trans_comments').status, 'Failed'), activity('trans_comments').Error, null)}'\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "loop data",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "start_time",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -3252,16 +3263,16 @@
 					"elapsedTimeMetric": {}
 				},
 				"variables": {
-					"start_date": {
+					"start_time": {
 						"type": "String"
 					},
-					"end_date": {
-						"type": "Integer"
+					"end_time": {
+						"type": "String"
 					},
 					"status": {
 						"type": "String"
 					},
-					"error_message": {
+					"error": {
 						"type": "String"
 					}
 				},
@@ -3273,12 +3284,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/multiple_transaction')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION')]",
-				"[concat(variables('factoryId'), '/datasets/transactioncsv_admin')]",
-				"[concat(variables('factoryId'), '/datasets/transaction_sink')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]",
-				"[concat(variables('factoryId'), '/datasets/comments_csv')]",
-				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
+				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTION_DATA')]",
+				"[concat(variables('factoryId'), '/dataflows/DF_COMMENTS')]"
 			]
 		},
 		{
@@ -3290,7 +3298,14 @@
 					{
 						"name": "DF_SHARE_ACCOUNT",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "start_time",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -3316,31 +3331,67 @@
 							},
 							"traceLevel": "Fine"
 						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "FSS_DATALOAD_PL"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-19T21:46:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Transformation_share_account')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TRANSACTION_DATA_LOAD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
+					},
 					{
-						"name": "transaction_data_flow",
-						"type": "ExecuteDataFlow",
+						"name": "start_time",
+						"type": "SetVariable",
 						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "start_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "end_time",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "DF_SHARE_ACCOUNT",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "job_run_status",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "DF_SHARE_ACCOUNT",
+								"dependencyConditions": [
+									"Completed"
+								]
+							},
+							{
+								"activity": "end_time",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -3349,27 +3400,40 @@
 							"secureInput": false
 						},
 						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzurePostgreSql1",
+							"type": "LinkedServiceReference"
+						},
 						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Transformation_transaction_data",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source": {},
-									"sink": {}
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('DF_SHARE_ACCOUNT').status}',\n  '@{if(equals(activity('DF_SHARE_ACCOUNT').status, 'Failed'), activity('DF_SHARE_ACCOUNT').Error, null)}'\n)",
+										"type": "Expression"
+									}
 								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 32,
-								"computeType": "MemoryOptimized"
-							},
-							"traceLevel": "Fine"
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"start_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					},
+					"status": {
+						"type": "String"
+					},
+					"Error": {
+						"type": "String"
+					}
 				},
 				"folder": {
 					"name": "FSS_DATALOAD_PL"
@@ -3378,7 +3442,8 @@
 				"lastPublishTime": "2025-11-19T21:46:21Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Transformation_transaction_data')]"
+				"[concat(variables('factoryId'), '/dataflows/Transformation_share_account')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
 			]
 		},
 		{
@@ -7849,6 +7914,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "DS_TRANSACTION"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -8788,7 +8856,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "comments_csv",
+								"referenceName": "comments_sink",
 								"type": "DatasetReference"
 							},
 							"name": "sinkfile"
@@ -8823,16 +8891,36 @@
 						")) ~> derivedColumn1",
 						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     partitionFileNames:['comments_csv'],",
+						"     input(",
+						"          comment_id as long,",
+						"          post_date as timestamp,",
+						"          comment_value as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          transaction_id as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          comment_id,",
+						"          post_date = transction_date,",
+						"          comment_value = Comment,",
+						"          transaction_id = TranId",
+						"     ),",
 						"     partitionBy('hash', 1)) ~> sinkfile"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/trans_comments_csv')]",
-				"[concat(variables('factoryId'), '/datasets/comments_csv')]"
+				"[concat(variables('factoryId'), '/datasets/comments_sink')]"
 			]
 		},
 		{
@@ -9898,6 +9986,119 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DF_TRANSACTION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "FSS_DATAFLOW"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "transaction_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "transaction_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink",
+							"description": "Export data to ",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "CombineDateTime"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          TranId as integer,",
+						"          PARENTID as string,",
+						"          SEQUENCENUMBER as string,",
+						"          EFFECTIVEDATE as string,",
+						"          POSTDATE as date,",
+						"          POSTTIME as string,",
+						"          DESCRIPTION as string,",
+						"          ACTIONCODE as string,",
+						"          SOURCECODE as string,",
+						"          BALANCECHANGE as float,",
+						"          INTEREST as string,",
+						"          NEWBALANCE as float,",
+						"          FEEAMOUNT as string,",
+						"          COMMENT as string,",
+						"          BRANCH as string,",
+						"          PWC_key as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     limit: 100,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionBy('hash', 1)) ~> source",
+						"source derive(transaction_code = case(\r",
+						"  toString(ACTIONCODE) == 'D', 1,\r",
+						"  toString(SOURCECODE) == 'F', 3,\r",
+						"  toString(ACTIONCODE) == 'W', 2\r",
+						"),",
+						"          SHARE_ID = concat(PWC_key,PARENTID),",
+						"     partitionBy('hash', 1)) ~> CombineDateTime",
+						"CombineDateTime sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          transaction_id as integer,",
+						"          transaction_status as string,",
+						"          transaction_date as timestamp,",
+						"          transaction_amount as decimal(10,2),",
+						"          balance as decimal(10,2),",
+						"          description as string,",
+						"          merchant as string,",
+						"          payment_method as string,",
+						"          created_date as timestamp,",
+						"          created_by as string,",
+						"          updated_date as timestamp,",
+						"          updated_by as string,",
+						"          transaction_type_code_id as integer,",
+						"          share_id as long",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     mapColumn(",
+						"          transaction_id = TranId,",
+						"          transaction_date = POSTDATE,",
+						"          transaction_amount = BALANCECHANGE,",
+						"          balance = NEWBALANCE,",
+						"          description = DESCRIPTION,",
+						"          payment_method = SOURCECODE,",
+						"          transaction_type_code_id = transaction_code,",
+						"          share_id = SHARE_ID",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/transaction_csv')]",
+				"[concat(variables('factoryId'), '/datasets/transaction_sink')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Transformation_Member_account')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -10498,122 +10699,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Share_accountcsv')]",
 				"[concat(variables('factoryId'), '/datasets/Share_account')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Transformation_transaction_data')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "INTIAL LOAD"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "transaction_csv",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "transaction_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink",
-							"description": "Export data to ",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureBlobStorage1",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "CombineDateTime"
-						},
-						{
-							"name": "filternulls"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          TranId as integer,",
-						"          PARENTID as string,",
-						"          SEQUENCENUMBER as string,",
-						"          EFFECTIVEDATE as string,",
-						"          POSTDATE as date,",
-						"          POSTTIME as string,",
-						"          DESCRIPTION as string,",
-						"          ACTIONCODE as string,",
-						"          SOURCECODE as string,",
-						"          BALANCECHANGE as float,",
-						"          INTEREST as string,",
-						"          NEWBALANCE as float,",
-						"          FEEAMOUNT as string,",
-						"          COMMENT as string,",
-						"          BRANCH as string,",
-						"          PWC_key as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     inferDriftedColumnTypes: true,",
-						"     ignoreNoFilesFound: false,",
-						"     partitionBy('hash', 1)) ~> source",
-						"source derive(transaction_code = case(\r",
-						"  toString(ACTIONCODE) == 'D', 1,\r",
-						"  toString(SOURCECODE) == 'F', 3,\r",
-						"  toString(ACTIONCODE) == 'W', 2\r",
-						"),",
-						"          SHARE_ID = concat(PWC_key,PARENTID),",
-						"     partitionBy('hash', 1)) ~> CombineDateTime",
-						"CombineDateTime filter(BALANCECHANGE != 0) ~> filternulls",
-						"filternulls sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          transaction_id as integer,",
-						"          transaction_status as string,",
-						"          transaction_date as timestamp,",
-						"          transaction_amount as decimal(10,2),",
-						"          balance as decimal(10,2),",
-						"          description as string,",
-						"          merchant as string,",
-						"          payment_method as string,",
-						"          created_date as timestamp,",
-						"          created_by as string,",
-						"          updated_date as timestamp,",
-						"          updated_by as string,",
-						"          transaction_type_code_id as integer,",
-						"          share_id as long",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     mapColumn(",
-						"          transaction_id = TranId,",
-						"          transaction_date = POSTDATE,",
-						"          transaction_amount = BALANCECHANGE,",
-						"          balance = NEWBALANCE,",
-						"          description = DESCRIPTION,",
-						"          payment_method = SOURCECODE,",
-						"          transaction_type_code_id = transaction_code,",
-						"          share_id = SHARE_ID",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> sink"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/transaction_csv')]",
-				"[concat(variables('factoryId'), '/datasets/transaction_sink')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		}
