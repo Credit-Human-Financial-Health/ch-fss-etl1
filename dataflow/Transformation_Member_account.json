@@ -26,7 +26,7 @@
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "derivedproductid"
 				}
 			],
 			"scriptLines": [
@@ -197,8 +197,8 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     partitionBy('hash', 1)) ~> source1",
-				"source1 derive(product_id = iifNull(TYPE,'p')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(product_id = iifNull(TYPE,'p')) ~> derivedproductid",
+				"derivedproductid sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          account_id as integer,",
