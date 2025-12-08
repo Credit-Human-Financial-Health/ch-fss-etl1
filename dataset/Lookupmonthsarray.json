@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DS_BATCHWISECAL"
+			"name": "DS_CALCULATION"
 		},
 		"annotations": [],
 		"type": "AzurePostgreSqlTable",
