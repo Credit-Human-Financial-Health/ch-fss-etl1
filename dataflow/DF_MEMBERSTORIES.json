@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "member_stories",
+						"referenceName": "member_stories_csv",
 						"type": "DatasetReference"
 					},
 					"name": "MEMBERSTORIESSOURCE"

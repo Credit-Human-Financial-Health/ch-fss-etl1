@@ -1,5 +1,5 @@
 {
-	"name": "Share_accountcsv",
+	"name": "share_account_csv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Share_accountcsv",
+						"referenceName": "share_account_csv",
 						"type": "DatasetReference"
 					},
 					"name": "SHAREACCOUNTSOURCE"
@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Share_account",
+						"referenceName": "share_account_sink",
 						"type": "DatasetReference"
 					},
 					"name": "SHAREACCOUNTTABLE",

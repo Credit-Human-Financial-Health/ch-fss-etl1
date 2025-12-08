@@ -1,5 +1,5 @@
 {
-	"name": "Share_account",
+	"name": "share_account_sink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzurePostgreSql1",
