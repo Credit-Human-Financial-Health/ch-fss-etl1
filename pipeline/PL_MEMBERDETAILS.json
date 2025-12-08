@@ -76,7 +76,7 @@
 				}
 			},
 			{
-				"name": "job_run_status_copy1",
+				"name": "job_run_status",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -110,7 +110,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('MEMBERDETAILS').status}',\n  '@{if(equals(activity('MEMBERDETAILS').status, 'Failed'), activity('MEMBERDETAILS').Error, null)}'\n)",
+								"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('MEMBERDETAILS').status, '''', ',',\n  if(\n    equals(activity('MEMBERDETAILS').status, 'Failed'),\n    concat('''', replace(activity('MEMBERDETAILS').error.message, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
 								"type": "Expression"
 							}
 						}

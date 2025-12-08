@@ -110,7 +110,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "insert into ch_fss.job_run_status\n(pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time,status,error_message)\nvalues (\n  '@{pipeline().Pipeline}',\n  '@{pipeline().RunId}',\n  '@{formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss')}',\n  '@{pipeline().TriggerType}',\n  '@{variables('end_time')}',\n  '@{variables('start_time')}',\n  '@{activity('DF_SHARE_ACCOUNT').status}',\n  '@{if(equals(activity('DF_SHARE_ACCOUNT').status, 'Failed'), activity('DF_SHARE_ACCOUNT').Error, null)}'\n)",
+								"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('DF_SHARE_ACCOUNT').status, '''', ',',\n  if(\n    equals(activity('DF_SHARE_ACCOUNT').status, 'Failed'),\n    concat('''', replace(activity('DF_SHARE_ACCOUNT').error.message, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
 								"type": "Expression"
 							}
 						}
