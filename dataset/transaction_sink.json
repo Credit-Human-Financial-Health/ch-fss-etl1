@@ -2,7 +2,7 @@
 	"name": "transaction_sink",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CH_FSS_POSTGRES_DB",
+			"referenceName": "CH_FSS_Postgres_sql",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
