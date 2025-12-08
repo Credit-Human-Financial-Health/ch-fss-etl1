@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "transaction_sink",
+						"referenceName": "transaction_postgres",
 						"type": "DatasetReference"
 					},
 					"name": "TRANSACTIONTABLE",
@@ -73,7 +73,6 @@
 				"          transaction_status as string,",
 				"          transaction_date as timestamp,",
 				"          transaction_amount as decimal(10,2),",
-				"          balance as decimal(10,2),",
 				"          description as string,",
 				"          merchant as string,",
 				"          payment_method as string,",
@@ -82,7 +81,8 @@
 				"          updated_date as timestamp,",
 				"          updated_by as string,",
 				"          transaction_type_code_id as integer,",
-				"          share_id as long",
+				"          share_id as long,",
+				"          balance as decimal(10,2)",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
