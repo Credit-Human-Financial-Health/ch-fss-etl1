@@ -1,0 +1,671 @@
+{
+	"name": "member_account_sinkcsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CH_FSS_Blob_Storage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_MEMBERACCOUNT"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "archive",
+				"container": "fss"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PWC_Key",
+				"type": "String"
+			},
+			{
+				"name": "TYPE",
+				"type": "String"
+			},
+			{
+				"name": "LASTFMDATE",
+				"type": "String"
+			},
+			{
+				"name": "OPENDATE",
+				"type": "String"
+			},
+			{
+				"name": "CLOSEDATE",
+				"type": "String"
+			},
+			{
+				"name": "BRANCH",
+				"type": "String"
+			},
+			{
+				"name": "RESTRICTACCESS",
+				"type": "String"
+			},
+			{
+				"name": "REFERENCE",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE1",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE2",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE3",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE4",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE5",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE6",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE7",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE8",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE9",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE10",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE11",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE12",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE13",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE14",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE15",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE16",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE17",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE18",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE19",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGCODE20",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY1",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY2",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY3",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY4",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY5",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENTHISTORY6",
+				"type": "String"
+			},
+			{
+				"name": "MEMBERSTATUS",
+				"type": "String"
+			},
+			{
+				"name": "CORRESPONDDATE",
+				"type": "String"
+			},
+			{
+				"name": "PROXYDATE",
+				"type": "String"
+			},
+			{
+				"name": "HEADOFHOUSEHOLD",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION1",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION2",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION3",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION4",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION5",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION6",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION7",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION8",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION9",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION10",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION11",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION12",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION13",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION14",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION15",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION16",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION17",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION18",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION19",
+				"type": "String"
+			},
+			{
+				"name": "WARNINGEXPIRATION20",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT3",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT4",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT5",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT6",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT7",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT8",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT9",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT10",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT11",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT12",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT13",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT14",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT15",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT16",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT17",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT18",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT19",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT20",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT21",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT22",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT23",
+				"type": "String"
+			},
+			{
+				"name": "NSFMONTHLYCOUNT24",
+				"type": "String"
+			},
+			{
+				"name": "NSFTODAY",
+				"type": "String"
+			},
+			{
+				"name": "MEMBERGROUP",
+				"type": "String"
+			},
+			{
+				"name": "COMMERCIALCODE",
+				"type": "String"
+			},
+			{
+				"name": "FMLASTPURGEDATE",
+				"type": "String"
+			},
+			{
+				"name": "STATEREPORTING",
+				"type": "String"
+			},
+			{
+				"name": "HOUSEHOLDACCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "HOUSEHOLDSTATEMENT",
+				"type": "String"
+			},
+			{
+				"name": "FROZENMODE",
+				"type": "String"
+			},
+			{
+				"name": "INVALIDATTEMPTCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "INVALIDATTEMPTDATE",
+				"type": "String"
+			},
+			{
+				"name": "INVALIDATTEMPTTIME",
+				"type": "String"
+			},
+			{
+				"name": "STATEMENTMAILCODE",
+				"type": "String"
+			},
+			{
+				"name": "RELATIONSHIPCODE",
+				"type": "String"
+			},
+			{
+				"name": "RELATIONSHIPOVERRIDE",
+				"type": "String"
+			},
+			{
+				"name": "RELATIONSHIPOVERRIDEEFFDATE",
+				"type": "String"
+			},
+			{
+				"name": "RELATIONSHIPOVERRIDEEXPDATE",
+				"type": "String"
+			},
+			{
+				"name": "KRHOLDBASEAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "KRTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "KRTOTALDATE",
+				"type": "String"
+			},
+			{
+				"name": "ESTMTNOTIFY",
+				"type": "String"
+			},
+			{
+				"name": "ESTMTENABLE",
+				"type": "String"
+			},
+			{
+				"name": "CRTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "CDTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "FRCRTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "FRCDTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR1",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR2",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR3",
+				"type": "String"
+			},
+			{
+				"name": "USERCHAR4",
+				"type": "String"
+			},
+			{
+				"name": "USERAMOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "USERAMOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "USERDATE1",
+				"type": "String"
+			},
+			{
+				"name": "USERDATE2",
+				"type": "String"
+			},
+			{
+				"name": "ENABLEFLOAT",
+				"type": "String"
+			},
+			{
+				"name": "FRCRUNITS",
+				"type": "String"
+			},
+			{
+				"name": "FRCDUNITS",
+				"type": "String"
+			},
+			{
+				"name": "PRGDRECACTIVITYDT",
+				"type": "String"
+			},
+			{
+				"name": "RECORDCHANGEDATE",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESCOUNTCAP",
+				"type": "String"
+			},
+			{
+				"name": "CAPPEDFEESAMOUNTCAP",
+				"type": "String"
+			},
+			{
+				"name": "CREATEDBYUSER",
+				"type": "String"
+			},
+			{
+				"name": "CREATEDATBRANCH",
+				"type": "String"
+			},
+			{
+				"name": "WRTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "WDTOTALAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "NONREGCCCHECKHOLDBASEAMT",
+				"type": "String"
+			},
+			{
+				"name": "NONREGCCCHECKTOTALAMT",
+				"type": "String"
+			},
+			{
+				"name": "LIMITUSAGEDATE",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT1",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT2",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT3",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT4",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT5",
+				"type": "String"
+			},
+			{
+				"name": "COUNTLIMIT6",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT3",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT4",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT5",
+				"type": "String"
+			},
+			{
+				"name": "LIMITCOUNT6",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT1",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT2",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT3",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT4",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT5",
+				"type": "String"
+			},
+			{
+				"name": "LIMIT6",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT1",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT2",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT3",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT4",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT5",
+				"type": "String"
+			},
+			{
+				"name": "LIMITAMOUNT6",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT1",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT2",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT3",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT4",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT5",
+				"type": "String"
+			},
+			{
+				"name": "PERITEMLIMIT6",
+				"type": "String"
+			},
+			{
+				"name": "VERSIONID",
+				"type": "String"
+			},
+			{
+				"name": "UUID",
+				"type": "String"
+			}
+		]
+	}
+}
