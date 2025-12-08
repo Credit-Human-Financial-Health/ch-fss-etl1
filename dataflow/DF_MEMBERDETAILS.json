@@ -191,7 +191,8 @@
 				"     ignoreNoFilesFound: false,",
 				"     partitionBy('hash', 1)) ~> MEMBERDETAILSSOURCE",
 				"MEMBERDETAILSSOURCE derive(name = replace(FIRST, char(0), ''),",
-				"          state = substring(rtrim(STATE), 1, 2)) ~> COLUMNSDERIVED",
+				"          state = substring(rtrim(STATE), 1, 2),",
+				"     partitionBy('hash', 1)) ~> COLUMNSDERIVED",
 				"COLUMNSDERIVED sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -219,8 +220,6 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          member_id = PWC_Key,",
 				"          name,",
@@ -232,7 +231,8 @@
 				"          start_date = MBRCREATEDATE,",
 				"          email = EMAIL,",
 				"          phone = MOBILEPHONE",
-				"     )) ~> MEMBERDETAILSTABLE"
+				"     ),",
+				"     partitionBy('hash', 1)) ~> MEMBERDETAILSTABLE"
 			]
 		}
 	}
