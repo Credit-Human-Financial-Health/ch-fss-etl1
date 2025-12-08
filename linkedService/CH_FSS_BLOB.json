@@ -1,16 +1,16 @@
 {
 	"name": "CH_FSS_BLOB",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=sachappfsstmpdevscus001;EndpointSuffix=core.windows.net;",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDYyRTAyQ0QzLUE3NEQtNDVGMS1BOTk0LTVDMzIyMEYwOTQxNF80ODYzMzUzNS1jYjdhLTRkN2ItYjMzMi01N2EyNDRiMzliYTIiDQp9"
+			"serviceEndpoint": "https://sachappfsstmpdevscus001.blob.core.windows.net/",
+			"accountKind": "StorageV2"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
