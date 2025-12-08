@@ -2,7 +2,7 @@
 	"name": "member_account_sink",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CH_FSS_POSTGRES_DB",
+			"referenceName": "CH_TST_DB",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
