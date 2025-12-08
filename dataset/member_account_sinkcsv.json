@@ -2,7 +2,7 @@
 	"name": "member_account_sinkcsv",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CH_FSS_Blob_Storage",
+			"referenceName": "CH_FSS_BLOB",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
