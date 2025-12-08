@@ -224,13 +224,14 @@
 				"     mapColumn(",
 				"          member_id = PWC_Key,",
 				"          name,",
-				"          last_name = LastName,",
+				"          last_name = LAST,",
 				"          address = STREET,",
 				"          city = CITY,",
 				"          state = COLUMNSDERIVED@state,",
 				"          zip_code = ZIPCODE,",
 				"          start_date = MBRCREATEDATE,",
-				"          email = {e-mail}",
+				"          email = EMAIL,",
+				"          phone = MOBILEPHONE",
 				"     )) ~> MEMBERDETAILSTABLE"
 			]
 		}
