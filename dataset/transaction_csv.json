@@ -1,19 +1,18 @@
 {
-	"name": "member_account_csv",
+	"name": "transaction_csv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "CH_FSS_BLOB",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DS_MEMBERACCOUNT"
+			"name": "DS_TRANSACTION"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "DEV_PWC_Extract_Account_2025_12_3.csv",
 				"folderPath": "InitialData",
 				"container": "fss"
 			},

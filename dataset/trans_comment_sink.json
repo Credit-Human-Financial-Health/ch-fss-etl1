@@ -1,0 +1,68 @@
+{
+	"name": "trans_comment_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CH_FSS_POSTGRES_DB",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_COMMENTS"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "comment_id",
+				"type": "bigint",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "post_date",
+				"type": "timestamp without time zone",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "comment_value",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "created_date",
+				"type": "timestamp without time zone",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "created_by",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "updated_date",
+				"type": "timestamp without time zone",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "updated_by",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "transaction_id",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "ch_fss",
+			"table": "transaction_comment"
+		}
+	}
+}

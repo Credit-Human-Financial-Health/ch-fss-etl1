@@ -2,7 +2,7 @@
 	"name": "multiple_transaction",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "CH_FSS_BLOB",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -13,7 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "transactionfiles"
+				"folderPath": "InitialData",
+				"container": "fss"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",

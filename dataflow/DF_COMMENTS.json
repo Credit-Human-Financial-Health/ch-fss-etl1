@@ -17,6 +17,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "trans_comment_sink",
+						"type": "DatasetReference"
+					},
 					"name": "COMMMENTSTABLE"
 				}
 			],
@@ -49,6 +53,21 @@
 				")) ~> COLUMNSDERIVED",
 				"COLUMNSDERIVED sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          comment_id as long,",
+				"          post_date as timestamp,",
+				"          comment_value as string,",
+				"          created_date as timestamp,",
+				"          created_by as string,",
+				"          updated_date as timestamp,",
+				"          updated_by as string,",
+				"          transaction_id as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
@@ -57,8 +76,7 @@
 				"          comment_value = Comment,",
 				"          transaction_id = TranId",
 				"     ),",
-				"     partitionBy('hash', 1),",
-				"     format: 'table') ~> COMMMENTSTABLE"
+				"     partitionBy('hash', 1)) ~> COMMMENTSTABLE"
 			]
 		}
 	}

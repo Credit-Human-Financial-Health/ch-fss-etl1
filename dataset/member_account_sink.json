@@ -1,0 +1,104 @@
+{
+	"name": "member_account_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CH_FSS_POSTGRES_DB",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DS_MEMBERACCOUNT"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "account_id",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "open_date",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "close_date",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "branch",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "status",
+				"type": "character",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "household_account_number",
+				"type": "character",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "member_group_name",
+				"type": "character",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "product_id",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "created_date",
+				"type": "timestamp without time zone",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "created_by",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "updated_date",
+				"type": "timestamp without time zone",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "updated_by",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "account_type_id",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "anonymized_member_id",
+				"type": "bigint",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "ch_fss",
+			"table": "member_account"
+		}
+	}
+}
