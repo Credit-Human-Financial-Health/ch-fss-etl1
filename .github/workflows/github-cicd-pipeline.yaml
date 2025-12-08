@@ -78,22 +78,22 @@ jobs:
           dataFactoryName: ch-test
           armTemplateFile: ARMTemplateForFactory.json
           armTemplateParametersFile: ARMTemplateParametersForFactory.json
-          additionalParameters: >
-            AzureBlobStorage1_properties_typeProperties_serviceEndpoint=${{ vars.AzureBlobStorage1_SERVICEENDPOINT }}
-            AzureBlobStorage1_properties_typeProperties_encryptedCredential=${{ vars.AzureBlobStorage1_ENCRYPTEDCREDENTIAL }}            
-            AzurePostgreSql1_properties_typeProperties_server=${{ vars.AzurePostgreSql1_SERVER }}
-            AzurePostgreSql1_properties_typeProperties_port=${{ vars.AzurePostgreSql1_port }}
-            AzurePostgreSql1_properties_typeProperties_database=${{ vars.AzurePostgreSql1_DATABASE }}
-            AzurePostgreSql1_properties_typeProperties_sslMode=${{ vars.AzurePostgreSql1_SSLMODE }}
-            AzurePostgreSql1_properties_typeProperties_username=${{ vars.AzurePostgreSql1_USERNAME }}
-            AzurePostgreSql1_properties_typeProperties_authenticationType=${{ vars.AzurePostgreSql1_AUTHENTICATIONTYPE }}
-            AzurePostgreSql1_properties_typeProperties_encryptedCredential=${{ vars.AzurePostgreSql1_ENCRYPTEDCREDENTIAL }}
-            PostgreSql_properties_typeProperties_server=${{ vars.PostgreSql_SERVER }}
-            PostgreSql_properties_typeProperties_port=${{ vars.PostgreSql_port }}
-            PostgreSql_properties_typeProperties_database=${{ vars.PostgreSql_DATABASE }}
-            PostgreSql_properties_typeProperties_sslMode=${{ vars.PostgreSql_SSLMODE }}
-            PostgreSql_properties_typeProperties_username=${{ vars.PostgreSql_USERNAME }}
-            PostgreSql_properties_typeProperties_authenticationType=${{ vars.PostgreSql_AUTHENTICATIONTYPE }}
-            PostgreSql_properties_typeProperties_encryptedCredential=${{ vars.PostgreSql_ENCRYPTEDCREDENTIAL }}
+          # additionalParameters: >
+          #   AzureBlobStorage1_properties_typeProperties_serviceEndpoint=${{ vars.AzureBlobStorage1_SERVICEENDPOINT }}
+          #   AzureBlobStorage1_properties_typeProperties_encryptedCredential=${{ vars.AzureBlobStorage1_ENCRYPTEDCREDENTIAL }}            
+          #   AzurePostgreSql1_properties_typeProperties_server=${{ vars.AzurePostgreSql1_SERVER }}
+          #   AzurePostgreSql1_properties_typeProperties_port=${{ vars.AzurePostgreSql1_port }}
+          #   AzurePostgreSql1_properties_typeProperties_database=${{ vars.AzurePostgreSql1_DATABASE }}
+          #   AzurePostgreSql1_properties_typeProperties_sslMode=${{ vars.AzurePostgreSql1_SSLMODE }}
+          #   AzurePostgreSql1_properties_typeProperties_username=${{ vars.AzurePostgreSql1_USERNAME }}
+          #   AzurePostgreSql1_properties_typeProperties_authenticationType=${{ vars.AzurePostgreSql1_AUTHENTICATIONTYPE }}
+          #   AzurePostgreSql1_properties_typeProperties_encryptedCredential=${{ vars.AzurePostgreSql1_ENCRYPTEDCREDENTIAL }}
+          #   PostgreSql_properties_typeProperties_server=${{ vars.PostgreSql_SERVER }}
+          #   PostgreSql_properties_typeProperties_port=${{ vars.PostgreSql_port }}
+          #   PostgreSql_properties_typeProperties_database=${{ vars.PostgreSql_DATABASE }}
+          #   PostgreSql_properties_typeProperties_sslMode=${{ vars.PostgreSql_SSLMODE }}
+          #   PostgreSql_properties_typeProperties_username=${{ vars.PostgreSql_USERNAME }}
+          #   PostgreSql_properties_typeProperties_authenticationType=${{ vars.PostgreSql_AUTHENTICATIONTYPE }}
+          #   PostgreSql_properties_typeProperties_encryptedCredential=${{ vars.PostgreSql_ENCRYPTEDCREDENTIAL }}
             
-          # skipAzModuleInstallation: false
+          # # skipAzModuleInstallation: false
