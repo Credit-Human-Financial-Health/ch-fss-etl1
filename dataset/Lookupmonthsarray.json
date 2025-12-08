@@ -2,7 +2,7 @@
 	"name": "Lookupmonthsarray",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzurePostgreSql1",
+			"referenceName": "CH_FSS_Postgres_sql",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -26,7 +26,7 @@
 		],
 		"typeProperties": {
 			"schema": "ch_fss",
-			"table": "watermark_table"
+			"table": "watermark"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
