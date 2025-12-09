@@ -149,7 +149,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "INSERT INTO ch_fss.watermark_table (process_name, last_processed_date,created_by,created_date, updated_date, updated_by)\nVALUES (\n    'TransactionProcessing',\n    TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);",
+											"value": "INSERT INTO ch_fss.watermark_table (process_name, last_processed_date,created_by,created_date, updated_date, updated_by)\nVALUES (\n    'activity('LookupMonthsArray').output.value',\n    TO_TIMESTAMP('@{variables('LatestProcessedEndDate')}', 'YYYY-MM-DD') + INTERVAL '1 day',\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);",
 											"type": "Expression"
 										}
 									}

@@ -200,7 +200,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat(\n'DELETE FROM ch_fss.share_financial_stat\nWHERE date >= ''',\npipeline().parameters.start_date,\n''' \nAND date < ''',\npipeline().parameters.end_date,\n''';'\n)",
+								"value": "@concat(\n'truncate table ch_fss.share_financial_stat\nWHERE date >= ''',\npipeline().parameters.start_date,\n''' \nAND date < ''',\npipeline().parameters.end_date,\n''';'\n)",
 								"type": "Expression"
 							}
 						}
