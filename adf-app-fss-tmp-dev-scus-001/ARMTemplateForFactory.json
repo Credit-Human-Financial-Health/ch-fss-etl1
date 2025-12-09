@@ -467,12 +467,10 @@
 				},
 				"parameters": {
 					"start_date": {
-						"type": "string",
-						"defaultValue": "@item().start_date"
+						"type": "string"
 					},
 					"end_date": {
-						"type": "string",
-						"defaultValue": "@item().end_date"
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -656,7 +654,8 @@
 							{
 								"activity": "ForEach1",
 								"dependencyConditions": [
-									"Succeeded"
+									"Succeeded",
+									"Failed"
 								]
 							}
 						],
@@ -2588,12 +2587,10 @@
 				},
 				"parameters": {
 					"start_date": {
-						"type": "string",
-						"defaultValue": "@item.start_date"
+						"type": "string"
 					},
 					"end_date": {
-						"type": "string",
-						"defaultValue": "@item.end_date"
+						"type": "string"
 					}
 				},
 				"folder": {

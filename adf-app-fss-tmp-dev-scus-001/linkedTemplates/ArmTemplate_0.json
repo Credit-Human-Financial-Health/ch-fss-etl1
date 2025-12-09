@@ -742,12 +742,10 @@
 				},
 				"parameters": {
 					"start_date": {
-						"type": "string",
-						"defaultValue": "@item().start_date"
+						"type": "string"
 					},
 					"end_date": {
-						"type": "string",
-						"defaultValue": "@item().end_date"
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -978,12 +976,10 @@
 				},
 				"parameters": {
 					"start_date": {
-						"type": "string",
-						"defaultValue": "@item.start_date"
+						"type": "string"
 					},
 					"end_date": {
-						"type": "string",
-						"defaultValue": "@item.end_date"
+						"type": "string"
 					}
 				},
 				"folder": {
