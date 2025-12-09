@@ -121,7 +121,7 @@
 						]
 					},
 					{
-						"activity": "DF_TRANSACTION_DATA",
+						"activity": "transaction_table",
 						"dependencyConditions": [
 							"Completed"
 						]
