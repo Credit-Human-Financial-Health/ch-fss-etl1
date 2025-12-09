@@ -207,14 +207,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzurePostgreSqlSource",
-						"query": "WITH params AS (\n  SELECT\n    date_trunc('month', last_processed_date)::date AS start_date,\n    date_trunc('month', CURRENT_DATE)::date AS current_month_start,\n    CURRENT_DATE AS today\n  FROM ch_fss.watermark_table\n  WHERE process_name = 'TransactionProcessing'\n  order by created_date desc\n  LIMIT 1\n)\nSELECT\n  generate_series::date AS start_date,\n  LEAST(\n    (generate_series::date + INTERVAL '1 month')::date,\n    today\n  ) AS end_date\nFROM params,\nLATERAL generate_series(\n  start_date,\n  current_month_start,\n  interval '1 month'\n)\nORDER BY start_date;",
+						"query": "\nSELECT\n  gs.dt::date AS start_date,\n  CASE\n    WHEN (gs.dt::date + INTERVAL '1 month')::date > CURRENT_DATE\n      THEN CURRENT_DATE\n    ELSE (gs.dt::date + INTERVAL '1 month')::date\n  END AS end_date\nFROM (\n  SELECT\n    date_trunc('month', last_processed_date)::date AS start_date,\n    date_trunc('month', CURRENT_DATE)::date AS current_month_start\n  FROM ch_fss.watermark_table\n  WHERE process_name = 'TransactionProcessing'\n  ORDER BY created_date DESC\n  LIMIT 1\n) AS p\nCROSS JOIN LATERAL generate_series(\n  p.start_date::timestamp,\n  p.current_month_start::timestamp,\n  INTERVAL '1 month'\n) AS gs(dt)\nORDER BY start_date\n",
 						"partitionOption": "None",
 						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
 						"referenceName": "Lookupmonthsarray",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -252,9 +253,37 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('updatewatermark').status, '''', ',',\n  if(\n    equals(activity('updatewatermark').status, 'Failed'),\n    concat('''', replace(activity('updatewatermark').error.message, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
+								"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('account_group_fin_stat_table').status, '''', ',',\n  if(\n    equals(activity('account_group_fin_stat_table').status, 'Failed'),\n    concat('''', replace(activity('account_group_fin_stat_table').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
 								"type": "Expression"
 							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "CH_FSS_Postgres_sql",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "\nINSERT INTO ch_fss.watermark_table (\n    process_name, last_processed_date, created_by, created_date, updated_date, updated_by\n)\nVALUES (\n    'TransactionProcessing',\n    '2020-01-01'::timestamp,\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"

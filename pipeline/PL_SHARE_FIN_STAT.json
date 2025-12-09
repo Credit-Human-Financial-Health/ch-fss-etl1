@@ -30,7 +30,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('\nINSERT INTO fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= ''',\n pipeline().parameters.start_date,\n '''::date\n  AND t.transaction_date::date <= ''',\n pipeline().parameters.end_date,\n '''::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n')",
+								"value": "@concat('\nINSERT INTO ch_fss.share_financial_stat (\n  share_id,\n  financial_stat_type_code_id,\n  date,\n  value\n)\nSELECT\n  t.share_id,\n  t.transaction_type_code_id AS financial_stat_type_code_id,\n  t.transaction_date::date AS date,\n  SUM(t.transaction_amount) AS value\nFROM ch_fss.\"transaction\" t\nWHERE t.transaction_date::date >= ''',\n pipeline().parameters.start_date,\n '''::date\n  AND t.transaction_date::date <= ''',\n pipeline().parameters.end_date,\n '''::date\n  AND t.transaction_type_code_id IN (1, 2, 3)\nGROUP BY t.share_id, t.transaction_date::date, t.transaction_type_code_id;\n')",
 								"type": "Expression"
 							}
 						}
