@@ -211,10 +211,12 @@
 		],
 		"parameters": {
 			"start_date": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().start_date"
 			},
 			"end_date": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().end_date"
 			}
 		},
 		"folder": {
