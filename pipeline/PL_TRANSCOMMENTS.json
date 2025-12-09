@@ -102,7 +102,7 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "CH_FSS_POSTGRES_DB",
+					"referenceName": "CH_FSS_Postgres_sql",
 					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
