@@ -13,7 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "transactiondata",
+				"fileName": "PWC_Trans_2025_10_31.csv",
+				"folderPath": "PwC_Data",
 				"container": "fss"
 			},
 			"columnDelimiter": "|",

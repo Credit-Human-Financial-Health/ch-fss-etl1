@@ -54,7 +54,6 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     moveFiles: ['transactiondata','archive'],",
 				"     partitionBy('hash', 1)) ~> TRANSACTIONSOURCE",
 				"TRANSACTIONSOURCE derive(transaction_code = case(\r",
 				"  toString(ACTIONCODE) == 'D', 1,\r",

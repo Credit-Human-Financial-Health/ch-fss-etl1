@@ -5,6 +5,8 @@
 			{
 				"name": "member_account_data",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "truncate anonymized member",
@@ -123,6 +125,8 @@
 			{
 				"name": "truncate member account",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "start_time",
@@ -156,6 +160,8 @@
 			{
 				"name": "truncate anonymized member",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "truncate member account",
