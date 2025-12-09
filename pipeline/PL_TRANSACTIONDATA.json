@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_TRANSACTIONDATA_copy1",
+						"referenceName": "DF_TRANSACTION",
 						"type": "DataFlowReference"
 					},
 					"compute": {

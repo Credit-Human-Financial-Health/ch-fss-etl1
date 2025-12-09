@@ -240,17 +240,6 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"dataflow": {
-												"referenceName": "DF_TRANSACTIONDATA",
-												"type": "DataFlowReference",
-												"datasetParameters": {
-													"TRANSACTIONSOURCE": {
-														"containerName": "fss",
-														"folderPath": "transactiondata",
-														"filePattern": "DEV_PWC_Trans_2*.csv"
-													}
-												}
-											},
 											"compute": {
 												"coreCount": 32,
 												"computeType": "MemoryOptimized"
