@@ -277,7 +277,7 @@
 							"typeProperties": {
 								"variableName": "filetype",
 								"value": {
-									"value": "@if(\n  contains(toLower(item().name), 'trans_comment'), \n  'trans_comment', \n  if(contains(toLower(item().name), 'Trans'), 'Trans', 'other')\n)",
+									"value": "@if(\n  contains(split(toLower(item()?['name']), '_'), 'trans_comment'),\n  'trans_comment',\n  if(contains(split(toLower(item()?['name']), '_'), 'trans'), 'trans', 'other')\n  )\n",
 									"type": "Expression"
 								}
 							}

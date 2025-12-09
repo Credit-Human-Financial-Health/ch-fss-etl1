@@ -1,5 +1,5 @@
 {
-	"name": "DF_TRANSACTIONDATA",
+	"name": "DF_TRANSACTIONDATA_copy1",
 	"properties": {
 		"folder": {
 			"name": "FSS_DATAFLOW"
@@ -51,14 +51,10 @@
 				"          BRANCH as string,",
 				"          PWC_key as string",
 				"     ),",
-				"     allowSchemaDrift: false,",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: true,",
+				"     ignoreNoFilesFound: false,",
 				"     moveFiles: ['transactiondata','archive'],",
-				"     fileList: true,",
-				"     partitionRootPath: '|',",
-				"     multiLineRow: true,",
-				"     wildcardPaths:['transactiondata/*.csv'],",
 				"     partitionBy('hash', 1)) ~> TRANSACTIONSOURCE",
 				"TRANSACTIONSOURCE derive(transaction_code = case(\r",
 				"  toString(ACTIONCODE) == 'D', 1,\r",

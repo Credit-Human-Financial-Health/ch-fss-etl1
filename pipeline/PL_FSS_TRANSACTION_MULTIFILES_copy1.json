@@ -1,0 +1,227 @@
+{
+	"name": "PL_FSS_TRANSACTION_MULTIFILES_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "get files data",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "start_time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "multiple_transaction",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems",
+						"itemName"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get files data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get files data').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "transaction_table",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "DF_TRANSACTION_DATA",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "CH_FSS_Postgres_sql",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": "UPDATE ch_fss.\"transaction\" t\nSET transaction_type_code_id = CASE\n    WHEN t.transaction_amount < 0 AND t.payment_method = 'F' THEN 3\n    WHEN t.transaction_amount < 0 THEN 2\n    WHEN t.transaction_amount > 0 THEN 1\n    ELSE transaction_type_code_id  -- keep existing if none match\nEND;\n"
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "transaction_table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "end_time",
+								"value": {
+									"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "job_run_status",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "end_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "CH_FSS_Postgres_sql",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('transaction_table').status, '''', ',',\n  if(\n    equals(activity('transaction_table').status, 'Failed'),\n    concat('''', replace(activity('transaction_table').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n  )",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "DF_TRANSACTION_DATA",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "DF_TRANSACTIONDATA_copy1",
+									"type": "DataFlowReference"
+								},
+								"compute": {
+									"coreCount": 32,
+									"computeType": "MemoryOptimized"
+								},
+								"traceLevel": "Fine"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "start_time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "start_time",
+					"value": {
+						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"start_time": {
+				"type": "String"
+			},
+			"end_time": {
+				"type": "String"
+			},
+			"status": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			},
+			"filetype": {
+				"type": "String"
+			},
+			"expression": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "FSS_DATALOAD_PL/FSS_TRANSACTION_PL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-11-08T19:05:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
