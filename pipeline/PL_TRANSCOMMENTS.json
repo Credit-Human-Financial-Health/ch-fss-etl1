@@ -102,7 +102,7 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "AzurePostgreSql1",
+					"referenceName": "CH_FSS_POSTGRES_DB",
 					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
