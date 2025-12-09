@@ -2,7 +2,7 @@
 	"name": "Lookupmonthsarray",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CH_FSS_POSTGRES_DB",
+			"referenceName": "CH_FSS_Postgres_sql",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -23,11 +23,7 @@
 				"precision": 0,
 				"scale": 0
 			}
-		],
-		"typeProperties": {
-			"schema": "Ch_fss",
-			"table": "watermark"
-		}
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
