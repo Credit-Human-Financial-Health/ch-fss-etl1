@@ -1671,7 +1671,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"folderPath": "transactiondata",
+						"fileName": "PWC_Trans_2025_10_31.csv",
+						"folderPath": "PwC_Data",
 						"container": "fss"
 					},
 					"columnDelimiter": "|",
@@ -3269,7 +3270,6 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     moveFiles: ['transactiondata','archive'],",
 						"     partitionBy('hash', 1)) ~> TRANSACTIONSOURCE",
 						"TRANSACTIONSOURCE derive(transaction_code = case(\r",
 						"  toString(ACTIONCODE) == 'D', 1,\r",
@@ -3424,7 +3424,14 @@
 										{
 											"activity": "transaction_table",
 											"dependencyConditions": [
-												"Succeeded"
+												"Succeeded",
+												"Failed"
+											]
+										},
+										{
+											"activity": "DF_TRANSACTION_DATA",
+											"dependencyConditions": [
+												"Failed"
 											]
 										}
 									],
@@ -3448,7 +3455,14 @@
 										{
 											"activity": "end_time",
 											"dependencyConditions": [
-												"Succeeded"
+												"Succeeded",
+												"Failed"
+											]
+										},
+										{
+											"activity": "DF_TRANSACTION_DATA",
+											"dependencyConditions": [
+												"Completed"
 											]
 										}
 									],
@@ -3469,7 +3483,7 @@
 											{
 												"type": "Query",
 												"text": {
-													"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('transaction_table').status, '''', ',',\n  if(\n    equals(activity('transaction_table').status, 'Failed'),\n    concat('''', replace(activity('transaction_table').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n  )",
+													"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('DF_TRANSACTION_DATA').status, '''', ',',\n  if(\n    equals(activity('DF_TRANSACTION_DATA').status, 'Failed'),\n    concat('''', replace(activity('DF_TRANSACTION_DATA').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n  )",
 													"type": "Expression"
 												}
 											}
@@ -3571,6 +3585,8 @@
 					{
 						"name": "member_account_data",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "truncate anonymized member",
@@ -3695,6 +3711,8 @@
 					{
 						"name": "truncate member account",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "start_time",
@@ -3728,6 +3746,8 @@
 					{
 						"name": "truncate anonymized member",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "truncate member account",
