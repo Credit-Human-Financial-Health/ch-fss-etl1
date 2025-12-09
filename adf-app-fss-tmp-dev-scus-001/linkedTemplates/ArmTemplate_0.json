@@ -1045,7 +1045,10 @@
 						"scale": 0
 					}
 				],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "ch_fss",
+					"table": "transaction"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"

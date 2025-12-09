@@ -820,7 +820,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "CH_FSS_POSTGRES_DB",
+					"referenceName": "CH_FSS_Postgres_sql",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -886,7 +886,7 @@
 				],
 				"typeProperties": {
 					"schema": "ch_fss",
-					"table": "member_stories"
+					"table": "member_story_summary"
 				}
 			},
 			"dependsOn": []
@@ -897,7 +897,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "CH_FSS_Blob_Storage",
+					"referenceName": "CH_FSS_BLOB",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -4311,7 +4311,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
+							"referenceName": "CH_FSS_Postgres_sql",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {

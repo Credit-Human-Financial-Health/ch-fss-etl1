@@ -924,7 +924,7 @@
 												},
 												"userProperties": [],
 												"linkedServiceName": {
-													"referenceName": "AzurePostgreSql1",
+													"referenceName": "CH_FSS_Postgres_sql",
 													"type": "LinkedServiceReference"
 												},
 												"typeProperties": {
@@ -1120,7 +1120,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/multiple_transaction')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]",
 				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]",
 				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTIONDATA')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_TRANSACTIONDATA')]",
@@ -1468,7 +1467,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
+							"referenceName": "CH_FSS_Postgres_sql",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -1513,7 +1512,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERACCOUNT')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"
 			]
 		},
 		{
@@ -1800,7 +1799,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
+							"referenceName": "CH_FSS_Postgres_sql",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -1859,7 +1858,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_MEMBERSTORIES')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"
 			]
 		},
 		{
@@ -2351,7 +2350,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
+							"referenceName": "CH_FSS_Postgres_sql",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -2433,7 +2432,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzurePostgreSql1",
+							"referenceName": "CH_FSS_Postgres_sql",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -2475,7 +2474,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_TRANSACTIONDATA')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"
 			]
 		},
 		{
@@ -2663,7 +2662,10 @@
 						"scale": 0
 					}
 				],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "ch_fss",
+					"table": "transaction"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"
@@ -4269,7 +4271,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "CH_FSS_POSTGRES_DB",
+					"referenceName": "CH_FSS_Postgres_sql",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -4335,11 +4337,11 @@
 				],
 				"typeProperties": {
 					"schema": "ch_fss",
-					"table": "member_stories"
+					"table": "member_story_summary"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_POSTGRES_DB')]"
+				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Postgres_sql')]"
 			]
 		},
 		{
@@ -4348,7 +4350,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "CH_FSS_Blob_Storage",
+					"referenceName": "CH_FSS_BLOB",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -4370,7 +4372,7 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_Blob_Storage')]"
+				"[concat(variables('factoryId'), '/linkedServices/CH_FSS_BLOB')]"
 			]
 		},
 		{
