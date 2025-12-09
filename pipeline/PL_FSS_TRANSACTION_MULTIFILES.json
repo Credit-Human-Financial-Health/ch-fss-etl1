@@ -90,7 +90,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"pipeline": {
-														"referenceName": "PL_TRANSACTION_DATA",
+														"referenceName": "PL_TRANSACTIONDATA",
 														"type": "PipelineReference"
 													},
 													"waitOnCompletion": true
