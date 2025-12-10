@@ -31,7 +31,7 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          PWC_Key as integer,",
+				"          PWC_Key as string,",
 				"          ORDINAL as string,",
 				"          TYPE as string,",
 				"          SUBTYPE as string,",

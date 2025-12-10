@@ -2,7 +2,7 @@
 	"name": "member_details_csv",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CH_FSS_Blob_Storage",
+			"referenceName": "CH_FSS_BLOB",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
