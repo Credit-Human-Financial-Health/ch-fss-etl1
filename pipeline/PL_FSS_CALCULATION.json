@@ -156,33 +156,76 @@
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
 							}
+						},
+						{
+							"name": "end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "updatewatermark",
+									"dependencyConditions": [
+										"Succeeded",
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "end_time",
+								"value": {
+									"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "job_run_status",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "end_time",
+									"dependencyConditions": [
+										"Succeeded",
+										"Failed"
+									]
+								},
+								{
+									"activity": "updatewatermark",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "CH_FSS_Postgres_sql",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('updatewatermark').status, '''', ',',\n  if(\n    equals(activity('updatewatermark').status, 'Failed'),\n    concat('''', replace(activity('updatewatermark').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
 						}
 					]
-				}
-			},
-			{
-				"name": "end_time",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded",
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "end_time",
-					"value": {
-						"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')",
-						"type": "Expression"
-					}
 				}
 			},
 			{
@@ -190,7 +233,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "start_time",
+						"activity": "watermarktable_intial_insert",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -219,54 +262,18 @@
 				}
 			},
 			{
-				"name": "job_run_status",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Completed"
-						]
-					},
-					{
-						"activity": "end_time",
-						"dependencyConditions": [
-							"Succeeded",
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "CH_FSS_Postgres_sql",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": {
-								"value": "@concat(\n  'insert into ch_fss.job_run_status (pl_name, pl_runid, pl_triggertime, pl_triggertype, End_time, Start_time, status, error_message) values (',\n  '''', pipeline().Pipeline, '''', ',',\n  '''', pipeline().RunId, '''', ',',\n  '''', formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd HH:mm:ss'), '''', ',',\n  '''', pipeline().TriggerType, '''', ',',\n  '''', variables('end_time'), '''', ',',\n  '''', variables('start_time'), '''', ',',\n  '''', activity('updatewatermark').status, '''', ',',\n  if(\n    equals(activity('updatewatermark').status, 'Failed'),\n    concat('''', replace(activity('updatewatermark').error.message.details, '''', ''''''), ''''),\n    'NULL'\n  ),\n  ')'\n)",
-								"type": "Expression"
-							}
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "Script1",
+				"name": "watermarktable_intial_insert",
 				"type": "Script",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "start_time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
