@@ -85,8 +85,8 @@ jobs:
         with:
           resourceGroupName: rg-app-fss-tmp-dev-scus-001
           dataFactoryName: ch-test
-          armTemplateFile: ExportedArmTemplate/ARMTemplateForFactory.json
-          armTemplateParametersFile: ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          armTemplateFile: ARMTemplateForFactory.json
+          armTemplateParametersFile: ARMTemplateParametersForFactory.json
           
   Prod-release:
     if: ${{ inputs.deploy_env == 'Prod' || inputs.deploy_env == 'All' }}
@@ -113,5 +113,5 @@ jobs:
         with:
           resourceGroupName: rg-app-fss-tmp-prod-scus-001
           dataFactoryName: adf-app-fss-tmp-prod-scus-001  
-          armTemplateFile: ExportedArmTemplate/ARMTemplateForFactory.json
-          armTemplateParametersFile: ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          armTemplateFile: ARMTemplateForFactory.json
+          armTemplateParametersFile: ARMTemplateParametersForFactory.json
