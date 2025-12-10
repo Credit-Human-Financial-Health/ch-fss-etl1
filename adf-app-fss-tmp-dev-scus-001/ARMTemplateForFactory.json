@@ -2463,7 +2463,7 @@
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Script1",
+								"activity": "transaction_data",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2615,7 +2615,7 @@
 						}
 					},
 					{
-						"name": "Script1",
+						"name": "transaction_data",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -6272,8 +6272,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2025-12-08T11:00:00",
-						"timeZone": "Central Standard Time",
-						"schedule": {}
+						"timeZone": "Central Standard Time"
 					}
 				}
 			},

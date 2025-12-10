@@ -23,7 +23,7 @@
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Script1",
+								"activity": "transaction_data",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -175,7 +175,7 @@
 						}
 					},
 					{
-						"name": "Script1",
+						"name": "transaction_data",
 						"type": "Script",
 						"dependsOn": [
 							{

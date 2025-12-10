@@ -141,8 +141,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2025-12-08T11:00:00",
-						"timeZone": "Central Standard Time",
-						"schedule": {}
+						"timeZone": "Central Standard Time"
 					}
 				}
 			},
