@@ -22,11 +22,7 @@
 						"type": "DatasetReference"
 					},
 					"name": "TRANSACTIONTABLE",
-					"description": "Export data to ",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureBlobStorage1",
-						"type": "LinkedServiceReference"
-					}
+					"description": "Export data to "
 				}
 			],
 			"transformations": [

@@ -21,11 +21,7 @@
 						"referenceName": "member_stories_sink",
 						"type": "DatasetReference"
 					},
-					"name": "MEMBERSTORIESTABLE",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureBlobStorage1",
-						"type": "LinkedServiceReference"
-					}
+					"name": "MEMBERSTORIESTABLE"
 				}
 			],
 			"transformations": [

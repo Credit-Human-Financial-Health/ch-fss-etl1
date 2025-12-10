@@ -21,11 +21,7 @@
 						"referenceName": "share_account_sink",
 						"type": "DatasetReference"
 					},
-					"name": "SHAREACCOUNTTABLE",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureBlobStorage1",
-						"type": "LinkedServiceReference"
-					}
+					"name": "SHAREACCOUNTTABLE"
 				}
 			],
 			"transformations": [
