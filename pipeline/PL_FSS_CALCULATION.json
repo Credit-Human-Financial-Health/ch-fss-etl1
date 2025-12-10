@@ -264,8 +264,6 @@
 			{
 				"name": "watermarktable_intial_insert",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "start_time",
@@ -290,7 +288,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "\nINSERT INTO ch_fss.watermark_table (\n    process_name, last_processed_date, created_by, created_date, updated_date, updated_by\n)\nVALUES (\n    'TransactionProcessing',\n    '2020-01-01'::timestamp,\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);"
+							"text": "\nINSERT INTO ch_fss.watermark_table (\n    process_name, last_processed_date, created_by, created_date, updated_date, updated_by\n)\nVALUES (\n    'TransactionProcessing',\n    '2024-12-01'::timestamp,\n    'Admin',\n    NOW(),\n    NOW(),\n    'Admin'\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
