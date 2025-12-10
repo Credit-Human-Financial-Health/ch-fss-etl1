@@ -14,6 +14,7 @@ on:
           options:
             - Dev
             - Prod
+            - All
           default: Dev
 jobs:
   build:
@@ -59,6 +60,7 @@ jobs:
           path: ${{ github.workspace }}/build/ExportedArmTemplate
 
   Dev-release:
+    if: ${{ inputs.deploy_env == Dev || inputs.deploy_env == 'All' }}
     runs-on: ubuntu-latest
     needs: build
     environment: dev
@@ -86,6 +88,7 @@ jobs:
           armTemplateParametersFile: ARMTemplateParametersForFactory.json
           
   Prod-release:
+    if: ${{ inputs.deploy_env == 'Prod' || inputs.deploy_env == 'All' }}
     runs-on: ubuntu-latest
     needs: [build, Dev-release]
     environment: prod
