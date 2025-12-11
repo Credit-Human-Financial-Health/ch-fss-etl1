@@ -3650,7 +3650,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "insert into ch_fss.anonymized_member(anonymized_member_id,member_id)\n\nselect member_id,member_id from ch_fss1.\"member\"\n "
+									"text": "insert into ch_fss.anonymized_member(anonymized_member_id,member_id)\nselect member_id,member_id from ch_fss.member\n "
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -3658,6 +3658,39 @@
 					},
 					{
 						"name": "scoring group",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "member_account_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "CH_FSS_Postgres_sql",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "insert into ch_fss.scoring_group (\ngroup_type_code_id,\naccount_id,\ncreated_by,\ncreated_date,\nupdated_by,\nupdated_date)\nselect \n1,\nma.account_id , \n'admin',\nnow(), \n'admin',\nnow()\nfrom ch_fss.member_account ma\nwhere ma.close_date is null"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "member_account_id",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -3683,7 +3716,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "insert into ch_fss.scoring_group (\ngroup_type_code_id,\naccount_id,\ncreated_by,\ncreated_date,\nupdated_by,\nupdated_date)\nselect \n1,\nma.account_id , \n'admin',\nnow(), \n'admin',\nnow()\nfrom ch_fss1.member_account ma\nwhere ma.close_date is null"
+									"text": "INSERT INTO ch_fss.member_account (anonymized_member_id)\nSELECT account_id\nFROM ch_fss.member_account;\n"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
