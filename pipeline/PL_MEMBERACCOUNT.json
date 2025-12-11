@@ -144,7 +144,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "TRUNCATE TABLE ch_fss1.member_account CASCADE;"
+							"text": "TRUNCATE TABLE ch_fss.member_account CASCADE;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -177,7 +177,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "truncate table ch_fss1.anonymized_member cascade;"
+							"text": "truncate table ch_fss.anonymized_member cascade;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -211,7 +211,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "insert into ch_fss1.anonymized_member(anonymized_member_id,member_id)\n\nselect member_id,member_id from ch_fss1.\"member\"\n "
+							"text": "insert into ch_fss.anonymized_member(anonymized_member_id,member_id)\n\nselect member_id,member_id from ch_fss1.\"member\"\n "
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -244,7 +244,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "insert into ch_fss1.scoring_group (\ngroup_type_code_id,\naccount_id,\ncreated_by,\ncreated_date,\nupdated_by,\nupdated_date)\nselect \n1,\nma.account_id , \n'admin',\nnow(), \n'admin',\nnow()\nfrom ch_fss1.member_account ma\nwhere ma.close_date is null"
+							"text": "insert into ch_fss.scoring_group (\ngroup_type_code_id,\naccount_id,\ncreated_by,\ncreated_date,\nupdated_by,\nupdated_date)\nselect \n1,\nma.account_id , \n'admin',\nnow(), \n'admin',\nnow()\nfrom ch_fss1.member_account ma\nwhere ma.close_date is null"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"

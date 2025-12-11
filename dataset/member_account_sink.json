@@ -97,7 +97,7 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "ch_fss1",
+			"schema": "ch_fss",
 			"table": "member_account"
 		}
 	}
