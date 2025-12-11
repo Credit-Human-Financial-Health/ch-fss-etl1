@@ -7373,8 +7373,7 @@
 						"          close_date = CLOSEDATE,",
 						"          share_type_code_id = TYPE,",
 						"          curr_balance = ORIGINALBALANCE,",
-						"          available_balance = BALANCE,",
-						"          product_id = TYPE",
+						"          available_balance = BALANCE",
 						"     ),",
 						"     partitionBy('hash', 1)) ~> SHAREACCOUNTTABLE"
 					]
