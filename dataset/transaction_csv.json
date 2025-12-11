@@ -76,7 +76,7 @@
 				"type": "String"
 			},
 			{
-				"name": "PWC_key",
+				"name": "PARENTACCOUNT",
 				"type": "String"
 			}
 		]

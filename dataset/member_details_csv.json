@@ -24,7 +24,7 @@
 		},
 		"schema": [
 			{
-				"name": "PWC_Key",
+				"name": "PARENTACCOUNT",
 				"type": "String"
 			},
 			{
