@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PROD_PWC_Extract_Name",
+				"fileName": "PROD_PWC_Extract_Name_2025_12_9.csv",
 				"folderPath": "InitialData",
 				"container": "fss"
 			},
@@ -624,5 +624,6 @@
 				"type": "String"
 			}
 		]
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
