@@ -35,7 +35,7 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          PWC_Key as string,",
+				"          ACCOUNTNUMBER as string,",
 				"          TYPE as string,",
 				"          LASTFMDATE as string,",
 				"          OPENDATE as string,",
@@ -230,14 +230,14 @@
 				"     assertFailure_fileSystem: 'fss',",
 				"     assertFailure_folderPath: 'error',",
 				"     mapColumn(",
-				"          account_id = PWC_Key,",
+				"          account_id = ACCOUNTNUMBER,",
 				"          open_date = OPENDATE,",
 				"          close_date = CLOSEDATE,",
 				"          branch = BRANCH,",
 				"          status = MEMBERSTATUS,",
 				"          account_type_id = TYPE,",
 				"          product_id,",
-				"          anonymized_member_id = PWC_Key",
+				"          anonymized_member_id = ACCOUNTNUMBER",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> MEMBERSINKCSV"
 			]
