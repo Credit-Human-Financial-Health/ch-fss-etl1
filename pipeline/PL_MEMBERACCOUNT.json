@@ -177,7 +177,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "truncate table ch_fss.anonymized_member cascade;"
+							"text": "BEGIN;\r\n \r\n-- Truncate the table\r\nTRUNCATE TABLE ch_fss.anonymized_member CASCADE;\r\n \r\nCOMMIT;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -211,7 +211,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "insert into ch_fss.anonymized_member(anonymized_member_id,member_id)\nselect member_id,member_id from ch_fss.member\n "
+							"text": "BEGIN;\nINSERT INTO ch_fss.anonymized_member(anonymized_member_id, member_id)\nSELECT DISTINCT m.member_id, m.member_id\nFROM ch_fss.member m\nWHERE m.member_id IS NOT NULL\n  AND NOT EXISTS (\n    SELECT 1 FROM ch_fss.anonymized_member am\n    WHERE am.anonymized_member_id = m.member_id\n  );\n \nCOMMIT;\n "
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -277,7 +277,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "INSERT INTO ch_fss.member_account (anonymized_member_id)\nSELECT account_id\nFROM ch_fss.member_account;\n"
+							"text": "UPDATE ch_fss.member_account\nSET anonymized_member_id = account_id;\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
