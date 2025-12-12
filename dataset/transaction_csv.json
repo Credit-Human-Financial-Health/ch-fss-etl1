@@ -13,8 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PROD_PWC_Trans_2024_2025_Sample_2025_12_9.csv",
-				"folderPath": "InitialData",
+				"fileName": "PWC_Trans_2025_10_31.csv",
+				"folderPath": "sampledata",
 				"container": "fss"
 			},
 			"columnDelimiter": "|",
@@ -48,6 +48,10 @@
 				"type": "String"
 			},
 			{
+				"name": "DESCRIPTION",
+				"type": "String"
+			},
+			{
 				"name": "ACTIONCODE",
 				"type": "String"
 			},
@@ -69,6 +73,10 @@
 			},
 			{
 				"name": "FEEAMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "COMMENT",
 				"type": "String"
 			},
 			{
