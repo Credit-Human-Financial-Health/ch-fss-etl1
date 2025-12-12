@@ -13,8 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PWC_Trans_2025_10_31.csv",
-				"folderPath": "sampledata",
+				"fileName": "PROD_PWC_Trans_2024_2025_Sample_2025_12_9.csv",
+				"folderPath": "InitialData",
 				"container": "fss"
 			},
 			"columnDelimiter": "|",
