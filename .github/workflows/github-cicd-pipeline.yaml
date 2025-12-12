@@ -95,7 +95,7 @@ jobs:
   Prod-release:
     if: ${{ inputs.deploy_env == 'Prod' || inputs.deploy_env == 'All' }}
     runs-on: ubuntu-latest
-    needs: [build, Dev-release]
+    needs: build
     environment: prod
     steps:
       - name: Download ARM artifact
